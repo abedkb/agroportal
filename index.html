@@ -11,7 +11,7 @@
      uncomment the line below and fill in your credentials in
      the SUPABASE CLIENT CONFIGURATION section in the <script> block.
      ════════════════════════════════════════════════════════════ -->
-<!-- <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -24,7 +24,7 @@
 .page-watermark::after{
   content:'';position:fixed;bottom:20px;right:20px;
   width:120px;height:140px;
-  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjAgMTYwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnRtYS1sZXR0ZXIgeyBmb250LWZhbWlseTogQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogOTAwOyBmaWxsOiAjMjlBQkUyOyB9CiAgICAgIC50bWEtc3ViICAgIHsgZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyBmaWxsOiAjMjlBQkUyOyBsZXR0ZXItc3BhY2luZzogMS4ycHg7IH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgoKICA8IS0tIOKUgOKUgCBTV0lSTCBBUkMgKHRoZSBsb29waW5nIG92YWwgcGF0aCkg4pSA4pSAIC0tPgogIDwhLS0gT3V0ZXIgYXJjIOKAlCBsaWdodCBncmVlbiAtLT4KICA8cGF0aCBkPSJNIDE4IDEyMCBDIDEwIDcwLCAzMCAyMCwgODUgMTUgQyAxMzAgMTAsIDE2NSAzMCwgMTc1IDU1IgogICAgICAgIHN0cm9rZT0iIzhEQzYzRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0gTWlkZGxlIGFyYyDigJQgeWVsbG93L2dvbGQgLS0+CiAgPHBhdGggZD0iTSAyMiAxMjggQyAxMiA3OCwgMzUgMjUsIDkwIDE4IEMgMTM4IDEyLCAxNzIgMzQsIDE4MCA2MiIKICAgICAgICBzdHJva2U9IiNGNzk0MUQiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIElubmVyIGFyYyAxIOKAlCBibHVlIC0tPgogIDxwYXRoIGQ9Ik0gMjYgMTM2IEMgMTUgODYsIDQwIDMyLCA5NiAyNCBDIDE0NSAxNywgMTgwIDQwLCAxODYgNzAiCiAgICAgICAgc3Ryb2tlPSIjMjlBQkUyIiBzdHJva2Utd2lkdGg9IjMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBPdXRlciBjbG9zaW5nIGFyYyDigJQgZGFyayBncmVlbiAoY29tZXMgYXJvdW5kIGJvdHRvbSkgLS0+CiAgPHBhdGggZD0iTSAxOCAxMjAgQyA1IDE0NSwgMjAgMTYwLCA1MCAxNTUgQyA4MCAxNTAsIDk1IDEzNSwgMTAwIDExOCIKICAgICAgICBzdHJva2U9IiMwMDk0NDQiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0g4pSA4pSAIEFSUk9XIEhFQURTIGF0IGFyYyB0aXBzIOKUgOKUgCAtLT4KICA8IS0tIERhcmsgZ3JlZW4gYXJyb3cgKHRvcCwgcG9pbnRpbmcgdXBwZXItcmlnaHQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw1Mikgcm90YXRlKC0zMCkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC03IDE0LDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+CiAgPC9nPgogIDwhLS0gTGlnaHQgZ3JlZW4gYXJyb3cgKHNsaWdodGx5IGJlbG93LCBwb2ludGluZyB1cHBlci1yaWdodCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY1LDQ1KSByb3RhdGUoLTI1KSI+CiAgICA8cG9seWdvbiBwb2ludHM9IjAsLTYgMTIsMCAwLDYiIGZpbGw9IiM4REM2M0YiLz4KICA8L2c+CiAgPCEtLSBHb2xkL3llbGxvdyBhcnJvdyAobWlkZGxlKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzAsNTYpIHJvdGF0ZSgtMTUpIj4KICAgIDxwb2x5Z29uIHBvaW50cz0iMCwtNiAxMiwwIDAsNiIgZmlsbD0iI0Y3OTQxRCIvPgogIDwvZz4KICA8IS0tIEJsdWUgYXJyb3cgKGxvd2VyKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzYsNjYpIHJvdGF0ZSgtNSkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC02IDEyLDAgMCw2IiBmaWxsPSIjMjlBQkUyIi8+CiAgPC9nPgoKICA8IS0tIOKUgOKUgCBUTUEgQk9MRCBMRVRURVJTIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMDgiIHk9IjEwOCIgY2xhc3M9InRtYS1sZXR0ZXIiIGZvbnQtc2l6ZT0iNzgiIGRvbWluYW50LWJhc2VsaW5lPSJhdXRvIj5UTUE8L3RleHQ+CgogIDwhLS0g4pSA4pSAIFNVQlRJVExFIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMzAiIHk9IjEyOCIgY2xhc3M9InRtYS1zdWIiIGZvbnQtc2l6ZT0iMTAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pgo8L3N2Zz4=');
+  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTUgMTU1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzFBNUNBQ30udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMUE1Q0FDO2xldHRlci1zcGFjaW5nOjFweH08L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNIDggMTE2IEMgMCA2OCwyMCAxNiw3NiA3IEMgMTE0IDEsMTQ2IDIxLDE1MSA1NCIgc3Ryb2tlPSIjOERDNjNGIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLDU0KSByb3RhdGUoLTY4KSI+PHBvbHlnb24gcG9pbnRzPSIwLC04IDE0LDAgMCw4IiBmaWxsPSIjOERDNjNGIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgMTI0IEMgNyA3NiwyOCAyMyw4NSAxMyBDIDEyNCA2LDE1NyAyNywxNjIgNjEiIHN0cm9rZT0iI0Y3OTQxRCIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2Miw2MSkgcm90YXRlKC02OCkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iI0Y3OTQxRCIvPjwvZz48cGF0aCBkPSJNIDI0IDEzMiBDIDE1IDg0LDM2IDMwLDk0IDE5IEMgMTM1IDExLDE2OCAzMywxNzQgNjciIHN0cm9rZT0iIzI5QUJFMiIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw2Nykgcm90YXRlKC02NSkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iIzI5QUJFMiIvPjwvZz48cGF0aCBkPSJNIDggMTE2IEMgLTEgMTQyLDEzIDE1MSw0MCAxNDggQyA2OCAxNDQsODMgMTI5LDg2IDExMiIgc3Ryb2tlPSIjMDA5NDQ0IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg2LDExMikgcm90YXRlKDI1KSI+PHBvbHlnb24gcG9pbnRzPSIwLC03IDEzLDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+PC9nPjx0ZXh0IHg9IjE0NSIgeT0iMTAyIiBjbGFzcz0idGwiIGZvbnQtc2l6ZT0iNjgiPlRNQTwvdGV4dD48dGV4dCB4PSIyMDgiIHk9IjEyNCIgY2xhc3M9InRzIiBmb250LXNpemU9IjkuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pjwvc3ZnPg==');
   background-size:contain;background-repeat:no-repeat;
   opacity:0.04;pointer-events:none;z-index:0;
 }
@@ -51,7 +51,7 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;back
 }
 .auth-screen::before{
   content:'';position:absolute;inset:0;
-  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjAgMTYwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnRtYS1sZXR0ZXIgeyBmb250LWZhbWlseTogQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogOTAwOyBmaWxsOiAjMjlBQkUyOyB9CiAgICAgIC50bWEtc3ViICAgIHsgZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyBmaWxsOiAjMjlBQkUyOyBsZXR0ZXItc3BhY2luZzogMS4ycHg7IH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgoKICA8IS0tIOKUgOKUgCBTV0lSTCBBUkMgKHRoZSBsb29waW5nIG92YWwgcGF0aCkg4pSA4pSAIC0tPgogIDwhLS0gT3V0ZXIgYXJjIOKAlCBsaWdodCBncmVlbiAtLT4KICA8cGF0aCBkPSJNIDE4IDEyMCBDIDEwIDcwLCAzMCAyMCwgODUgMTUgQyAxMzAgMTAsIDE2NSAzMCwgMTc1IDU1IgogICAgICAgIHN0cm9rZT0iIzhEQzYzRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0gTWlkZGxlIGFyYyDigJQgeWVsbG93L2dvbGQgLS0+CiAgPHBhdGggZD0iTSAyMiAxMjggQyAxMiA3OCwgMzUgMjUsIDkwIDE4IEMgMTM4IDEyLCAxNzIgMzQsIDE4MCA2MiIKICAgICAgICBzdHJva2U9IiNGNzk0MUQiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIElubmVyIGFyYyAxIOKAlCBibHVlIC0tPgogIDxwYXRoIGQ9Ik0gMjYgMTM2IEMgMTUgODYsIDQwIDMyLCA5NiAyNCBDIDE0NSAxNywgMTgwIDQwLCAxODYgNzAiCiAgICAgICAgc3Ryb2tlPSIjMjlBQkUyIiBzdHJva2Utd2lkdGg9IjMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBPdXRlciBjbG9zaW5nIGFyYyDigJQgZGFyayBncmVlbiAoY29tZXMgYXJvdW5kIGJvdHRvbSkgLS0+CiAgPHBhdGggZD0iTSAxOCAxMjAgQyA1IDE0NSwgMjAgMTYwLCA1MCAxNTUgQyA4MCAxNTAsIDk1IDEzNSwgMTAwIDExOCIKICAgICAgICBzdHJva2U9IiMwMDk0NDQiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0g4pSA4pSAIEFSUk9XIEhFQURTIGF0IGFyYyB0aXBzIOKUgOKUgCAtLT4KICA8IS0tIERhcmsgZ3JlZW4gYXJyb3cgKHRvcCwgcG9pbnRpbmcgdXBwZXItcmlnaHQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw1Mikgcm90YXRlKC0zMCkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC03IDE0LDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+CiAgPC9nPgogIDwhLS0gTGlnaHQgZ3JlZW4gYXJyb3cgKHNsaWdodGx5IGJlbG93LCBwb2ludGluZyB1cHBlci1yaWdodCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY1LDQ1KSByb3RhdGUoLTI1KSI+CiAgICA8cG9seWdvbiBwb2ludHM9IjAsLTYgMTIsMCAwLDYiIGZpbGw9IiM4REM2M0YiLz4KICA8L2c+CiAgPCEtLSBHb2xkL3llbGxvdyBhcnJvdyAobWlkZGxlKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzAsNTYpIHJvdGF0ZSgtMTUpIj4KICAgIDxwb2x5Z29uIHBvaW50cz0iMCwtNiAxMiwwIDAsNiIgZmlsbD0iI0Y3OTQxRCIvPgogIDwvZz4KICA8IS0tIEJsdWUgYXJyb3cgKGxvd2VyKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzYsNjYpIHJvdGF0ZSgtNSkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC02IDEyLDAgMCw2IiBmaWxsPSIjMjlBQkUyIi8+CiAgPC9nPgoKICA8IS0tIOKUgOKUgCBUTUEgQk9MRCBMRVRURVJTIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMDgiIHk9IjEwOCIgY2xhc3M9InRtYS1sZXR0ZXIiIGZvbnQtc2l6ZT0iNzgiIGRvbWluYW50LWJhc2VsaW5lPSJhdXRvIj5UTUE8L3RleHQ+CgogIDwhLS0g4pSA4pSAIFNVQlRJVExFIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMzAiIHk9IjEyOCIgY2xhc3M9InRtYS1zdWIiIGZvbnQtc2l6ZT0iMTAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pgo8L3N2Zz4=');
+  background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTUgMTU1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzFBNUNBQ30udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMUE1Q0FDO2xldHRlci1zcGFjaW5nOjFweH08L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNIDggMTE2IEMgMCA2OCwyMCAxNiw3NiA3IEMgMTE0IDEsMTQ2IDIxLDE1MSA1NCIgc3Ryb2tlPSIjOERDNjNGIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLDU0KSByb3RhdGUoLTY4KSI+PHBvbHlnb24gcG9pbnRzPSIwLC04IDE0LDAgMCw4IiBmaWxsPSIjOERDNjNGIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgMTI0IEMgNyA3NiwyOCAyMyw4NSAxMyBDIDEyNCA2LDE1NyAyNywxNjIgNjEiIHN0cm9rZT0iI0Y3OTQxRCIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2Miw2MSkgcm90YXRlKC02OCkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iI0Y3OTQxRCIvPjwvZz48cGF0aCBkPSJNIDI0IDEzMiBDIDE1IDg0LDM2IDMwLDk0IDE5IEMgMTM1IDExLDE2OCAzMywxNzQgNjciIHN0cm9rZT0iIzI5QUJFMiIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw2Nykgcm90YXRlKC02NSkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iIzI5QUJFMiIvPjwvZz48cGF0aCBkPSJNIDggMTE2IEMgLTEgMTQyLDEzIDE1MSw0MCAxNDggQyA2OCAxNDQsODMgMTI5LDg2IDExMiIgc3Ryb2tlPSIjMDA5NDQ0IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg2LDExMikgcm90YXRlKDI1KSI+PHBvbHlnb24gcG9pbnRzPSIwLC03IDEzLDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+PC9nPjx0ZXh0IHg9IjE0NSIgeT0iMTAyIiBjbGFzcz0idGwiIGZvbnQtc2l6ZT0iNjgiPlRNQTwvdGV4dD48dGV4dCB4PSIyMDgiIHk9IjEyNCIgY2xhc3M9InRzIiBmb250LXNpemU9IjkuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pjwvc3ZnPg==');
   background-repeat:no-repeat;background-position:center;background-size:420px;
   opacity:0.06;pointer-events:none;
 }
@@ -116,7 +116,7 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;back
 .contact-admin-label{font-size:12px;font-weight:500;color:var(--tma-blue-dk);flex:1;min-width:120px}
 
 /* LAYOUT */
-.layout{display:flex;min-height:100vh}
+.layout{display:flex;min-height:100vh;flex-direction:column}
 .sidebar{width:232px;min-width:232px;background:var(--bg-primary);border-right:0.5px solid var(--border-light);display:flex;flex-direction:column;padding:1rem 0;position:sticky;top:0;height:100vh;overflow-y:auto}
 .sidebar-logo{
   padding:.75rem 1rem 1rem;border-bottom:0.5px solid var(--border-light);margin-bottom:.5rem;
@@ -319,7 +319,7 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;back
 
 /* Summary strip (computed stats, below the official table) */
 .official-summary{
-  display:flex;gap:0;flex-wrap:wrap;
+  display:block;
   padding:.5rem .75rem;background:#edf3fa;border-top:1px solid #ccc;
   font-family:'IBM Plex Sans',sans-serif;
 }
@@ -439,6 +439,17 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;back
    ══════════════════════════════════════════════════ */
 .f626-wrap { font-family: 'Times New Roman', Times, serif; }
 .f626-scroll-wrap { overflow-x: auto; padding: .4rem .5rem; background: #fffde0; }
+
+/* Form 626 — override all chrome sections to full yellow background */
+.f626-wrap.official-form-wrap { background: #fffde0; }
+.f626-wrap .official-form-header { background: #fffde0; border-bottom-color: #c9a800; }
+.f626-wrap .official-form-logo-row { border-bottom-color: #c9a800; }
+.f626-wrap .official-form-logo-row .form-number-box { background: #ffe066; border-color: #c9a800; }
+.f626-wrap .official-form-title-block { background: #fffde0; border-bottom-color: #c9a800; }
+.f626-wrap .official-form-meta { background: #ffe88a; border-bottom-color: #c9a800; }
+.f626-wrap .official-form-meta-item { border-right-color: #c9a800; }
+.f626-wrap .official-summary { background: #ffe066; border-top-color: #c9a800; }
+.f626-wrap .official-form-footer { background: #fffde0; border-top-color: #c9a800; }
 
 .f626-tbl {
   border-collapse: collapse;
@@ -785,6 +796,189 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
 
 /* Month selector for returns */
 .returns-toolbar{display:flex;align-items:center;gap:.75rem;margin-bottom:.875rem;flex-wrap:wrap}
+
+/* ══════════════════════════════════════════════════
+   TOP-NAV + TAB-NAV LAYOUT
+   ══════════════════════════════════════════════════ */
+
+/* Sidebar and old topbar are hidden in the new layout */
+.sidebar{display:none!important}
+.topbar{display:none!important}
+.sidebar-overlay{display:none!important}
+
+/* Top navigation bar */
+.topnav{
+  background:#0D47A1;color:#fff;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.625rem 1rem;gap:.75rem;
+  position:sticky;top:0;z-index:100;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(0,0,0,0.22);
+}
+.topnav-brand{display:flex;align-items:center;gap:.625rem;min-width:0}
+.topnav-logo-icon{
+  width:34px;height:34px;border-radius:6px;
+  background:rgba(255,255,255,0.15);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;font-family:'IBM Plex Mono',monospace;
+  letter-spacing:.5px;flex-shrink:0;border:1px solid rgba(255,255,255,0.25);
+}
+.topnav-brand-text{min-width:0}
+.topnav-brand-name{display:block;font-size:13px;font-weight:600;color:#fff;line-height:1.2;white-space:nowrap}
+.topnav-brand-sub{display:block;font-size:10px;color:rgba(255,255,255,0.6);line-height:1.2;white-space:nowrap}
+.topnav-right{display:flex;align-items:center;gap:.5rem;flex-shrink:0}
+.topnav-clock{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,0.8);white-space:nowrap}
+.topnav-session{white-space:nowrap}
+.topnav-user{display:flex;align-items:center;gap:.5rem}
+.topnav-avatar{
+  width:28px;height:28px;border-radius:50%;
+  background:rgba(255,255,255,0.2);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:600;flex-shrink:0;
+  border:1.5px solid rgba(255,255,255,0.3);
+}
+.topnav-userinfo{min-width:0}
+.topnav-username{font-size:12px;font-weight:500;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+.topnav-userrole{font-size:10px;color:rgba(255,255,255,0.6);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+.topnav-logout{
+  background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.22);
+  border-radius:var(--radius);padding:5px 10px;
+  font-size:11px;color:#fff;cursor:pointer;font-weight:500;
+  font-family:'IBM Plex Sans',sans-serif;white-space:nowrap;transition:.15s;
+}
+.topnav-logout:hover{background:rgba(255,255,255,0.22)}
+
+/* Tab navigation bar */
+.tabnav{
+  background:var(--bg-primary);border-bottom:0.5px solid var(--border-light);
+  position:sticky;top:54px;z-index:90;flex-shrink:0;
+  overflow-x:auto;-webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.tabnav::-webkit-scrollbar{display:none}
+.tabnav-inner{display:flex;align-items:stretch;min-width:max-content}
+.tab-btn{
+  background:none;border:none;cursor:pointer;
+  padding:.625rem .875rem;font-size:13px;color:var(--text-secondary);
+  font-family:'IBM Plex Sans',sans-serif;white-space:nowrap;
+  border-bottom:2.5px solid transparent;margin-bottom:-0.5px;
+  display:inline-flex;align-items:center;gap:4px;
+  transition:.15s;flex-shrink:0;
+}
+.tab-btn:hover{color:var(--text-primary);background:var(--bg-secondary)}
+.tab-btn.active{color:var(--tma-blue);border-bottom-color:var(--tma-blue);font-weight:500}
+.tab-badge{
+  display:inline-flex;align-items:center;justify-content:center;
+  background:var(--tma-amber-l);color:var(--tma-amber);
+  font-size:10px;font-weight:600;border-radius:10px;
+  padding:1px 5px;min-width:16px;line-height:1.4;
+}
+
+/* ══════════════════════════════════════════════════
+   RESPONSIVE — mobile adjustments
+   ══════════════════════════════════════════════════ */
+@media(max-width:768px){
+  /* Content area */
+  .content{padding:1rem .875rem}
+
+  /* Cards & grids: single column */
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px}
+
+  /* Bigger form fields */
+  .field input,.field select,.field textarea{padding:10px 12px;font-size:14px}
+  .btn{padding:10px 18px;font-size:14px}
+  .btn-sm{padding:8px 14px;font-size:13px}
+
+  /* Observation form: allow horizontal scroll */
+  .obs-body{padding:.875rem .75rem}
+  .obs-table-wrap{-webkit-overflow-scrolling:touch}
+  .obs-table input[type="number"],.obs-table input[type="text"]{min-width:52px}
+
+  /* Data tables */
+  .table-wrap{-webkit-overflow-scrolling:touch}
+
+  /* Official forms */
+  .official-form-logo-row{flex-wrap:wrap}
+  .official-table-wrap{-webkit-overflow-scrolling:touch}
+
+  /* Form actions — stack buttons */
+  .form-actions{flex-direction:column;align-items:stretch}
+  .form-actions .btn{text-align:center}
+  .form-note{margin-left:0;margin-top:4px}
+
+  /* Auth screen */
+  .auth-card{padding:1.5rem 1.25rem}
+  .auth-tabs{flex-direction:column}
+  .auth-tab{padding:10px;border-radius:0}
+  .auth-tab:first-child{border-radius:calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0}
+  .auth-tab:last-child{border-radius:0 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px)}
+
+  /* Field rows: single column */
+  .field-row,.field-row3{grid-template-columns:1fr}
+
+  /* Toast: full-width at bottom */
+  .toast{left:1rem;right:1rem;max-width:none;bottom:1rem}
+
+  /* Form switcher buttons */
+  .form-btn{padding:8px 14px;font-size:13px}
+
+  /* Accordion headers */
+  .ret-acc-header{padding:.625rem .875rem}
+
+  /* Topnav: hide user info text to save horizontal space */
+  .topnav-userinfo{display:none}
+  .topnav-brand-sub{display:none}
+}
+
+@media(max-width:480px){
+  .content{padding:.75rem .625rem}
+  .card{padding:1rem}
+  .obs-body{padding:.75rem .5rem}
+  .stat-value{font-size:18px}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .topnav{padding:.5rem .75rem}
+  .topnav-clock{display:none}
+}
+
+/* ── Beautiful background — TMA brand colours ── */
+body{
+  background:
+    radial-gradient(ellipse at 15% 20%, rgba(26,92,172,0.28) 0%, transparent 55%),
+    radial-gradient(ellipse at 85% 10%, rgba(141,198,63,0.22) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 80%, rgba(247,148,29,0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 10% 85%, rgba(41,171,226,0.18) 0%, transparent 50%),
+    radial-gradient(ellipse at 50% 50%, rgba(26,92,172,0.07) 0%, transparent 70%),
+    linear-gradient(160deg, #cde3f5 0%, #dff2c8 38%, #fdefd4 68%, #d4ecf9 100%);
+  background-attachment: fixed;
+}
+#logout-choice-overlay{
+  position:fixed;inset:0;z-index:9999;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(10,30,60,0.55);backdrop-filter:blur(4px);
+}
+#logout-choice-box{
+  background:#fff;border-radius:18px;padding:2.2rem 2rem 1.8rem;
+  box-shadow:0 12px 48px rgba(26,92,172,0.22),0 2px 8px rgba(0,0,0,0.10);
+  max-width:380px;width:90%;text-align:center;
+}
+#logout-choice-box h3{margin:0 0 .3rem;color:#1A5CAC;font-size:1.25rem;}
+#logout-choice-box p{margin:0 0 1.5rem;color:#555;font-size:.9rem;}
+.logout-choice-btn{
+  display:flex;align-items:center;gap:.75rem;
+  width:100%;padding:.85rem 1.2rem;margin-bottom:.75rem;
+  border:2px solid #e0eaf6;border-radius:12px;background:#f5f9ff;
+  cursor:pointer;font-size:.95rem;font-weight:600;color:#1A5CAC;
+  transition:background .15s,border-color .15s,transform .1s;text-align:left;
+}
+.logout-choice-btn:hover{background:#ddeeff;border-color:#1A5CAC;transform:translateY(-1px);}
+.logout-choice-btn.green{background:#f3fbee;border-color:#d0edb8;color:#2a7a0e;}
+.logout-choice-btn.green:hover{background:#daf0c4;border-color:#8DC63F;}
+.logout-choice-icon{font-size:1.5rem;flex-shrink:0;}
+.logout-cancel-btn{
+  margin-top:.25rem;background:none;border:none;color:#999;
+  font-size:.85rem;cursor:pointer;text-decoration:underline;
+}
+.logout-cancel-btn:hover{color:#555;}
 </style>
 </head>
 <body>
@@ -793,17 +987,19 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
 <div class="auth-screen" id="authScreen">
   <div class="auth-card">
     <div class="auth-logo" style="flex-direction:column;align-items:center;gap:8px;margin-bottom:1.2rem">
-      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjAgMTYwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnRtYS1sZXR0ZXIgeyBmb250LWZhbWlseTogQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogOTAwOyBmaWxsOiAjMjlBQkUyOyB9CiAgICAgIC50bWEtc3ViICAgIHsgZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyBmaWxsOiAjMjlBQkUyOyBsZXR0ZXItc3BhY2luZzogMS4ycHg7IH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgoKICA8IS0tIOKUgOKUgCBTV0lSTCBBUkMgKHRoZSBsb29waW5nIG92YWwgcGF0aCkg4pSA4pSAIC0tPgogIDwhLS0gT3V0ZXIgYXJjIOKAlCBsaWdodCBncmVlbiAtLT4KICA8cGF0aCBkPSJNIDE4IDEyMCBDIDEwIDcwLCAzMCAyMCwgODUgMTUgQyAxMzAgMTAsIDE2NSAzMCwgMTc1IDU1IgogICAgICAgIHN0cm9rZT0iIzhEQzYzRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0gTWlkZGxlIGFyYyDigJQgeWVsbG93L2dvbGQgLS0+CiAgPHBhdGggZD0iTSAyMiAxMjggQyAxMiA3OCwgMzUgMjUsIDkwIDE4IEMgMTM4IDEyLCAxNzIgMzQsIDE4MCA2MiIKICAgICAgICBzdHJva2U9IiNGNzk0MUQiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIElubmVyIGFyYyAxIOKAlCBibHVlIC0tPgogIDxwYXRoIGQ9Ik0gMjYgMTM2IEMgMTUgODYsIDQwIDMyLCA5NiAyNCBDIDE0NSAxNywgMTgwIDQwLCAxODYgNzAiCiAgICAgICAgc3Ryb2tlPSIjMjlBQkUyIiBzdHJva2Utd2lkdGg9IjMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBPdXRlciBjbG9zaW5nIGFyYyDigJQgZGFyayBncmVlbiAoY29tZXMgYXJvdW5kIGJvdHRvbSkgLS0+CiAgPHBhdGggZD0iTSAxOCAxMjAgQyA1IDE0NSwgMjAgMTYwLCA1MCAxNTUgQyA4MCAxNTAsIDk1IDEzNSwgMTAwIDExOCIKICAgICAgICBzdHJva2U9IiMwMDk0NDQiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0g4pSA4pSAIEFSUk9XIEhFQURTIGF0IGFyYyB0aXBzIOKUgOKUgCAtLT4KICA8IS0tIERhcmsgZ3JlZW4gYXJyb3cgKHRvcCwgcG9pbnRpbmcgdXBwZXItcmlnaHQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw1Mikgcm90YXRlKC0zMCkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC03IDE0LDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+CiAgPC9nPgogIDwhLS0gTGlnaHQgZ3JlZW4gYXJyb3cgKHNsaWdodGx5IGJlbG93LCBwb2ludGluZyB1cHBlci1yaWdodCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY1LDQ1KSByb3RhdGUoLTI1KSI+CiAgICA8cG9seWdvbiBwb2ludHM9IjAsLTYgMTIsMCAwLDYiIGZpbGw9IiM4REM2M0YiLz4KICA8L2c+CiAgPCEtLSBHb2xkL3llbGxvdyBhcnJvdyAobWlkZGxlKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzAsNTYpIHJvdGF0ZSgtMTUpIj4KICAgIDxwb2x5Z29uIHBvaW50cz0iMCwtNiAxMiwwIDAsNiIgZmlsbD0iI0Y3OTQxRCIvPgogIDwvZz4KICA8IS0tIEJsdWUgYXJyb3cgKGxvd2VyKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzYsNjYpIHJvdGF0ZSgtNSkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC02IDEyLDAgMCw2IiBmaWxsPSIjMjlBQkUyIi8+CiAgPC9nPgoKICA8IS0tIOKUgOKUgCBUTUEgQk9MRCBMRVRURVJTIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMDgiIHk9IjEwOCIgY2xhc3M9InRtYS1sZXR0ZXIiIGZvbnQtc2l6ZT0iNzgiIGRvbWluYW50LWJhc2VsaW5lPSJhdXRvIj5UTUE8L3RleHQ+CgogIDwhLS0g4pSA4pSAIFNVQlRJVExFIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMzAiIHk9IjEyOCIgY2xhc3M9InRtYS1zdWIiIGZvbnQtc2l6ZT0iMTAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pgo8L3N2Zz4=" alt="TMA Logo" style="width:80px;height:auto;filter:drop-shadow(0 2px 8px rgba(13,71,161,0.18))"/>
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTUgMTU1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzFBNUNBQ30udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMUE1Q0FDO2xldHRlci1zcGFjaW5nOjFweH08L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNIDggMTE2IEMgMCA2OCwyMCAxNiw3NiA3IEMgMTE0IDEsMTQ2IDIxLDE1MSA1NCIgc3Ryb2tlPSIjOERDNjNGIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLDU0KSByb3RhdGUoLTY4KSI+PHBvbHlnb24gcG9pbnRzPSIwLC04IDE0LDAgMCw4IiBmaWxsPSIjOERDNjNGIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgMTI0IEMgNyA3NiwyOCAyMyw4NSAxMyBDIDEyNCA2LDE1NyAyNywxNjIgNjEiIHN0cm9rZT0iI0Y3OTQxRCIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2Miw2MSkgcm90YXRlKC02OCkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iI0Y3OTQxRCIvPjwvZz48cGF0aCBkPSJNIDI0IDEzMiBDIDE1IDg0LDM2IDMwLDk0IDE5IEMgMTM1IDExLDE2OCAzMywxNzQgNjciIHN0cm9rZT0iIzI5QUJFMiIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw2Nykgcm90YXRlKC02NSkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iIzI5QUJFMiIvPjwvZz48cGF0aCBkPSJNIDggMTE2IEMgLTEgMTQyLDEzIDE1MSw0MCAxNDggQyA2OCAxNDQsODMgMTI5LDg2IDExMiIgc3Ryb2tlPSIjMDA5NDQ0IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg2LDExMikgcm90YXRlKDI1KSI+PHBvbHlnb24gcG9pbnRzPSIwLC03IDEzLDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+PC9nPjx0ZXh0IHg9IjE0NSIgeT0iMTAyIiBjbGFzcz0idGwiIGZvbnQtc2l6ZT0iNjgiPlRNQTwvdGV4dD48dGV4dCB4PSIyMDgiIHk9IjEyNCIgY2xhc3M9InRzIiBmb250LXNpemU9IjkuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pjwvc3ZnPg==" alt="TMA Logo" style="width:80px;height:auto;filter:drop-shadow(0 2px 8px rgba(13,71,161,0.18))"/>
       <div style="text-align:center">
         <div style="font-size:17px;font-weight:700;color:#0D47A1;letter-spacing:.3px;line-height:1.2">AgriMet Portal</div>
         <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">Tanzania Meteorological Authority</div>
         <div style="font-size:10px;color:var(--text-tertiary)">Agrometeorological Observation System</div>
       </div>
     </div>
+    <div style="text-align:right;margin-bottom:.25rem">
+      <button onclick="backToPortal()" style="background:none;border:none;color:var(--tma-blue);font-size:12px;cursor:pointer;padding:4px 0;text-decoration:underline">← Back to Portal</button>
+    </div>
     <div class="auth-tabs">
       <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Sign in</div>
       <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Register as Observer</div>
-      <div class="auth-tab" id="tab-register-sh" onclick="switchAuthTab('register-sh')">Register as Stakeholder</div>
     </div>
     <div id="loginForm">
       <div class="field"><label>Phone number or email</label><input type="text" id="login-identifier" placeholder="Enter your phone or email" onkeydown="if(event.key==='Enter')tryLogin()"/></div>
@@ -814,9 +1010,9 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
     </div>
     <div id="registerForm" style="display:none">
       <div class="field-row3">
-        <div class="field"><label>First name</label><input type="text" id="reg-fname" placeholder="e.g. Juma"/></div>
-        <div class="field"><label>Middle name</label><input type="text" id="reg-mname" placeholder="e.g. Hassan"/></div>
-        <div class="field"><label>Last name</label><input type="text" id="reg-lname" placeholder="e.g. Makundi"/></div>
+        <div class="field"><label>First name</label><input type="text" id="reg-fname" placeholder="e.g. Abednego"/></div>
+        <div class="field"><label>Middle name</label><input type="text" id="reg-mname" placeholder="e.g. Agustino"/></div>
+        <div class="field"><label>Last name</label><input type="text" id="reg-lname" placeholder="e.g. Kuboko"/></div>
       </div>
       <div class="field"><label>Title / Designation</label>
         <select id="reg-title"><option value="">-- Select designation --</option><option>Meteorological Officer</option><option>Meteorologist</option></select>
@@ -828,7 +1024,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
         <div class="field"><label>Phone number</label><input type="tel" id="reg-phone" placeholder="+255 7XX XXX XXX"/></div>
         <div class="field"><label>WhatsApp number</label><input type="tel" id="reg-whatsapp" placeholder="+255 7XX XXX XXX"/></div>
       </div>
-      <div class="field"><label>Email address</label><input type="email" id="reg-email" placeholder="your.name@example.com"/></div>
+      <div class="field"><label>Email address</label><input type="email" id="reg-email" placeholder="your.name@meteo.go.tz"/></div>
       <div class="field-row">
         <div class="field"><label>Password</label><input type="password" id="reg-password"/></div>
         <div class="field"><label>Confirm password</label><input type="password"/></div>
@@ -871,11 +1067,66 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
 <!-- ======================== MAIN APP ======================== -->
 <div class="layout" id="mainApp" style="display:none">
 
-  <!-- SIDEBAR -->
-  <div class="sidebar">
+  <!-- TOP NAVIGATION BAR -->
+  <div class="topnav">
+    <div class="topnav-brand">
+      <div class="topnav-logo-icon">TMA</div>
+      <div class="topnav-brand-text">
+        <span class="topnav-brand-name">AgriMet Portal</span>
+        <span class="topnav-brand-sub">Tanzania Meteorological Authority</span>
+      </div>
+    </div>
+    <div class="topnav-right">
+      <span class="badge badge-green topnav-session" id="sessionBadge" style="display:none">0600 UTC</span>
+      <span class="topnav-clock" id="utcClock">—</span>
+      <div class="topnav-user">
+        <div class="topnav-avatar" id="topnavAvatar">—</div>
+        <div class="topnav-userinfo">
+          <div class="topnav-username" id="topnavName">—</div>
+          <div class="topnav-userrole" id="topnavRole">—</div>
+        </div>
+      </div>
+      <button class="topnav-logout" id="topnavLogoutBtn" onclick="logout()" style="display:none">&#9211; Logout</button>
+      <button class="btn btn-primary" id="staffLoginBtn" onclick="openStaffLogin()" style="font-size:12px;padding:5px 14px;border-radius:6px">&#128274; Staff Login</button>
+    </div>
+  </div>
+
+  <!-- TAB NAVIGATION BAR -->
+  <div class="tabnav">
+    <!-- Observer tabs -->
+    <div class="tabnav-inner" id="observerTabs" style="display:none">
+      <button class="tab-btn" data-page="dashboard" onclick="showPage('dashboard',this)">&#8862; Dashboard</button>
+      <button class="tab-btn" data-page="obsForms" onclick="showPage('obsForms',this)">&#9998; Fill Observation</button>
+      <button class="tab-btn" data-page="myRecords" onclick="showPage('myRecords',this)">&#8801; My Records</button>
+      <button class="tab-btn" data-page="returns" onclick="showPage('returns',this)">&#128203; Returns <span class="auto-badge">AUTO</span></button>
+      <button class="tab-btn" data-page="products" onclick="showPage('products',this)">&#10571; Downloads</button>
+      <button class="tab-btn" data-page="messages" onclick="showPage('messages',this)">&#9711; Notifications</button>
+      <button class="tab-btn" style="margin-left:auto;color:#dc2626;font-weight:600;border-left:2px solid #fee2e2" onclick="logout()">&#9211; Sign Out</button>
+    </div>
+    <!-- Stakeholder tabs -->
+    <div class="tabnav-inner" id="stakeholderTabs" style="display:none">
+      <button class="tab-btn" data-page="stakeholderDash" onclick="showPage('stakeholderDash',this)">&#8862; Dashboard</button>
+      <button class="tab-btn" data-page="stakeholderProducts" onclick="showPage('stakeholderProducts',this)">&#10571; Met Products</button>
+      <button class="tab-btn" data-page="stakeholderRequest" onclick="showPage('stakeholderRequest',this)">&#9993; Request Product</button>
+      <button class="tab-btn" data-page="stakeholderMessages" onclick="showPage('stakeholderMessages',this)">&#9711; Notifications</button>
+    </div>
+    <!-- Admin tabs -->
+    <div class="tabnav-inner" id="adminTabs" style="display:none">
+      <button class="tab-btn" data-page="adminDash" onclick="showPage('adminDash',this)">&#8862; Dashboard</button>
+      <button class="tab-btn" data-page="approvals" onclick="showPage('approvals',this)">&#10003; Approvals <span class="tab-badge" id="tabApprovalBadge" style="display:none">0</span></button>
+      <button class="tab-btn" data-page="allRecords" onclick="showPage('allRecords',this)">&#8801; All Records</button>
+      <button class="tab-btn" data-page="uploadProducts" onclick="showPage('uploadProducts',this)">&#10570; Upload</button>
+      <button class="tab-btn" data-page="adminMessages" onclick="showPage('adminMessages',this)">&#9711; Comms</button>
+      <button class="tab-btn" data-page="observers" onclick="showPage('observers',this)">&#9673; Observers</button>
+      <button class="tab-btn" data-page="manageStakeholders" onclick="showPage('manageStakeholders',this)">&#9672; Stakeholders</button>
+    </div>
+  </div>
+
+  <!-- SIDEBAR (hidden — kept so DOM element IDs remain accessible) -->
+  <div class="sidebar" id="mainSidebar" style="display:none!important">
     <div class="sidebar-logo">
       <div class="sidebar-logo-row" style="align-items:center;gap:10px">
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjAgMTYwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnRtYS1sZXR0ZXIgeyBmb250LWZhbWlseTogQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogOTAwOyBmaWxsOiAjMjlBQkUyOyB9CiAgICAgIC50bWEtc3ViICAgIHsgZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyBmaWxsOiAjMjlBQkUyOyBsZXR0ZXItc3BhY2luZzogMS4ycHg7IH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgoKICA8IS0tIOKUgOKUgCBTV0lSTCBBUkMgKHRoZSBsb29waW5nIG92YWwgcGF0aCkg4pSA4pSAIC0tPgogIDwhLS0gT3V0ZXIgYXJjIOKAlCBsaWdodCBncmVlbiAtLT4KICA8cGF0aCBkPSJNIDE4IDEyMCBDIDEwIDcwLCAzMCAyMCwgODUgMTUgQyAxMzAgMTAsIDE2NSAzMCwgMTc1IDU1IgogICAgICAgIHN0cm9rZT0iIzhEQzYzRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0gTWlkZGxlIGFyYyDigJQgeWVsbG93L2dvbGQgLS0+CiAgPHBhdGggZD0iTSAyMiAxMjggQyAxMiA3OCwgMzUgMjUsIDkwIDE4IEMgMTM4IDEyLCAxNzIgMzQsIDE4MCA2MiIKICAgICAgICBzdHJva2U9IiNGNzk0MUQiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIElubmVyIGFyYyAxIOKAlCBibHVlIC0tPgogIDxwYXRoIGQ9Ik0gMjYgMTM2IEMgMTUgODYsIDQwIDMyLCA5NiAyNCBDIDE0NSAxNywgMTgwIDQwLCAxODYgNzAiCiAgICAgICAgc3Ryb2tlPSIjMjlBQkUyIiBzdHJva2Utd2lkdGg9IjMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBPdXRlciBjbG9zaW5nIGFyYyDigJQgZGFyayBncmVlbiAoY29tZXMgYXJvdW5kIGJvdHRvbSkgLS0+CiAgPHBhdGggZD0iTSAxOCAxMjAgQyA1IDE0NSwgMjAgMTYwLCA1MCAxNTUgQyA4MCAxNTAsIDk1IDEzNSwgMTAwIDExOCIKICAgICAgICBzdHJva2U9IiMwMDk0NDQiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0g4pSA4pSAIEFSUk9XIEhFQURTIGF0IGFyYyB0aXBzIOKUgOKUgCAtLT4KICA8IS0tIERhcmsgZ3JlZW4gYXJyb3cgKHRvcCwgcG9pbnRpbmcgdXBwZXItcmlnaHQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw1Mikgcm90YXRlKC0zMCkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC03IDE0LDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+CiAgPC9nPgogIDwhLS0gTGlnaHQgZ3JlZW4gYXJyb3cgKHNsaWdodGx5IGJlbG93LCBwb2ludGluZyB1cHBlci1yaWdodCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY1LDQ1KSByb3RhdGUoLTI1KSI+CiAgICA8cG9seWdvbiBwb2ludHM9IjAsLTYgMTIsMCAwLDYiIGZpbGw9IiM4REM2M0YiLz4KICA8L2c+CiAgPCEtLSBHb2xkL3llbGxvdyBhcnJvdyAobWlkZGxlKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzAsNTYpIHJvdGF0ZSgtMTUpIj4KICAgIDxwb2x5Z29uIHBvaW50cz0iMCwtNiAxMiwwIDAsNiIgZmlsbD0iI0Y3OTQxRCIvPgogIDwvZz4KICA8IS0tIEJsdWUgYXJyb3cgKGxvd2VyKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzYsNjYpIHJvdGF0ZSgtNSkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC02IDEyLDAgMCw2IiBmaWxsPSIjMjlBQkUyIi8+CiAgPC9nPgoKICA8IS0tIOKUgOKUgCBUTUEgQk9MRCBMRVRURVJTIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMDgiIHk9IjEwOCIgY2xhc3M9InRtYS1sZXR0ZXIiIGZvbnQtc2l6ZT0iNzgiIGRvbWluYW50LWJhc2VsaW5lPSJhdXRvIj5UTUE8L3RleHQ+CgogIDwhLS0g4pSA4pSAIFNVQlRJVExFIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMzAiIHk9IjEyOCIgY2xhc3M9InRtYS1zdWIiIGZvbnQtc2l6ZT0iMTAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pgo8L3N2Zz4=" alt="TMA" style="width:38px;height:auto;flex-shrink:0;filter:drop-shadow(0 1px 4px rgba(13,71,161,0.2))"/>
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTUgMTU1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzFBNUNBQ30udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMUE1Q0FDO2xldHRlci1zcGFjaW5nOjFweH08L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNIDggMTE2IEMgMCA2OCwyMCAxNiw3NiA3IEMgMTE0IDEsMTQ2IDIxLDE1MSA1NCIgc3Ryb2tlPSIjOERDNjNGIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLDU0KSByb3RhdGUoLTY4KSI+PHBvbHlnb24gcG9pbnRzPSIwLC04IDE0LDAgMCw4IiBmaWxsPSIjOERDNjNGIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgMTI0IEMgNyA3NiwyOCAyMyw4NSAxMyBDIDEyNCA2LDE1NyAyNywxNjIgNjEiIHN0cm9rZT0iI0Y3OTQxRCIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2Miw2MSkgcm90YXRlKC02OCkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iI0Y3OTQxRCIvPjwvZz48cGF0aCBkPSJNIDI0IDEzMiBDIDE1IDg0LDM2IDMwLDk0IDE5IEMgMTM1IDExLDE2OCAzMywxNzQgNjciIHN0cm9rZT0iIzI5QUJFMiIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw2Nykgcm90YXRlKC02NSkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iIzI5QUJFMiIvPjwvZz48cGF0aCBkPSJNIDggMTE2IEMgLTEgMTQyLDEzIDE1MSw0MCAxNDggQyA2OCAxNDQsODMgMTI5LDg2IDExMiIgc3Ryb2tlPSIjMDA5NDQ0IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg2LDExMikgcm90YXRlKDI1KSI+PHBvbHlnb24gcG9pbnRzPSIwLC03IDEzLDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+PC9nPjx0ZXh0IHg9IjE0NSIgeT0iMTAyIiBjbGFzcz0idGwiIGZvbnQtc2l6ZT0iNjgiPlRNQTwvdGV4dD48dGV4dCB4PSIyMDgiIHk9IjEyNCIgY2xhc3M9InRzIiBmb250LXNpemU9IjkuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pjwvc3ZnPg==" alt="TMA" style="width:38px;height:auto;flex-shrink:0;filter:drop-shadow(0 1px 4px rgba(13,71,161,0.2))"/>
         <div class="sidebar-logo-name">
           <strong style="font-size:13px;color:#0D47A1;display:block;line-height:1.2">AgriMet Portal</strong>
           <span style="font-size:10px;color:var(--text-tertiary);line-height:1.2">Tanzania Met. Authority</span>
@@ -925,16 +1176,19 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
   <!-- MAIN -->
   <div class="main" style="position:relative">
     <!-- Faint watermark logo in main area -->
-    <div style="position:fixed;bottom:24px;right:24px;width:100px;height:116px;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjAgMTYwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnRtYS1sZXR0ZXIgeyBmb250LWZhbWlseTogQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogOTAwOyBmaWxsOiAjMjlBQkUyOyB9CiAgICAgIC50bWEtc3ViICAgIHsgZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyBmaWxsOiAjMjlBQkUyOyBsZXR0ZXItc3BhY2luZzogMS4ycHg7IH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgoKICA8IS0tIOKUgOKUgCBTV0lSTCBBUkMgKHRoZSBsb29waW5nIG92YWwgcGF0aCkg4pSA4pSAIC0tPgogIDwhLS0gT3V0ZXIgYXJjIOKAlCBsaWdodCBncmVlbiAtLT4KICA8cGF0aCBkPSJNIDE4IDEyMCBDIDEwIDcwLCAzMCAyMCwgODUgMTUgQyAxMzAgMTAsIDE2NSAzMCwgMTc1IDU1IgogICAgICAgIHN0cm9rZT0iIzhEQzYzRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0gTWlkZGxlIGFyYyDigJQgeWVsbG93L2dvbGQgLS0+CiAgPHBhdGggZD0iTSAyMiAxMjggQyAxMiA3OCwgMzUgMjUsIDkwIDE4IEMgMTM4IDEyLCAxNzIgMzQsIDE4MCA2MiIKICAgICAgICBzdHJva2U9IiNGNzk0MUQiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIElubmVyIGFyYyAxIOKAlCBibHVlIC0tPgogIDxwYXRoIGQ9Ik0gMjYgMTM2IEMgMTUgODYsIDQwIDMyLCA5NiAyNCBDIDE0NSAxNywgMTgwIDQwLCAxODYgNzAiCiAgICAgICAgc3Ryb2tlPSIjMjlBQkUyIiBzdHJva2Utd2lkdGg9IjMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBPdXRlciBjbG9zaW5nIGFyYyDigJQgZGFyayBncmVlbiAoY29tZXMgYXJvdW5kIGJvdHRvbSkgLS0+CiAgPHBhdGggZD0iTSAxOCAxMjAgQyA1IDE0NSwgMjAgMTYwLCA1MCAxNTUgQyA4MCAxNTAsIDk1IDEzNSwgMTAwIDExOCIKICAgICAgICBzdHJva2U9IiMwMDk0NDQiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0g4pSA4pSAIEFSUk9XIEhFQURTIGF0IGFyYyB0aXBzIOKUgOKUgCAtLT4KICA8IS0tIERhcmsgZ3JlZW4gYXJyb3cgKHRvcCwgcG9pbnRpbmcgdXBwZXItcmlnaHQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw1Mikgcm90YXRlKC0zMCkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC03IDE0LDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+CiAgPC9nPgogIDwhLS0gTGlnaHQgZ3JlZW4gYXJyb3cgKHNsaWdodGx5IGJlbG93LCBwb2ludGluZyB1cHBlci1yaWdodCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY1LDQ1KSByb3RhdGUoLTI1KSI+CiAgICA8cG9seWdvbiBwb2ludHM9IjAsLTYgMTIsMCAwLDYiIGZpbGw9IiM4REM2M0YiLz4KICA8L2c+CiAgPCEtLSBHb2xkL3llbGxvdyBhcnJvdyAobWlkZGxlKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzAsNTYpIHJvdGF0ZSgtMTUpIj4KICAgIDxwb2x5Z29uIHBvaW50cz0iMCwtNiAxMiwwIDAsNiIgZmlsbD0iI0Y3OTQxRCIvPgogIDwvZz4KICA8IS0tIEJsdWUgYXJyb3cgKGxvd2VyKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzYsNjYpIHJvdGF0ZSgtNSkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC02IDEyLDAgMCw2IiBmaWxsPSIjMjlBQkUyIi8+CiAgPC9nPgoKICA8IS0tIOKUgOKUgCBUTUEgQk9MRCBMRVRURVJTIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMDgiIHk9IjEwOCIgY2xhc3M9InRtYS1sZXR0ZXIiIGZvbnQtc2l6ZT0iNzgiIGRvbWluYW50LWJhc2VsaW5lPSJhdXRvIj5UTUE8L3RleHQ+CgogIDwhLS0g4pSA4pSAIFNVQlRJVExFIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMzAiIHk9IjEyOCIgY2xhc3M9InRtYS1zdWIiIGZvbnQtc2l6ZT0iMTAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pgo8L3N2Zz4=');background-size:contain;background-repeat:no-repeat;opacity:0.04;pointer-events:none;z-index:0;"></div>
+    <div style="position:fixed;bottom:24px;right:24px;width:100px;height:116px;background-image:url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTUgMTU1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzFBNUNBQ30udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMUE1Q0FDO2xldHRlci1zcGFjaW5nOjFweH08L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNIDggMTE2IEMgMCA2OCwyMCAxNiw3NiA3IEMgMTE0IDEsMTQ2IDIxLDE1MSA1NCIgc3Ryb2tlPSIjOERDNjNGIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLDU0KSByb3RhdGUoLTY4KSI+PHBvbHlnb24gcG9pbnRzPSIwLC04IDE0LDAgMCw4IiBmaWxsPSIjOERDNjNGIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgMTI0IEMgNyA3NiwyOCAyMyw4NSAxMyBDIDEyNCA2LDE1NyAyNywxNjIgNjEiIHN0cm9rZT0iI0Y3OTQxRCIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2Miw2MSkgcm90YXRlKC02OCkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iI0Y3OTQxRCIvPjwvZz48cGF0aCBkPSJNIDI0IDEzMiBDIDE1IDg0LDM2IDMwLDk0IDE5IEMgMTM1IDExLDE2OCAzMywxNzQgNjciIHN0cm9rZT0iIzI5QUJFMiIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw2Nykgcm90YXRlKC02NSkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iIzI5QUJFMiIvPjwvZz48cGF0aCBkPSJNIDggMTE2IEMgLTEgMTQyLDEzIDE1MSw0MCAxNDggQyA2OCAxNDQsODMgMTI5LDg2IDExMiIgc3Ryb2tlPSIjMDA5NDQ0IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg2LDExMikgcm90YXRlKDI1KSI+PHBvbHlnb24gcG9pbnRzPSIwLC03IDEzLDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+PC9nPjx0ZXh0IHg9IjE0NSIgeT0iMTAyIiBjbGFzcz0idGwiIGZvbnQtc2l6ZT0iNjgiPlRNQTwvdGV4dD48dGV4dCB4PSIyMDgiIHk9IjEyNCIgY2xhc3M9InRzIiBmb250LXNpemU9IjkuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pjwvc3ZnPg==');background-size:contain;background-repeat:no-repeat;opacity:0.04;pointer-events:none;z-index:0;"></div>
     <div class="topbar">
-      <div>
-        <div class="topbar-title" id="pageTitle">Dashboard</div>
-        <div class="topbar-meta" id="pageDate">Tanzania Meteorological Authority</div>
+      <div style="display:flex;align-items:center;gap:.5rem;min-width:0">
+        <button class="hamburger-btn" onclick="toggleSidebar()" aria-label="Menu">&#9776;</button>
+        <div style="min-width:0">
+          <div class="topbar-title" id="pageTitle">Dashboard</div>
+          <div class="topbar-meta" id="pageDate">Tanzania Meteorological Authority</div>
+        </div>
       </div>
       <div style="display:flex;gap:.5rem;align-items:center">
         <span class="badge badge-green" id="sessionBadge">0600 UTC</span>
         <span class="badge badge-teal mono" id="utcClock">—</span>
-        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjAgMTYwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnRtYS1sZXR0ZXIgeyBmb250LWZhbWlseTogQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogOTAwOyBmaWxsOiAjMjlBQkUyOyB9CiAgICAgIC50bWEtc3ViICAgIHsgZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyBmaWxsOiAjMjlBQkUyOyBsZXR0ZXItc3BhY2luZzogMS4ycHg7IH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgoKICA8IS0tIOKUgOKUgCBTV0lSTCBBUkMgKHRoZSBsb29waW5nIG92YWwgcGF0aCkg4pSA4pSAIC0tPgogIDwhLS0gT3V0ZXIgYXJjIOKAlCBsaWdodCBncmVlbiAtLT4KICA8cGF0aCBkPSJNIDE4IDEyMCBDIDEwIDcwLCAzMCAyMCwgODUgMTUgQyAxMzAgMTAsIDE2NSAzMCwgMTc1IDU1IgogICAgICAgIHN0cm9rZT0iIzhEQzYzRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0gTWlkZGxlIGFyYyDigJQgeWVsbG93L2dvbGQgLS0+CiAgPHBhdGggZD0iTSAyMiAxMjggQyAxMiA3OCwgMzUgMjUsIDkwIDE4IEMgMTM4IDEyLCAxNzIgMzQsIDE4MCA2MiIKICAgICAgICBzdHJva2U9IiNGNzk0MUQiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIElubmVyIGFyYyAxIOKAlCBibHVlIC0tPgogIDxwYXRoIGQ9Ik0gMjYgMTM2IEMgMTUgODYsIDQwIDMyLCA5NiAyNCBDIDE0NSAxNywgMTgwIDQwLCAxODYgNzAiCiAgICAgICAgc3Ryb2tlPSIjMjlBQkUyIiBzdHJva2Utd2lkdGg9IjMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBPdXRlciBjbG9zaW5nIGFyYyDigJQgZGFyayBncmVlbiAoY29tZXMgYXJvdW5kIGJvdHRvbSkgLS0+CiAgPHBhdGggZD0iTSAxOCAxMjAgQyA1IDE0NSwgMjAgMTYwLCA1MCAxNTUgQyA4MCAxNTAsIDk1IDEzNSwgMTAwIDExOCIKICAgICAgICBzdHJva2U9IiMwMDk0NDQiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0g4pSA4pSAIEFSUk9XIEhFQURTIGF0IGFyYyB0aXBzIOKUgOKUgCAtLT4KICA8IS0tIERhcmsgZ3JlZW4gYXJyb3cgKHRvcCwgcG9pbnRpbmcgdXBwZXItcmlnaHQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw1Mikgcm90YXRlKC0zMCkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC03IDE0LDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+CiAgPC9nPgogIDwhLS0gTGlnaHQgZ3JlZW4gYXJyb3cgKHNsaWdodGx5IGJlbG93LCBwb2ludGluZyB1cHBlci1yaWdodCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY1LDQ1KSByb3RhdGUoLTI1KSI+CiAgICA8cG9seWdvbiBwb2ludHM9IjAsLTYgMTIsMCAwLDYiIGZpbGw9IiM4REM2M0YiLz4KICA8L2c+CiAgPCEtLSBHb2xkL3llbGxvdyBhcnJvdyAobWlkZGxlKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzAsNTYpIHJvdGF0ZSgtMTUpIj4KICAgIDxwb2x5Z29uIHBvaW50cz0iMCwtNiAxMiwwIDAsNiIgZmlsbD0iI0Y3OTQxRCIvPgogIDwvZz4KICA8IS0tIEJsdWUgYXJyb3cgKGxvd2VyKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzYsNjYpIHJvdGF0ZSgtNSkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC02IDEyLDAgMCw2IiBmaWxsPSIjMjlBQkUyIi8+CiAgPC9nPgoKICA8IS0tIOKUgOKUgCBUTUEgQk9MRCBMRVRURVJTIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMDgiIHk9IjEwOCIgY2xhc3M9InRtYS1sZXR0ZXIiIGZvbnQtc2l6ZT0iNzgiIGRvbWluYW50LWJhc2VsaW5lPSJhdXRvIj5UTUE8L3RleHQ+CgogIDwhLS0g4pSA4pSAIFNVQlRJVExFIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMzAiIHk9IjEyOCIgY2xhc3M9InRtYS1zdWIiIGZvbnQtc2l6ZT0iMTAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pgo8L3N2Zz4=" alt="TMA" style="width:28px;height:auto;opacity:0.85;margin-left:6px" title="Tanzania Meteorological Authority"/>
+        <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTUgMTU1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzFBNUNBQ30udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMUE1Q0FDO2xldHRlci1zcGFjaW5nOjFweH08L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNIDggMTE2IEMgMCA2OCwyMCAxNiw3NiA3IEMgMTE0IDEsMTQ2IDIxLDE1MSA1NCIgc3Ryb2tlPSIjOERDNjNGIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLDU0KSByb3RhdGUoLTY4KSI+PHBvbHlnb24gcG9pbnRzPSIwLC04IDE0LDAgMCw4IiBmaWxsPSIjOERDNjNGIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgMTI0IEMgNyA3NiwyOCAyMyw4NSAxMyBDIDEyNCA2LDE1NyAyNywxNjIgNjEiIHN0cm9rZT0iI0Y3OTQxRCIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2Miw2MSkgcm90YXRlKC02OCkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iI0Y3OTQxRCIvPjwvZz48cGF0aCBkPSJNIDI0IDEzMiBDIDE1IDg0LDM2IDMwLDk0IDE5IEMgMTM1IDExLDE2OCAzMywxNzQgNjciIHN0cm9rZT0iIzI5QUJFMiIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw2Nykgcm90YXRlKC02NSkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iIzI5QUJFMiIvPjwvZz48cGF0aCBkPSJNIDggMTE2IEMgLTEgMTQyLDEzIDE1MSw0MCAxNDggQyA2OCAxNDQsODMgMTI5LDg2IDExMiIgc3Ryb2tlPSIjMDA5NDQ0IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg2LDExMikgcm90YXRlKDI1KSI+PHBvbHlnb24gcG9pbnRzPSIwLC03IDEzLDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+PC9nPjx0ZXh0IHg9IjE0NSIgeT0iMTAyIiBjbGFzcz0idGwiIGZvbnQtc2l6ZT0iNjgiPlRNQTwvdGV4dD48dGV4dCB4PSIyMDgiIHk9IjEyNCIgY2xhc3M9InRzIiBmb250LXNpemU9IjkuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pjwvc3ZnPg==" alt="TMA" style="width:28px;height:auto;opacity:0.85;margin-left:6px" title="Tanzania Meteorological Authority"/>
       </div>
     </div>
 
@@ -1010,13 +1264,33 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
               <div class="obs-section">
                 <div class="obs-section-title">Anemometer — feeds Form 10C</div>
                 <div class="obs-table-wrap"><table class="obs-table">
-                  <thead><tr><th>Obs. Time</th><th>Present reading</th><th>Previous reading</th><th>Wind run diff. (km/24h)</th><th>Wind direction</th><th>Wind speed (km/h)</th></tr></thead>
+                  <thead><tr><th class="col-0600">Obs. Time</th><th class="col-0600">Present reading</th><th class="col-0600">Previous reading</th><th class="col-0600">Wind run diff. (km/24h)</th><th>Wind direction</th><th>Wind speed (kts)</th></tr></thead>
                   <tbody><tr>
-                    <td><div class="time-cell" id="aneTime">0600</div></td>
-                    <td><input type="number" id="ane_present" step="0.01" oninput="calcWindRun()"/></td>
-                    <td><input type="number" id="ane_prev" step="0.01" oninput="calcWindRun()"/></td>
-                    <td><input type="number" id="ane_diff" class="auto-calc" readonly step="0.01"/></td>
-                    <td><input type="text" id="ane_dir" style="min-width:50px"/></td>
+                    <td class="col-0600"><div class="time-cell" id="aneTime">0600</div></td>
+                    <td class="col-0600"><input type="number" id="ane_present" step="0.01" oninput="calcWindRun()"/></td>
+                    <td class="col-0600"><input type="number" id="ane_prev" step="0.01" oninput="calcWindRun()"/></td>
+                    <td class="col-0600"><input type="number" id="ane_diff" class="auto-calc" readonly step="0.01"/></td>
+                    <td><select id="ane_dir" style="min-width:90px;padding:2px 4px">
+                      <option value="">-- Dir --</option>
+                      <option value="0">Calm (000°)</option>
+                      <option value="360">N — 360°</option>
+                      <option value="22.5">NNE — 022°</option>
+                      <option value="45">NE — 045°</option>
+                      <option value="67.5">ENE — 067°</option>
+                      <option value="90">E — 090°</option>
+                      <option value="112.5">ESE — 112°</option>
+                      <option value="135">SE — 135°</option>
+                      <option value="157.5">SSE — 157°</option>
+                      <option value="180">S — 180°</option>
+                      <option value="202.5">SSW — 202°</option>
+                      <option value="225">SW — 225°</option>
+                      <option value="247.5">WSW — 247°</option>
+                      <option value="270">W — 270°</option>
+                      <option value="292.5">WNW — 292°</option>
+                      <option value="315">NW — 315°</option>
+                      <option value="337.5">NNW — 337°</option>
+                      <option value="VRB">Variable (VRB)</option>
+                    </select></td>
                     <td><input type="number" id="ane_speed" step="0.1"/></td>
                   </tr></tbody>
                 </table></div>
@@ -1028,8 +1302,8 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
                     <th>Obs. Time</th>
                     <th>Dry bulb (°C)</th>
                     <th>Wet bulb (°C)</th>
-                    <th>Max (°C)</th><th>Max reset</th>
-                    <th>Min (°C)</th><th>Min reset</th>
+                    <th>Max (°C)</th><th class="col-0600">Max reset</th>
+                    <th>Min (°C)</th><th class="col-0600">Min reset</th>
                     <th>Depression (°C)<br><span style="font-weight:400;font-size:10px">auto</span></th>
                     <th>Dew point (°C)<br><span style="font-weight:400;font-size:10px">🔢 auto</span></th>
                     <th>Vapour press. (hPa)<br><span style="font-weight:400;font-size:10px">🔢 auto</span></th>
@@ -1040,9 +1314,9 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
                     <td><input type="number" id="t_dry" step="0.1" oninput="calcPsychrometric()"/></td>
                     <td><input type="number" id="t_wet" step="0.1" oninput="calcPsychrometric()"/></td>
                     <td><input type="number" id="t_max" step="0.1"/></td>
-                    <td><input type="number" id="t_maxr" step="0.1"/></td>
+                    <td class="col-0600"><input type="number" id="t_maxr" step="0.1"/></td>
                     <td><input type="number" id="t_min" step="0.1"/></td>
-                    <td><input type="number" id="t_minr" step="0.1"/></td>
+                    <td class="col-0600"><input type="number" id="t_minr" step="0.1"/></td>
                     <td><input type="number" id="t_depn" class="auto-calc" readonly step="0.1"/></td>
                     <td><input type="number" id="t_dew" class="auto-calc" readonly step="0.1"/></td>
                     <td><input type="number" id="t_vap" class="auto-calc" readonly step="0.1"/></td>
@@ -1066,7 +1340,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
                   </div>
                 </div>
               </div>
-              <div class="grid-2" style="gap:.75rem;margin-bottom:.75rem">
+              <div id="section-rain-evap" class="grid-2" style="gap:.75rem;margin-bottom:.75rem">
                 <div class="obs-section" style="margin-bottom:0">
                   <div class="obs-section-title">Rainfall — feeds Kadi 496 &amp; Form 202</div>
                   <div class="obs-table-wrap"><table class="obs-table">
@@ -1092,7 +1366,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
                   </table></div>
                 </div>
               </div>
-              <div class="grid-2" style="gap:.75rem;margin-bottom:.75rem">
+              <div id="section-rad-sun" class="grid-2" style="gap:.75rem;margin-bottom:.75rem">
                 <div class="obs-section" style="margin-bottom:0">
                   <div class="obs-section-title">Radiation — feeds Form 616 (Gunn-Bellani)</div>
                   <div class="obs-table-wrap"><table class="obs-table">
@@ -1113,8 +1387,8 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
                     <tbody><tr>
                       <td><div class="time-cell" id="sunTime">0600</div></td>
                       <td><select><option>No</option><option>Yes</option></select></td>
-                      <td><input type="number" id="sun_hrs" step="0.1" min="0" max="24"/></td>
-                      <td><input type="number" id="sun_mins" step="1" min="0" max="1440"/></td>
+                      <td><input type="number" id="sun_hrs" class="auto-calc" readonly step="0.01" min="0" max="24" placeholder="auto"/></td>
+                      <td><input type="number" id="sun_mins" step="1" min="0" max="1440" oninput="calcSunshineHours()" placeholder="enter mins"/></td>
                     </tr></tbody>
                   </table></div>
                 </div>
@@ -1139,7 +1413,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
               <div class="obs-section">
                 <div class="obs-section-title">Soil temperature (°C)</div>
                 <div class="obs-table-wrap"><table class="obs-table">
-                  <thead><tr><th>Obs. Time</th><th>Surface</th><th>5 cm</th><th>10 cm</th><th>20 cm</th><th>30 cm</th><th>50 cm</th><th>100 cm</th><th>Grass min.</th><th>Reset</th></tr></thead>
+                  <thead><tr><th>Obs. Time</th><th>Surface</th><th>5 cm</th><th>10 cm</th><th>20 cm</th><th>30 cm</th><th>50 cm</th><th>100 cm</th></tr></thead>
                   <tbody><tr>
                     <td><div class="time-cell" id="soilTempTime">0600</div></td>
                     <td><input type="number" id="st_surf" step="0.1"/></td>
@@ -1149,12 +1423,10 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
                     <td><input type="number" id="st_30" step="0.1"/></td>
                     <td><input type="number" id="st_50" step="0.1"/></td>
                     <td><input type="number" id="st_100" step="0.1"/></td>
-                    <td><input type="number" id="st_gmin" step="0.1"/></td>
-                    <td><input type="number" id="st_reset" step="0.1"/></td>
                   </tr></tbody>
                 </table></div>
               </div>
-              <div class="obs-section">
+              <div id="section-soil-moist" class="obs-section">
                 <div class="obs-section-title">Soil moisture — feeds AGRO 5</div>
                 <div class="obs-table-wrap"><table class="obs-table">
                   <thead><tr><th>Obs. Time</th><th>5 cm</th><th>10 cm</th><th>20 cm</th><th>30 cm</th><th>40 cm</th><th>50 cm</th><th>60 cm</th><th>70 cm</th><th>80 cm</th><th>90 cm</th><th>100 cm</th></tr></thead>
@@ -1183,7 +1455,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
               <button class="btn btn-primary" onclick="submitObservation()">Submit observation</button>
               <button class="btn" onclick="saveDraft()">Save draft</button>
               <button class="btn" onclick="clearForm()">Clear form</button>
-              <span class="form-note">Submitting notifies admin via SMS &amp; WhatsApp (0764 627 983)</span>
+              <span class="form-note">Submitting notifies admin via SMS &amp; WhatsApp (0755863325)</span>
               <span style="display:inline-block;width:1px;height:20px;background:var(--border-medium);margin:0 4px;vertical-align:middle"></span>
               <span class="form-note" style="margin-right:4px">Share filled data:</span>
               <button class="btn btn-sm btn-wa" title="Share observation data via WhatsApp to Admin" onclick="shareForm601AsText('wa')">📱 WA</button>
@@ -1560,7 +1832,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           </div>
           <div class="empty-state" id="myrecords-empty"><div class="empty-state-icon">≡</div><div class="empty-state-title">No records yet</div><div class="empty-state-sub">Your submitted observations will appear here</div></div>
           <div class="table-wrap" id="myrecords-table" style="display:none">
-            <table class="data-table"><thead><tr><th>Date</th><th>Session</th><th>Rain (mm)</th><th>Tmax</th><th>Tmin</th><th>RH%</th><th>Dry bulb</th><th>Wet bulb</th><th>Dew pt</th><th>Wind run</th><th>Sunshine</th><th>Rad MJm</th><th>Evap.</th><th>Status</th><th>Share</th></tr></thead>
+            <table class="data-table"><thead><tr><th>Date</th><th>Session</th><th>Rain (mm)</th><th>Tmax</th><th>Tmin</th><th>RH%</th><th>Dry bulb</th><th>Wet bulb</th><th>Dew pt</th><th>Wind run</th><th>Sunshine</th><th>Rad MJm</th><th>Evap.</th><th>Status</th><th>Actions</th></tr></thead>
             <tbody id="myrecords-rows"></tbody></table>
           </div>
         </div>
@@ -1576,7 +1848,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div style="margin-left:auto;display:flex;gap:.5rem;flex-wrap:wrap;align-items:center">
             <span id="returns-rec-count" style="font-size:11px;color:var(--text-tertiary);font-family:'IBM Plex Mono',monospace;background:var(--bg-secondary);padding:4px 8px;border-radius:4px;border:0.5px solid var(--border-light)">0 records</span>
             <select class="btn btn-sm" id="returns-month-select" onchange="onReturnMonthChange()"></select>
-            <button class="btn btn-sm" onclick="clearAllData()" title="Clear all submitted observation data" style="color:var(--tma-red)">🗑 Clear data</button>
+            <!-- Clear data removed: data is protected against accidental deletion -->
             <button class="btn btn-sm btn-primary" onclick="window.print()">🖨 Print</button>
           </div>
         </div>
@@ -1586,7 +1858,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-626" data-retid="ret-626">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">📋</span><span class="ret-acc-label">Form 626 — Monthly Return of Daily Climatological Observations</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-626">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-626')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-626')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-626')" title="Download as Excel (.xls)">⬇ Excel</button>
           </div>
           <div class="ret-acc-body" id="body-ret-626"><div id="render-ret-626"></div></div>
         </div>
@@ -1596,7 +1868,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-10c" data-retid="ret-10c">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">💨</span><span class="ret-acc-label">Form 10C — Wind Run Readings</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-10c">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-10c')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-10c')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-10c')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-10c"><div id="render-ret-10c"></div></div>
         </div>
@@ -1606,7 +1878,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-446" data-retid="ret-446">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">💧</span><span class="ret-acc-label">Form 446 — Evaporation from Standard Evaporation Pan</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-446">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-446')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-446')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-446')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-446"><div id="render-ret-446"></div></div>
         </div>
@@ -1616,7 +1888,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-616" data-retid="ret-616">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">☀️</span><span class="ret-acc-label">Form 616 — Reading of Gunn-Bellani Radiation Integrator</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-616">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-616')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-616')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-616')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-616"><div id="render-ret-616"></div></div>
         </div>
@@ -1626,7 +1898,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-drybulb" data-retid="ret-drybulb">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">🌡️</span><span class="ret-acc-label">Form 10 — Dry Bulb Temperature Register (°C)</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-drybulb">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-drybulb')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-drybulb')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-drybulb')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-drybulb"><div id="render-ret-drybulb"></div></div>
         </div>
@@ -1636,7 +1908,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-wetbulb" data-retid="ret-wetbulb">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">🌡️</span><span class="ret-acc-label">Form 10 — Wet Bulb Temperature Register (°C)</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-wetbulb">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-wetbulb')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-wetbulb')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-wetbulb')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-wetbulb"><div id="render-ret-wetbulb"></div></div>
         </div>
@@ -1646,7 +1918,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-dewpoint" data-retid="ret-dewpoint">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">🌫️</span><span class="ret-acc-label">Form 10 — Dew Point Register (°C)</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-dewpoint">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-dewpoint')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-dewpoint')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-dewpoint')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-dewpoint"><div id="render-ret-dewpoint"></div></div>
         </div>
@@ -1656,7 +1928,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-rh" data-retid="ret-rh">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">💦</span><span class="ret-acc-label">Form 10 — Relative Humidity Register (%)</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-rh">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-rh')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-rh')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-rh')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-rh"><div id="render-ret-rh"></div></div>
         </div>
@@ -1666,7 +1938,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-vapour" data-retid="ret-vapour">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">🌬️</span><span class="ret-acc-label">Form 10 — Vapour Pressure Register (hPa)</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-vapour">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-vapour')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-vapour')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-vapour')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-vapour"><div id="render-ret-vapour"></div></div>
         </div>
@@ -1676,7 +1948,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-agro5" data-retid="ret-agro5">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">🌱</span><span class="ret-acc-label">AGRO 5 — Soil Moisture Register (%)</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-agro5">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-agro5')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-agro5')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-agro5')" title="Download as Excel (.xls)">⬇ Excel</button>
           </div>
           <div class="ret-acc-body" id="body-ret-agro5"><div id="render-ret-agro5"></div></div>
         </div>
@@ -1686,7 +1958,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-agro1" data-retid="ret-agro1">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">🌿</span><span class="ret-acc-label">AGRO 1 — Monthly Phenological Report (Annual Crops)</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-agro1">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-agro1')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-agro1')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-agro1')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-agro1"><div id="render-ret-agro1"></div></div>
         </div>
@@ -1696,7 +1968,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-agro3" data-retid="ret-agro3">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">🌳</span><span class="ret-acc-label">AGRO 3 — Monthly Phenological Report (Perennial Plants)</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-agro3">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-agro3')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-agro3')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-agro3')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-agro3"><div id="render-ret-agro3"></div></div>
         </div>
@@ -1706,7 +1978,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-agro4" data-retid="ret-agro4">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">📋</span><span class="ret-acc-label">AGRO 4 — Ten Day Agrometeorological Report</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-agro4">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-agro4')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-agro4')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-agro4')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-agro4"><div id="render-ret-agro4"></div></div>
         </div>
@@ -1716,7 +1988,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="ret-acc-header" id="hdr-ret-202" data-retid="ret-202">
             <span class="ret-acc-toggle-zone"><span class="ret-acc-icon">📊</span><span class="ret-acc-label">Form 202 — Monthly Weather Summary</span><span class="auto-badge">AUTO</span><span class="ret-acc-arrow" id="arr-ret-202">▾</span></span>
             <button class="ret-share-btn" type="button" onclick="shareReturnByEmail('ret-202')" title="Share via email">✉ Email</button>
-            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-202')" title="Download as HTML">⬇ Download</button>
+            <button class="ret-download-btn" type="button" onclick="downloadReturn('ret-202')" title="Download as Word (.doc)">⬇ Word</button>
           </div>
           <div class="ret-acc-body" id="body-ret-202"><div id="render-ret-202"></div></div>
         </div>
@@ -1802,7 +2074,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
           <div class="stat-card"><div class="stat-label">Pending approvals</div><div class="stat-value" style="color:var(--tma-amber)" id="admin-stat-pending">0</div></div>
           <div class="stat-card"><div class="stat-label">Product requests</div><div class="stat-value" style="color:var(--tma-teal)" id="admin-stat-sh-requests">0</div></div>
           <div class="stat-card"><div class="stat-label">Products available</div><div class="stat-value" id="admin-stat-products">0</div></div>
-          <div class="stat-card"><div class="stat-label">Admin contact</div><div class="stat-value" style="font-size:13px;margin-top:4px">0764 627 983</div></div>
+          <div class="stat-card"><div class="stat-label">Admin contact</div><div class="stat-value" style="font-size:13px;margin-top:4px">0755 863 325</div></div>
         </div>
         <div class="grid-2">
           <div class="card"><div class="card-title">Live incoming notifications</div><div class="empty-state" id="admin-live-empty"><div class="empty-state-icon">◎</div><div class="empty-state-title">No incoming data yet</div></div><div id="admin-live-list"></div></div>
@@ -1847,6 +2119,24 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
                 <tbody id="dash-obs-rows"></tbody>
               </table>
             </div>
+          </div>
+        </div>
+
+        <!-- Pending observation approvals -->
+        <div class="card" style="margin-top:.75rem">
+          <div class="card-title" style="display:flex;align-items:center;justify-content:space-between">
+            <span>Pending observations — awaiting approval</span>
+            <span id="admin-pending-obs-badge" class="badge badge-amber" style="display:none">0</span>
+          </div>
+          <div class="empty-state" id="admin-pending-obs-empty">
+            <div class="empty-state-icon">✓</div>
+            <div class="empty-state-title">No observations pending approval</div>
+          </div>
+          <div class="table-wrap" id="admin-pending-obs-table" style="display:none">
+            <table class="data-table">
+              <thead><tr><th>Date</th><th>Session</th><th>Station</th><th>Observer</th><th>Rain(mm)</th><th>Tmax(°C)</th><th>Tmin(°C)</th><th>RH%</th><th>Sunshine(h)</th><th>Action</th></tr></thead>
+              <tbody id="admin-pending-obs-rows"></tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -1941,10 +2231,65 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
 
       <!-- ===== MANAGE STAKEHOLDERS ===== -->
       <div class="page" id="page-manageStakeholders">
-        <div class="card"><div class="card-title">All registered stakeholders</div>
-          <div class="empty-state" id="stakeholders-empty"><div class="empty-state-icon">◈</div><div class="empty-state-title">No stakeholders yet</div></div>
-          <div class="table-wrap" id="stakeholders-table" style="display:none"><table class="data-table"><thead><tr><th>Name</th><th>Organization</th><th>Position</th><th>Phone</th><th>Email</th><th>Joined</th><th>Status</th><th>Contact</th><th>Action</th></tr></thead><tbody id="stakeholders-rows"></tbody></table></div>
+
+        <!-- Registration card -->
+        <div class="card" style="margin-bottom:1rem">
+          <div class="card-title">Register New Stakeholder</div>
+          <div class="field-row">
+            <div class="field"><label>First Name *</label><input type="text" id="sh-reg-fname" placeholder="First name"/></div>
+            <div class="field"><label>Last Name *</label><input type="text" id="sh-reg-lname" placeholder="Last name"/></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Organization *</label><input type="text" id="sh-reg-org" placeholder="e.g. Ministry of Agriculture"/></div>
+            <div class="field"><label>Position / Title</label><input type="text" id="sh-reg-position" placeholder="e.g. Director"/></div>
+          </div>
+          <div class="field-row">
+            <div class="field"><label>Phone (WhatsApp &amp; SMS)</label><input type="tel" id="sh-reg-phone" placeholder="e.g. 0712345678"/></div>
+            <div class="field"><label>Email</label><input type="email" id="sh-reg-email" placeholder="e.g. name@org.go.tz"/></div>
+          </div>
+          <div style="text-align:right;margin-top:.5rem">
+            <button class="btn btn-primary" onclick="adminRegisterStakeholder()">Add Stakeholder</button>
+          </div>
         </div>
+
+        <!-- Broadcast card -->
+        <div class="card" style="margin-bottom:1rem" id="sh-broadcast-card">
+          <div class="card-title">Broadcast Message</div>
+          <div class="field-row" style="align-items:flex-start">
+            <div class="field" style="flex:2">
+              <label>Message</label>
+              <textarea id="sh-broadcast-msg" style="min-height:80px;resize:vertical" placeholder="Type your message to stakeholders..."></textarea>
+            </div>
+            <div class="field" style="flex:1">
+              <label>Channel</label>
+              <select id="sh-broadcast-channel" style="height:38px">
+                <option value="whatsapp">WhatsApp</option>
+                <option value="sms">SMS</option>
+                <option value="email">Email</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;gap:.5rem;justify-content:flex-end;flex-wrap:wrap;margin-top:.25rem">
+            <button class="btn btn-sm" style="background:#25d366;color:#fff;border-color:#25d366" onclick="sendStakeholderBroadcast('selected')">Send to Selected</button>
+            <button class="btn btn-sm btn-primary" onclick="sendStakeholderBroadcast('all')">Send to All</button>
+          </div>
+        </div>
+
+        <!-- Stakeholder list card -->
+        <div class="card">
+          <div class="card-title">Registered Stakeholders</div>
+          <div class="empty-state" id="stakeholders-empty"><div class="empty-state-icon">◈</div><div class="empty-state-title">No stakeholders yet</div></div>
+          <div class="table-wrap" id="stakeholders-table" style="display:none">
+            <table class="data-table">
+              <thead><tr>
+                <th style="width:36px"><input type="checkbox" id="sh-chk-all" onchange="toggleAllStakeholderCheckboxes(this)" title="Select all"/></th>
+                <th>Name</th><th>Organization</th><th>Position</th><th>Phone</th><th>Email</th><th>Added</th><th>Status</th><th>Contact</th><th>Action</th>
+              </tr></thead>
+              <tbody id="stakeholders-rows"></tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
 
     </div><!-- /content -->
@@ -1985,15 +2330,12 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
 //        Never paste the SERVICE ROLE key here.
 // ═══════════════════════════════════════════════════════════════
 
-const SUPABASE_URL      = 'rdnozraqruiyqlkyhcsc';
-//                         ↑ e.g. https://abcdefghij.supabase.co
+const SUPABASE_URL      = 'https://rdnozraqruiyqlkyhcsc.supabase.co';
 
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkbm96cmFxcnVpeXFsa3loY3NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxODE3NTgsImV4cCI6MjA4OTc1Nzc1OH0.KL8x2QNkTGwdwpMdtKabTqvMr7TKu8vzKMP2DMRwzeI';
 //                         ↑ long string from Project Settings → API → anon/public
 
-// Uncomment the line below once you have filled in the values above
-// and enabled the CDN script tag in the <head> section:
-// const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ─────────────────────────────────────────────────────────────
 //  EXAMPLE: how to insert an observation into Supabase
@@ -2033,8 +2375,8 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 //  Official form styles matching physical TMA documents
 // ═══════════════════════════════════════════════════════════════
 
-const ADMIN_PHONE = '0764627983';
-const ADMIN_CREDENTIALS = { phone: '0764627983', email: 'admin@tma.go.tz', password: 'admin2024' };
+const ADMIN_PHONE = '0755863325';
+const ADMIN_CREDENTIALS = { phone: '0755863325', email: 'admin@tma.go.tz', password: 'admin2024' };
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
 const state = {
@@ -2146,11 +2488,10 @@ const monthRecs = ym => { const [y,m]=ym.split('-').map(Number); return state.re
 
 // ── AUTH ────────────────────────────────────────────────────────
 function switchAuthTab(tab) {
-  document.getElementById('loginForm').style.display       = tab==='login'?'':'none';
-  document.getElementById('registerForm').style.display    = tab==='register'?'':'none';
-  document.getElementById('registerShForm').style.display  = tab==='register-sh'?'':'none';
-  ['login','register','register-sh'].forEach(t => {
-    document.getElementById('tab-'+t).className = 'auth-tab' + (t===tab?' active':'');
+  document.getElementById('loginForm').style.display    = tab==='login'?'':'none';
+  document.getElementById('registerForm').style.display = tab==='register'?'':'none';
+  ['login','register'].forEach(t => {
+    const el=document.getElementById('tab-'+t); if(el) el.className = 'auth-tab' + (t===tab?' active':'');
   });
 }
 
@@ -2158,36 +2499,40 @@ function loginAs(role, user) {
   state.role=role; state.currentUser=user; state.currentYM=currentYM();
   document.getElementById('authScreen').style.display='none';
   document.getElementById('mainApp').style.display='flex';
-  ['observerNav','stakeholderNav','adminNav'].forEach(id=>document.getElementById(id).style.display='none');
-  const avatar=document.getElementById('sidebarAvatar');
+  ['observerTabs','stakeholderTabs','adminTabs'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  const tnAvatar=document.getElementById('topnavAvatar');
+  const tnName=document.getElementById('topnavName');
+  const tnRole=document.getElementById('topnavRole');
   if (role==='admin') {
-    document.getElementById('adminNav').style.display='';
-    document.getElementById('sidebarName').textContent='TMA Administrator';
-    document.getElementById('sidebarRole').textContent='Administrator · All stations';
-    avatar.textContent='AD'; avatar.style.background='var(--tma-blue)';
+    const el=document.getElementById('adminTabs'); if(el)el.style.display='';
+    if(tnAvatar){tnAvatar.textContent='AD';}
+    if(tnName)tnName.textContent='TMA Administrator';
+    if(tnRole)tnRole.textContent='Administrator · All stations';
     document.getElementById('sessionBadge').style.display='none';
     showPage('adminDash',null);
   } else if (role==='stakeholder') {
     state.stakeholderName=user.name; state.stakeholderOrg=user.org;
-    document.getElementById('stakeholderNav').style.display='';
-    document.getElementById('sidebarName').textContent=user.name;
-    document.getElementById('sidebarRole').textContent=`${user.position||'Stakeholder'} · ${user.org}`;
-    avatar.textContent=nameInitials(user.name); avatar.style.background='var(--tma-teal)';
+    const el=document.getElementById('stakeholderTabs'); if(el)el.style.display='';
+    if(tnAvatar){tnAvatar.textContent=nameInitials(user.name);}
+    if(tnName)tnName.textContent=user.name;
+    if(tnRole)tnRole.textContent=`${user.position||'Stakeholder'} · ${user.org}`;
     document.getElementById('sessionBadge').style.display='none';
     showPage('stakeholderDash',null);
   } else {
     state.observerName=user.name; state.stationName=user.station;
-    document.getElementById('observerNav').style.display='';
-    document.getElementById('sidebarName').textContent=user.name;
-    document.getElementById('sidebarRole').textContent=`${user.title||'Observer'} · ${user.station}`;
-    avatar.textContent=nameInitials(user.name); avatar.style.background='var(--tma-blue)';
+    const el=document.getElementById('observerTabs'); if(el)el.style.display='';
+    if(tnAvatar){tnAvatar.textContent=nameInitials(user.name);}
+    if(tnName)tnName.textContent=user.name;
+    if(tnRole)tnRole.textContent=`${user.title||'Observer'} · ${user.station}`;
     document.getElementById('sessionBadge').style.display='';
     showPage('dashboard',null);
   }
+  const logoutBtn=document.getElementById('topnavLogoutBtn'); if(logoutBtn) logoutBtn.style.display='';
+  const staffBtn=document.getElementById('staffLoginBtn'); if(staffBtn) staffBtn.style.display='none';
   loadState();
   loadPhenoState();
+  loadFromSupabase();
   setTimeout(initAccordionDelegation, 100);
-  // Restore currentYM after login
   if (!state.currentYM) state.currentYM = currentYM();
   initReturnMonthSelect(); setTodayDate(); updateClock();
   refreshReturnStatus(state.currentYM);
@@ -2211,11 +2556,81 @@ function tryLogin() {
 }
 
 function logout() {
-  document.getElementById('authScreen').style.display='flex';
-  document.getElementById('mainApp').style.display='none';
+  // Show destination-choice modal instead of auto-redirecting
+  if(document.getElementById('logout-choice-overlay')) return;
+  const ov=document.createElement('div');
+  ov.id='logout-choice-overlay';
+  ov.innerHTML=`
+    <div id="logout-choice-box">
+      <h3>Logging Out</h3>
+      <p>Where would you like to go after logging out?</p>
+      <button class="logout-choice-btn green" onclick="_doLogout('landing')">
+        <span class="logout-choice-icon">🌐</span>
+        <span><strong>Landing Page</strong><br><small style="font-weight:400;color:#555">View the public AgriMet portal</small></span>
+      </button>
+      <button class="logout-choice-btn" onclick="_doLogout('signin')">
+        <span class="logout-choice-icon">🔑</span>
+        <span><strong>Sign In / Register</strong><br><small style="font-weight:400;color:#555">Log in as a different user</small></span>
+      </button>
+      <button class="logout-cancel-btn" onclick="document.getElementById('logout-choice-overlay').remove()">Cancel — stay logged in</button>
+    </div>`;
+  document.body.appendChild(ov);
+}
+
+function _doLogout(dest) {
   state.role=null; state.currentUser=null;
   state.observerName='Observer'; state.stationName='Station';
   state.sessionSubmitted={'0600':false,'1200':false};
+  const ov=document.getElementById('logout-choice-overlay'); if(ov) ov.remove();
+  enterPublicView();
+  if(dest==='signin') setTimeout(openStaffLogin, 120);
+}
+
+function enterPublicView() {
+  state.role='public'; state.currentUser=null;
+  state.stakeholderName='Guest'; state.stakeholderOrg='';
+  state.currentYM=currentYM();
+  document.getElementById('authScreen').style.display='none';
+  document.getElementById('mainApp').style.display='flex';
+  ['observerTabs','stakeholderTabs','adminTabs'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  const stTabs=document.getElementById('stakeholderTabs'); if(stTabs) stTabs.style.display='';
+  const tnAvatar=document.getElementById('topnavAvatar');
+  const tnName=document.getElementById('topnavName');
+  const tnRole=document.getElementById('topnavRole');
+  if(tnAvatar) tnAvatar.textContent='TMA';
+  if(tnName) tnName.textContent='TMA AgriMet Portal';
+  if(tnRole) tnRole.textContent='Meteorological Information & Products';
+  document.getElementById('sessionBadge').style.display='none';
+  const logoutBtn=document.getElementById('topnavLogoutBtn'); if(logoutBtn) logoutBtn.style.display='none';
+  const loginBtn=document.getElementById('staffLoginBtn'); if(loginBtn) loginBtn.style.display='';
+  loadState(); loadPhenoState();
+  showPage('stakeholderDash',null);
+  setTimeout(()=>{refreshStakeholderDash();},80);
+  setTodayDate(); updateClock();
+}
+
+function openStaffLogin() {
+  switchAuthTab('login');
+  document.getElementById('authScreen').style.display='flex';
+}
+
+function backToPortal() {
+  document.getElementById('authScreen').style.display='none';
+  if(!state.role||state.role==='public') enterPublicView();
+}
+
+function toggleSidebar(){
+  const sb=document.getElementById('mainSidebar');
+  const ov=document.getElementById('sidebarOverlay');
+  if(sb.classList.contains('open')){closeSidebar();}
+  else{sb.classList.add('open');ov.classList.add('active');document.body.style.overflow='hidden';}
+}
+function closeSidebar(){
+  const sb=document.getElementById('mainSidebar');
+  const ov=document.getElementById('sidebarOverlay');
+  if(sb){sb.classList.remove('open');}
+  if(ov){ov.classList.remove('active');}
+  document.body.style.overflow='';
 }
 
 function submitRegister() {
@@ -2224,13 +2639,25 @@ function submitRegister() {
   const title=document.getElementById('reg-title')?.value;
   const station=document.getElementById('reg-station')?.value;
   if(!fname||!lname||!title||!station){showToast('Missing fields','Please fill all required fields','warning');return;}
+  const email=(document.getElementById('reg-email')?.value?.trim()||'').toLowerCase();
+  if(!email.endsWith('@meteo.go.tz')){
+    showToast('Invalid email address','Only official TMA email addresses are accepted (e.g. juma.ally@meteo.go.tz)','error');
+    return;
+  }
+  const allAccounts=[...state.approvedObservers,...state.pendingApprovals];
+  if(allAccounts.some(u=>u.email&&u.email.toLowerCase()===email)){
+    showToast('Email already registered','This email address is already linked to an existing account','error');
+    return;
+  }
   const name=[fname,document.getElementById('reg-mname')?.value?.trim(),lname].filter(Boolean).join(' ');
-  state.pendingApprovals.push({type:'observer',name,title,station,
+  const _obsReg={type:'observer',name,title,station,
     phone:document.getElementById('reg-phone')?.value?.trim(),
-    email:document.getElementById('reg-email')?.value?.trim(),
+    email,
     password:document.getElementById('reg-password')?.value||'',
-    submittedDate:getTodayStr()});
+    submittedDate:getTodayStr()};
+  state.pendingApprovals.push(_obsReg);
   saveState();
+  pushPendingToSupabase(_obsReg);
   updateApprovalBadge();
   showToast('Registration submitted','Your request has been sent to the administrator.','success');
   switchAuthTab('login');
@@ -2241,13 +2668,15 @@ function submitStakeholderRegister() {
   const lname=document.getElementById('sh-lname')?.value?.trim();
   const org=document.getElementById('sh-org')?.value?.trim();
   if(!fname||!lname||!org){showToast('Missing fields','Please fill in name and organization','warning');return;}
-  state.pendingApprovals.push({type:'stakeholder',name:`${fname} ${lname}`,org,
+  const _shReg={type:'stakeholder',name:`${fname} ${lname}`,org,
     position:document.getElementById('sh-position')?.value?.trim(),
     phone:document.getElementById('sh-phone')?.value?.trim(),
     email:document.getElementById('sh-email')?.value?.trim(),
     password:document.getElementById('sh-password')?.value||'',
-    submittedDate:getTodayStr()});
+    submittedDate:getTodayStr()};
+  state.pendingApprovals.push(_shReg);
   saveState();
+  pushPendingToSupabase(_shReg);
   updateApprovalBadge();
   showToast('Registration submitted','Your stakeholder request has been sent.','success');
   switchAuthTab('login');
@@ -2256,10 +2685,16 @@ function submitStakeholderRegister() {
 // ── NAVIGATION ─────────────────────────────────────────────────
 function showPage(id,navEl) {
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(n=>n.classList.remove('active'));
   const pg=document.getElementById('page-'+id);
   if(pg) pg.classList.add('active');
-  if(navEl) navEl.classList.add('active');
+  if(navEl){
+    navEl.classList.add('active');
+  } else {
+    const matchTab=document.querySelector(`.tab-btn[data-page="${id}"]`);
+    if(matchTab) matchTab.classList.add('active');
+  }
+  window.scrollTo(0,0);
   const titles={
     dashboard:['Observer Dashboard',`${state.stationName} · ${getTodayStr()}`],
     obsForms:['Fill Observation','Form 601 — Agricultural Meteorological Observations'],
@@ -2280,6 +2715,7 @@ function showPage(id,navEl) {
     manageStakeholders:['Manage Stakeholders','All registered stakeholders'],
   };
   if(titles[id]){document.getElementById('pageTitle').textContent=titles[id][0];document.getElementById('pageDate').textContent=titles[id][1];}
+  if(id==='obsForms') setTodayDate();
   const rfMap={
     dashboard:refreshObsDash,myRecords:refreshMyRecords,returns:refreshAllReturns,
     products:refreshProductsPage,messages:refreshMessagesPage,
@@ -2315,6 +2751,166 @@ const FORM_LABELS = {
   'ret-agro4':   'AGRO 4 — Ten Day Agrometeorological Report',
   'ret-202':     'Form 202 — Monthly Weather Summary',
 };
+
+// Tabular registers → Excel (.xls); narrative reports → Word (.doc)
+const FORM_DOWNLOAD_FORMAT = {
+  'ret-626':     'excel',
+  'ret-10c':     'word',
+  'ret-446':     'word',
+  'ret-616':     'word',
+  'ret-drybulb': 'word',
+  'ret-wetbulb': 'word',
+  'ret-dewpoint':'word',
+  'ret-rh':      'word',
+  'ret-vapour':  'word',
+  'ret-agro5':   'excel',
+  'ret-agro1':   'word',
+  'ret-agro3':   'word',
+  'ret-agro4':   'word',
+  'ret-202':     'word',
+};
+
+/* ── SpreadsheetML XML helpers (proper Excel format — no format-mismatch warning) ── */
+function xmlEsc(s){
+  if(s===null||s===undefined)return '—';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function buildSpreadsheetML626(ym){
+  const [y,m]=ym.split('-').map(Number);
+  const days=daysInMonth(y,m), recs=monthRecs(ym);
+  const monthLabel=getMonthLabel(ym);
+  if(recs.length===0) return null;
+  const dg=(val,n,dec)=>{
+    if(val===null||val===undefined) return Array(n).fill(null);
+    const v=Math.round(Math.abs(Number(val))*Math.pow(10,dec));
+    return v.toString().padStart(n,'0').slice(-n).split('');
+  };
+  const NCOLS=57;
+  const B=`<Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/></Borders>`;
+  const B2=`<Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="2"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="2"/></Borders>`;
+  const styles=`<Styles>
+<Style ss:ID="s_bg"><Interior ss:Color="#FFFF00" ss:Pattern="Solid"/></Style>
+<Style ss:ID="s_ttl"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:Bold="1" ss:Size="13" ss:FontName="Arial"/><Interior ss:Color="#FFFF00" ss:Pattern="Solid"/></Style>
+<Style ss:ID="s_sub"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:Bold="1" ss:Size="10" ss:FontName="Arial"/><Interior ss:Color="#FFFF00" ss:Pattern="Solid"/></Style>
+<Style ss:ID="s_meta"><Alignment ss:Horizontal="Left" ss:Vertical="Center"/><Font ss:Bold="1" ss:Size="9" ss:FontName="Arial"/><Interior ss:Color="#FFFF00" ss:Pattern="Solid"/></Style>
+<Style ss:ID="s_grp"><Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/><Font ss:Bold="1" ss:Size="7" ss:FontName="Arial"/><Interior ss:Color="#FFFF00" ss:Pattern="Solid"/>${B2}</Style>
+<Style ss:ID="s_num"><Alignment ss:Horizontal="Center" ss:Vertical="Center"/><Font ss:Bold="1" ss:Size="7" ss:FontName="Arial"/><Interior ss:Color="#FFFF00" ss:Pattern="Solid"/>${B}</Style>
+<Style ss:ID="s_dig"><Alignment ss:Horizontal="Center" ss:Vertical="Center"/><Font ss:Size="9" ss:FontName="Arial"/><Interior ss:Color="#FFFF00" ss:Pattern="Solid"/>${B}</Style>
+<Style ss:ID="s_shd"><Interior ss:Color="#E0C000" ss:Pattern="Solid"/>${B}</Style>
+</Styles>`;
+  const colDefs=Array(NCOLS).fill('<Column ss:Width="18"/>').join('');
+  const DC=(d,shd=false)=>d!==null
+    ?`<Cell ss:StyleID="s_dig"><Data ss:Type="String">${xmlEsc(String(d))}</Data></Cell>`
+    :`<Cell ss:StyleID="${shd?'s_shd':'s_dig'}"/>`;
+  const SC=(v)=>`<Cell ss:StyleID="s_dig"><Data ss:Type="String">${xmlEsc(String(v))}</Data></Cell>`;
+  const SHD=(n)=>Array(n).fill('<Cell ss:StyleID="s_shd"/>').join('');
+  const stnStr=(state.wmoIndex||'00000000').replace(/\D/g,'').padStart(8,'0').slice(-8).split('');
+  const yrStr=String(y).padStart(4,'0').split('');
+  const moStr=String(m).padStart(2,'0').split('');
+  let rows='';
+  rows+=`<Row ss:Height="24"><Cell ss:MergeAcross="${NCOLS-1}" ss:StyleID="s_ttl"><Data ss:Type="String">TANZANIA METEOROLOGICAL AUTHORITY</Data></Cell></Row>`;
+  rows+=`<Row ss:Height="18"><Cell ss:MergeAcross="${NCOLS-1}" ss:StyleID="s_sub"><Data ss:Type="String">MONTHLY RETURN OF DAILY CLIMATOLOGICAL OBSERVATIONS</Data></Cell></Row>`;
+  rows+=`<Row ss:Height="16"><Cell ss:MergeAcross="27" ss:StyleID="s_meta"><Data ss:Type="String">Station name: ${xmlEsc(state.stationName)}</Data></Cell><Cell ss:MergeAcross="28" ss:StyleID="s_meta"><Data ss:Type="String">Registered Number: ${xmlEsc(state.wmoIndex||'---')}   Month And Year: ${xmlEsc(monthLabel)}</Data></Cell></Row>`;
+  rows+=`<Row ss:Height="5"><Cell ss:MergeAcross="${NCOLS-1}" ss:StyleID="s_bg"/></Row>`;
+  rows+=`<Row ss:Height="30"><Cell ss:MergeAcross="7" ss:StyleID="s_grp"><Data ss:Type="String">STATION NUMBER</Data></Cell><Cell ss:MergeAcross="3" ss:StyleID="s_grp"><Data ss:Type="String">YEAR</Data></Cell><Cell ss:MergeAcross="1" ss:StyleID="s_grp"><Data ss:Type="String">MON</Data></Cell><Cell ss:MergeAcross="1" ss:StyleID="s_grp"><Data ss:Type="String">DAY</Data></Cell><Cell ss:MergeAcross="1" ss:StyleID="s_grp"><Data ss:Type="String">HR (UTC) AM</Data></Cell><Cell ss:MergeAcross="2" ss:StyleID="s_grp"><Data ss:Type="String">DRY BULB (C)</Data></Cell><Cell ss:MergeAcross="2" ss:StyleID="s_grp"><Data ss:Type="String">WET BULB (C)</Data></Cell><Cell ss:MergeAcross="2" ss:StyleID="s_grp"><Data ss:Type="String">DEW POINT (C)</Data></Cell><Cell ss:MergeAcross="2" ss:StyleID="s_grp"><Data ss:Type="String">MAX (C)</Data></Cell><Cell ss:MergeAcross="2" ss:StyleID="s_grp"><Data ss:Type="String">MIN (C)</Data></Cell><Cell ss:MergeAcross="2" ss:StyleID="s_grp"><Data ss:Type="String">GRASS MIN (C)</Data></Cell><Cell ss:StyleID="s_grp"><Data ss:Type="String">HT</Data></Cell><Cell ss:MergeAcross="3" ss:StyleID="s_grp"><Data ss:Type="String">WIND RUN (km/day)</Data></Cell><Cell ss:MergeAcross="3" ss:StyleID="s_grp"><Data ss:Type="String">RAINFALL AMOUNT (mm)</Data></Cell><Cell ss:MergeAcross="2" ss:StyleID="s_grp"><Data ss:Type="String">SUN SHINE DURAT. (Hours)</Data></Cell><Cell ss:StyleID="s_grp"><Data ss:Type="String">TYPE</Data></Cell><Cell ss:MergeAcross="3" ss:StyleID="s_grp"><Data ss:Type="String">RADIAT. (MJm-2)</Data></Cell><Cell ss:StyleID="s_grp"><Data ss:Type="String">TYPE</Data></Cell><Cell ss:MergeAcross="2" ss:StyleID="s_grp"><Data ss:Type="String">EVAPORATION (mm)</Data></Cell></Row>`;
+  rows+='<Row ss:Height="14">'+Array.from({length:NCOLS},(_,i)=>`<Cell ss:StyleID="s_num"><Data ss:Type="Number">${i+1}</Data></Cell>`).join('')+'</Row>';
+  let sumDry=0,cDry=0,sumWet=0,cWet=0,sumRain=0,sumSun=0,sumWind=0,sumRad=0,sumEvap=0,maxTmax=null,minTmin=null;
+  for(let d=1;d<=days;d++){
+    const am=getRec(recs,d,'0600'), pm=getRec(recs,d,'1200');
+    const dayStr=String(d).padStart(2,'0').split('');
+    if(am){
+      if(am.dry!=null){sumDry+=am.dry;cDry++;}
+      if(am.wet!=null){sumWet+=am.wet;cWet++;}
+      if(am.rain!=null)sumRain+=am.rain;
+      if(am.sunshine!=null)sumSun+=am.sunshine;
+      if(am.windRun!=null)sumWind+=am.windRun;
+      if(am.radiation!=null)sumRad+=am.radiation;
+      if(am.evapStd!=null)sumEvap+=am.evapStd;
+      if(am.tmax!=null&&(maxTmax===null||am.tmax>maxTmax))maxTmax=am.tmax;
+      if(am.tmin!=null&&(minTmin===null||am.tmin<minTmin))minTmin=am.tmin;
+    }
+    let r=`<Row ss:Height="16">`;
+    stnStr.forEach(c=>{r+=SC(c);});
+    yrStr.forEach(c=>{r+=SC(c);});
+    moStr.forEach(c=>{r+=SC(c);});
+    dayStr.forEach(c=>{r+=SC(c);});
+    r+=SC('0');r+=SC('6');
+    dg(am?.dry,3,1).forEach(c=>{r+=DC(c);});
+    dg(am?.wet,3,1).forEach(c=>{r+=DC(c);});
+    dg(am?.dew,3,1).forEach(c=>{r+=DC(c);});
+    dg(am?.tmax,3,1).forEach(c=>{r+=DC(c);});
+    dg(am?.tmin,3,1).forEach(c=>{r+=DC(c);});
+    dg(am?.soilTemp?.grassMin,3,1).forEach(c=>{r+=DC(c);});
+    r+=DC('1');
+    dg(am?.windRun,4,1).forEach(c=>{r+=DC(c);});
+    dg(am?.rain,4,1).forEach(c=>{r+=DC(c);});
+    dg(am?.sunshine,3,1).forEach(c=>{r+=DC(c);});
+    r+=SC('A');
+    dg(am?.radiation,4,2).forEach(c=>{r+=DC(c);});
+    r+=SC('A');
+    dg(am?.evapStd,3,1).forEach(c=>{r+=DC(c);});
+    r+=`</Row>`;
+    rows+=r;
+    let p=`<Row ss:Height="14">`;
+    stnStr.forEach(c=>{p+=SC(c);});
+    yrStr.forEach(c=>{p+=SC(c);});
+    moStr.forEach(c=>{p+=SC(c);});
+    dayStr.forEach(c=>{p+=SC(c);});
+    p+=SC('1');p+=SC('2');
+    dg(pm?.dry,3,1).forEach(c=>{p+=DC(c);});
+    dg(pm?.wet,3,1).forEach(c=>{p+=DC(c);});
+    dg(pm?.dew,3,1).forEach(c=>{p+=DC(c);});
+    p+=SHD(30);
+    p+=`</Row>`;
+    rows+=p;
+  }
+  const mDry=cDry?(sumDry/cDry).toFixed(1):'--';
+  const mWet=cWet?(sumWet/cWet).toFixed(1):'--';
+  rows+=`<Row ss:Height="5"><Cell ss:MergeAcross="${NCOLS-1}" ss:StyleID="s_bg"/></Row>`;
+  rows+=`<Row ss:Height="18"><Cell ss:MergeAcross="${NCOLS-1}" ss:StyleID="s_meta"><Data ss:Type="String">Total Rainfall: ${sumRain.toFixed(1)} mm  |  Total Wind: ${sumWind.toFixed(1)} km  |  Total Sunshine: ${sumSun.toFixed(1)} h  |  Total Radiation: ${sumRad.toFixed(2)} MJm-2  |  Total Evaporation: ${sumEvap.toFixed(1)} mm  |  Mean Dry Bulb: ${mDry} C  |  Mean Wet Bulb: ${mWet} C  |  Max Temp: ${maxTmax!==null?Number(maxTmax).toFixed(1):'--'} C  |  Min Temp: ${minTmin!==null?Number(minTmin).toFixed(1):'--'} C</Data></Cell></Row>`;
+  rows+=`<Row ss:Height="5"><Cell ss:MergeAcross="${NCOLS-1}" ss:StyleID="s_bg"/></Row>`;
+  rows+=`<Row ss:Height="16"><Cell ss:MergeAcross="27" ss:StyleID="s_meta"><Data ss:Type="String">Effective Date: October 31, 2019</Data></Cell><Cell ss:MergeAcross="28" ss:StyleID="s_meta"><Data ss:Type="String">Revision No. 05</Data></Cell></Row>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<?mso-application progid="Excel.Sheet"?>\n<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n${styles}\n<Worksheet ss:Name="Form 626">\n<Table>\n${colDefs}\n${rows}\n</Table>\n</Worksheet>\n</Workbook>`;
+}
+function buildSpreadsheetMLAgro5(ym){
+  const recs=monthRecs(ym).filter(r=>r.session==='0600');
+  const monthLabel=getMonthLabel(ym);
+  if(recs.length===0) return null;
+  const depths=[5,10,20,30,40,50,60,70,80,90,100];
+  const smKeys=['d5','d10','d20','d30','d40','d50','d60','d70','d80','d90','d100'];
+  const N=4;
+  const styles=`<Styles>
+<Style ss:ID="Default"><Font ss:FontName="Arial" ss:Size="10"/></Style>
+<Style ss:ID="s_ttl"><Alignment ss:Horizontal="Center" ss:Vertical="Center"/><Font ss:Bold="1" ss:Size="14" ss:FontName="Arial"/><Interior ss:Color="#A5D6A7" ss:Pattern="Solid"/><Borders><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#2E7D32"/></Borders></Style>
+<Style ss:ID="s_sub"><Alignment ss:Horizontal="Center" ss:Vertical="Center"/><Font ss:Bold="1" ss:Size="11" ss:FontName="Arial"/><Interior ss:Color="#C8E6C9" ss:Pattern="Solid"/></Style>
+<Style ss:ID="s_mk"><Font ss:Bold="1" ss:Size="9" ss:FontName="Arial"/><Interior ss:Color="#DCEDC8" ss:Pattern="Solid"/><Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/></Borders></Style>
+<Style ss:ID="s_mv"><Font ss:Size="9" ss:FontName="Arial"/><Interior ss:Color="#F1F8E9" ss:Pattern="Solid"/><Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/></Borders></Style>
+<Style ss:ID="s_hdr"><Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/><Font ss:Bold="1" ss:Size="10" ss:FontName="Arial" ss:Color="#FFFFFF"/><Interior ss:Color="#2E7D32" ss:Pattern="Solid"/><Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/></Borders></Style>
+<Style ss:ID="s_dep"><Alignment ss:Horizontal="Center" ss:Vertical="Center"/><Font ss:Bold="1" ss:Size="11" ss:FontName="Arial"/><Interior ss:Color="#E8F5E9" ss:Pattern="Solid"/><Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/></Borders></Style>
+<Style ss:ID="s_num"><Alignment ss:Horizontal="Center"/><Font ss:Size="10" ss:FontName="Arial"/><Interior ss:Color="#F9FBE7" ss:Pattern="Solid"/><Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/></Borders></Style>
+<Style ss:ID="s_mean"><Alignment ss:Horizontal="Center"/><Font ss:Bold="1" ss:Size="11" ss:FontName="Arial"/><Interior ss:Color="#CCFF90" ss:Pattern="Solid"/><Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#33691E"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#33691E"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#33691E"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#33691E"/></Borders></Style>
+<Style ss:ID="s_nd"><Alignment ss:Horizontal="Center"/><Font ss:Size="10" ss:FontName="Arial" ss:Color="#999999"/><Interior ss:Color="#F5F5F5" ss:Pattern="Solid"/><Borders><Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1"/><Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1"/></Borders></Style>
+</Styles>`;
+  const colDefs=`<Column ss:Width="80"/><Column ss:Width="100"/><Column ss:Width="130"/><Column ss:Width="110"/><Column ss:Width="110"/>`;
+  let rows='';
+  rows+=`<Row ss:Height="32"><Cell ss:MergeAcross="${N}" ss:StyleID="s_ttl"><Data ss:Type="String">Tanzania Meteorological Authority -- AGRO 5</Data></Cell></Row>`;
+  rows+=`<Row ss:Height="22"><Cell ss:MergeAcross="${N}" ss:StyleID="s_sub"><Data ss:Type="String">Soil Moisture Register -- ${xmlEsc(monthLabel)}</Data></Cell></Row>`;
+  rows+=`<Row ss:Height="18"><Cell ss:StyleID="s_mk"><Data ss:Type="String">Station:</Data></Cell><Cell ss:MergeAcross="1" ss:StyleID="s_mv"><Data ss:Type="String">${xmlEsc(state.stationName)}</Data></Cell><Cell ss:StyleID="s_mk"><Data ss:Type="String">Observer:</Data></Cell><Cell ss:MergeAcross="1" ss:StyleID="s_mv"><Data ss:Type="String">${xmlEsc(state.observerName)}</Data></Cell></Row>`;
+  rows+='<Row ss:Height="6"/>';
+  rows+=`<Row ss:Height="32"><Cell ss:StyleID="s_hdr"><Data ss:Type="String">Depth (cm)</Data></Cell><Cell ss:StyleID="s_hdr"><Data ss:Type="String">Observations</Data></Cell><Cell ss:StyleID="s_hdr"><Data ss:Type="String">Mean % Soil Moisture</Data></Cell><Cell ss:StyleID="s_hdr"><Data ss:Type="String">Min %</Data></Cell><Cell ss:StyleID="s_hdr"><Data ss:Type="String">Max %</Data></Cell></Row>`;
+  depths.forEach((dep,ki)=>{
+    const key=smKeys[ki];
+    const vals=recs.filter(r=>r.sm&&r.sm[key]!=null).map(r=>r.sm[key]);
+    const mean=vals.length?(vals.reduce((a,b)=>a+b,0)/vals.length).toFixed(1):null;
+    const mn=vals.length?Math.min(...vals).toFixed(1):null;
+    const mx=vals.length?Math.max(...vals).toFixed(1):null;
+    rows+=`<Row ss:Height="22"><Cell ss:StyleID="s_dep"><Data ss:Type="Number">${dep}</Data></Cell><Cell ss:StyleID="s_num"><Data ss:Type="Number">${vals.length}</Data></Cell>${mean!==null?`<Cell ss:StyleID="s_mean"><Data ss:Type="String">${mean}%</Data></Cell>`:`<Cell ss:StyleID="s_nd"><Data ss:Type="String">No data</Data></Cell>`}${mn!==null?`<Cell ss:StyleID="s_num"><Data ss:Type="String">${mn}%</Data></Cell>`:`<Cell ss:StyleID="s_nd"><Data ss:Type="String">--</Data></Cell>`}${mx!==null?`<Cell ss:StyleID="s_num"><Data ss:Type="String">${mx}%</Data></Cell>`:`<Cell ss:StyleID="s_nd"><Data ss:Type="String">--</Data></Cell>`}</Row>`;
+  });
+  rows+='<Row ss:Height="6"/>';
+  rows+=`<Row ss:Height="14"><Cell ss:MergeAcross="${N}" ss:StyleID="s_mv"><Data ss:Type="String">Generated by TMA AgriMet Portal -- Tanzania Meteorological Authority -- ${new Date().getFullYear()}</Data></Cell></Row>`;
+  return `<?xml version="1.0" encoding="UTF-8"?>\n<?mso-application progid="Excel.Sheet"?>\n<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet" xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">\n${styles}\n<Worksheet ss:Name="AGRO 5">\n<Table>\n${colDefs}\n${rows}\n</Table>\n</Worksheet>\n</Workbook>`;
+}
 
 /* ── Collect ALL page CSS from the portal's own <style> tag ── */
 function getPortalCSS() {
@@ -2442,17 +3038,36 @@ function buildStandaloneHTML(retId, ym) {
 /* ── DOWNLOAD — triggers browser file save ── */
 function downloadReturn(retId) {
   const ym = state.currentYM || currentYM();
-  const html = buildStandaloneHTML(retId, ym);
-  if (!html) {
-    showToast('Nothing to download', 'Open this form first so it has data to export', 'warning');
-    return;
-  }
-
+  const fmt = FORM_DOWNLOAD_FORMAT[retId] || 'word';
+  const isExcel = fmt === 'excel';
   const formLabel  = FORM_LABELS[retId] || retId;
   const monthLabel = getMonthLabel(ym).replace(' ','_');
-  const filename   = `TMA_${formLabel.replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_')}_${monthLabel}_${state.stationName.replace(/\s+/g,'_')}.html`;
+  const baseName   = `TMA_${formLabel.replace(/[^a-zA-Z0-9]/g,'_').replace(/_+/g,'_')}_${monthLabel}_${state.stationName.replace(/\s+/g,'_')}`;
 
-  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  let content, mime, ext;
+
+  if (isExcel) {
+    // Generate proper SpreadsheetML XML — Excel opens natively without any format warning
+    content = retId === 'ret-agro5' ? buildSpreadsheetMLAgro5(ym) : buildSpreadsheetML626(ym);
+    if (!content) {
+      showToast('Nothing to download', 'Open this form first so it has data to export', 'warning');
+      return;
+    }
+    mime = 'application/vnd.ms-excel';
+    ext  = '.xls';
+  } else {
+    const html = buildStandaloneHTML(retId, ym);
+    if (!html) {
+      showToast('Nothing to download', 'Open this form first so it has data to export', 'warning');
+      return;
+    }
+    content = html;
+    mime = 'application/msword';
+    ext  = '.doc';
+  }
+
+  const filename = baseName + ext;
+  const blob = new Blob([content], { type: mime + ';charset=utf-8' });
   const url  = URL.createObjectURL(blob);
   const a    = document.createElement('a');
   a.href = url; a.download = filename;
@@ -2460,7 +3075,6 @@ function downloadReturn(retId) {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 
-  // Show brief toast
   const toast = document.createElement('div');
   toast.className = 'dl-toast';
   toast.innerHTML = `✓ Downloaded: ${filename}`;
@@ -2596,10 +3210,17 @@ function selectSession(s) {
   btn0.style.cssText=s==='0600'?'background:rgba(255,255,255,.92);color:var(--tma-blue);font-weight:500;border:none':'background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.4)';
   btn1.style.cssText=s==='1200'?'background:rgba(255,255,255,.92);color:var(--tma-blue);font-weight:500;border:none':'background:rgba(255,255,255,.2);color:#fff;border-color:rgba(255,255,255,.4)';
   document.getElementById('sessionBadge').textContent=s+' UTC';
+  // Show/hide fields that are exclusive to the 0600z observation
+  const is0600 = s === '0600';
+  document.querySelectorAll('.col-0600').forEach(el => { el.style.display = is0600 ? '' : 'none'; });
+  ['section-rain-evap','section-rad-sun','section-soil-moist'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.style.display = is0600 ? '' : 'none';
+  });
 }
 
 // ── FORM 601 AUTO-CALCS ────────────────────────────────────────
 function calcWindRun(){const p=inp('ane_present'),v=inp('ane_prev'),el=document.getElementById('ane_diff');if(el)el.value=(p!==null&&v!==null)?(p-v).toFixed(2):'';}
+function calcSunshineHours(){const m=inp('sun_mins'),el=document.getElementById('sun_hrs');if(el)el.value=(m!==null)?Math.round(m/60):'';};
 /* ════════════════════════════════════════════════════════════════
    PSYCHROMETRIC CALCULATOR
    Based on WMO No.8 Guide to Meteorological Instruments & Methods
@@ -2671,7 +3292,7 @@ function calcPsychrometric() {
     document.getElementById('ps_esd').textContent  = esd.toFixed(2);
     document.getElementById('ps_esw').textContent  = esw.toFixed(2);
     document.getElementById('ps_vap').textContent  = e.toFixed(2);
-    document.getElementById('ps_rh').textContent   = rh.toFixed(1);
+    document.getElementById('ps_rh').textContent   = Math.round(rh);
     document.getElementById('ps_dew').textContent  = dew !== null ? dew.toFixed(1) : '—';
     document.getElementById('ps_A').textContent    = A.toFixed(6);
   }
@@ -2997,6 +3618,7 @@ function submitPhenoObservation() {
   state.phenoRecords = state.phenoRecords.filter(r => r.key !== rec.key);
   state.phenoRecords.push(rec);
   savePhenoState();
+  pushPhenoToSupabase(rec);
 
   showToast('✓ Phenological observation submitted',
     `${rec.cropName} · BBCH ${phaseCode} (${phaseName}) recorded for ${rec.date}`, 'success');
@@ -3045,12 +3667,64 @@ function switchForm601(btn,id){
   if(id==='formRainfall'){initRainfallMonthSelect();buildRainfallCardView();}
 }
 
+// ── FORM 601 VALIDATION ────────────────────────────────────────
+function validateForm601() {
+  const missing = [];
+  const has = id => {
+    const el = document.getElementById(id);
+    if (!el) return true; // element absent — skip
+    const v = el.value?.trim();
+    return v !== '' && v !== null && v !== undefined;
+  };
+  // Core fields required for every session
+  [['t_dry','Dry bulb temperature'],['t_wet','Wet bulb temperature'],
+   ['t_max','Maximum temperature'],['t_min','Minimum temperature'],
+   ['ane_speed','Wind speed']].forEach(([id,lbl])=>{ if(!has(id)) missing.push(lbl); });
+  // Wind direction — select must not be on the blank placeholder
+  const wdEl = document.getElementById('ane_dir');
+  if (!wdEl || !wdEl.value) missing.push('Wind direction');
+  // 0600z extra fields
+  if (currentSession === '0600') {
+    [['t_maxr','Maximum reset'],['t_minr','Minimum reset'],
+     ['ane_present','Anemometer present reading'],['ane_prev','Anemometer previous reading'],
+     ['rain_std','Rainfall (standard gauge)']].forEach(([id,lbl])=>{ if(!has(id)) missing.push(lbl); });
+  }
+  return missing;
+}
+
+function checkTempThresholds() {
+  const issues = [];
+  const tempFields = currentSession==='0600'
+    ? [['t_dry','Dry bulb'],['t_wet','Wet bulb'],['t_max','Maximum'],['t_min','Minimum'],['t_maxr','Max reset'],['t_minr','Min reset']]
+    : [['t_dry','Dry bulb'],['t_wet','Wet bulb'],['t_max','Maximum'],['t_min','Minimum']];
+  tempFields.forEach(([id,lbl])=>{
+    const v = inp(id);
+    if (v===null||v===9999) return; // blank or missing-data code — skip
+    if (v < 0 || v > 45) issues.push(`${lbl} (${v}°C is outside 0–45°C range)`);
+  });
+  return issues;
+}
+
 // ── SUBMIT OBSERVATION ─────────────────────────────────────────
 function submitObservation() {
+  // Completeness check
+  const missing = validateForm601();
+  if (missing.length > 0) {
+    const listed = missing.slice(0,4).join(', ') + (missing.length>4 ? ` and ${missing.length-4} more` : '');
+    showToast('Incomplete form', `Please fill all fields or enter 9999 for missing data. Empty: ${listed}`, 'error');
+    return;
+  }
+  // Temperature range check
+  const thresholdIssues = checkTempThresholds();
+  if (thresholdIssues.length > 0) {
+    showToast('Value out of range', thresholdIssues[0] + '. Check entry and correct or use 9999 for missing data.', 'error');
+    return;
+  }
   const {y,m,day}=getNow();
   const rec={
     key:`${y}${pad(m)}${pad(day)}-${currentSession}`,
-    date:`${pad(day)}/${pad(m)}/${y}`, day,month:m,year:y, session:currentSession,
+    date:`${pad(day)}/${pad(m)}/${y}`, day,month:m,year:y, session:currentSession, status:'pending',
+    stationName:state.stationName, observerName:state.observerName,
     dry:inp('t_dry'), wet:inp('t_wet'), depn:inp('t_depn'), dew:inp('t_dew'),
     rh:inp('t_rh'), vap:inp('t_vap'), tmax:inp('t_max'), tmaxReset:inp('t_maxr'),
     tmin:inp('t_min'), tminReset:inp('t_minr'),
@@ -3065,20 +3739,22 @@ function submitObservation() {
     radDistill:inp('rad_distill'), radiation:inp('rad_mjm'),
     // Sunshine
     sunshine:inp('sun_hrs'), sunMins:inp('sun_mins'),
-    soilTemp:{surf:inp('st_surf'),d5:inp('st_5'),d10:inp('st_10'),d20:inp('st_20'),d30:inp('st_30'),d50:inp('st_50'),d100:inp('st_100'),grassMin:inp('st_gmin'),reset:inp('st_reset')},
+    soilTemp:{surf:inp('st_surf'),d5:inp('st_5'),d10:inp('st_10'),d20:inp('st_20'),d30:inp('st_30'),d50:inp('st_50'),d100:inp('st_100')},
     sm:{d5:inp('sm_5'),d10:inp('sm_10'),d20:inp('sm_20'),d30:inp('sm_30'),d40:inp('sm_40'),d50:inp('sm_50'),d60:inp('sm_60'),d70:inp('sm_70'),d80:inp('sm_80'),d90:inp('sm_90'),d100:inp('sm_100')},
   };
   state.records=state.records.filter(r=>r.key!==rec.key);
   state.records.push(rec);
   saveState();
+  pushObsToSupabase(rec);
   state.sessionSubmitted[currentSession]=true;
   state.currentYM=`${y}-${pad(m)}`;
   const ms=document.getElementById('returns-month-select'); if(ms) ms.value=state.currentYM;
   const ref=`OBS-${y}${pad(m)}${pad(day)}-${currentSession}`;
-  state.notifications.unshift({type:'sms',title:'SMS confirmation',desc:`TMA: Obs ${rec.date} ${currentSession}UTC received. Rain:${rec.rain??'—'}mm MaxT:${rec.tmax??'—'}°C MinT:${rec.tmin??'—'}°C RH:${rec.rh??'—'}%`,time:'Just now'});
-  state.adminNotifications.unshift({title:`New observation — ${currentSession} UTC · ${rec.date}`,desc:`Rain:${rec.rain??'—'}mm | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | RH:${rec.rh??'—'}% | Dry:${rec.dry??'—'}°C | Wind:${rec.windRun??'—'}km | Sun:${rec.sunshine??'—'}h`,time:`Just now · Forwarded to ${ADMIN_PHONE}`});
-  showToast('✓ Observation submitted',`All 11 return forms updated. Ref: ${ref}`,'success');
-  setTimeout(()=>{clearForm();showPage('returns',null);switchReturn('ret-626');},1600);
+  state.notifications.unshift({type:'sms',title:'Observation sent for approval',desc:`TMA: Obs ${rec.date} ${currentSession}UTC submitted. Pending admin approval. Rain:${rec.rain??'—'}mm MaxT:${rec.tmax??'—'}°C MinT:${rec.tmin??'—'}°C RH:${rec.rh??'—'}%`,time:'Just now'});
+  state.adminNotifications.unshift({title:`⏳ Pending approval — ${currentSession} UTC · ${rec.date}`,desc:`Rain:${rec.rain??'—'}mm | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | RH:${rec.rh??'—'}% | Dry:${rec.dry??'—'}°C | Wind:${rec.windRun??'—'}km | Sun:${rec.sunshine??'—'}h`,time:`Just now · Awaiting approval`});
+  saveState();
+  showToast('Observation submitted','Sent for admin approval. Status: Pending. Ref: '+ref,'info');
+  setTimeout(()=>{clearForm();showPage('myRecords',document.querySelector('.nav-item[onclick*="myRecords"]'));},1600);
 }
 
 function saveDraft(){showToast('Draft saved','You can continue before submitting');}
@@ -3144,6 +3820,17 @@ function buildReturnById(retId,ym) {
 //  BUILD FUNCTIONS — official document style
 // ──────────────────────────────────────────────────────────────
 
+/* Helper: renders summary stats as a horizontal HTML table (Word-compatible, no flexbox) */
+function makeSummaryTable(pairs) {
+  const tdStyle = 'text-align:center;padding:4px 8px;border:1px solid #c8d4e4;background:#fff;min-width:80px;';
+  const lblStyle = 'font-size:9px;color:#555;text-transform:uppercase;letter-spacing:.3px;display:block;';
+  const valStyle = 'font-size:13px;font-weight:600;color:#0C447C;font-family:monospace;display:block;margin-top:2px;';
+  const cells = pairs.map(([lbl, val]) =>
+    `<td style="${tdStyle}"><span style="${lblStyle}">${lbl}</span><span style="${valStyle}">${val}</span></td>`
+  ).join('');
+  return `<table style="border-collapse:separate;border-spacing:3px;width:100%;"><tr>${cells}</tr></table>`;
+}
+
 /* Helper: standard official form wrapper — matches physical TMA document layout */
 function officialFormHtml(formNo, title, subtitle, metaItems, tableHtml, footerLeft, footerRight, summaryHtml) {
   const metaHtml = metaItems.map(([l,v]) =>
@@ -3155,7 +3842,7 @@ function officialFormHtml(formNo, title, subtitle, metaItems, tableHtml, footerL
       <div class="official-form-logo-row">
         <div class="form-number-box"><span style="font-size:10px;color:#777">Form No.</span><span>${formNo}</span></div>
         <div class="form-tma-emblem">
-          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjAgMTYwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnRtYS1sZXR0ZXIgeyBmb250LWZhbWlseTogQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogOTAwOyBmaWxsOiAjMjlBQkUyOyB9CiAgICAgIC50bWEtc3ViICAgIHsgZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyBmaWxsOiAjMjlBQkUyOyBsZXR0ZXItc3BhY2luZzogMS4ycHg7IH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgoKICA8IS0tIOKUgOKUgCBTV0lSTCBBUkMgKHRoZSBsb29waW5nIG92YWwgcGF0aCkg4pSA4pSAIC0tPgogIDwhLS0gT3V0ZXIgYXJjIOKAlCBsaWdodCBncmVlbiAtLT4KICA8cGF0aCBkPSJNIDE4IDEyMCBDIDEwIDcwLCAzMCAyMCwgODUgMTUgQyAxMzAgMTAsIDE2NSAzMCwgMTc1IDU1IgogICAgICAgIHN0cm9rZT0iIzhEQzYzRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0gTWlkZGxlIGFyYyDigJQgeWVsbG93L2dvbGQgLS0+CiAgPHBhdGggZD0iTSAyMiAxMjggQyAxMiA3OCwgMzUgMjUsIDkwIDE4IEMgMTM4IDEyLCAxNzIgMzQsIDE4MCA2MiIKICAgICAgICBzdHJva2U9IiNGNzk0MUQiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIElubmVyIGFyYyAxIOKAlCBibHVlIC0tPgogIDxwYXRoIGQ9Ik0gMjYgMTM2IEMgMTUgODYsIDQwIDMyLCA5NiAyNCBDIDE0NSAxNywgMTgwIDQwLCAxODYgNzAiCiAgICAgICAgc3Ryb2tlPSIjMjlBQkUyIiBzdHJva2Utd2lkdGg9IjMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBPdXRlciBjbG9zaW5nIGFyYyDigJQgZGFyayBncmVlbiAoY29tZXMgYXJvdW5kIGJvdHRvbSkgLS0+CiAgPHBhdGggZD0iTSAxOCAxMjAgQyA1IDE0NSwgMjAgMTYwLCA1MCAxNTUgQyA4MCAxNTAsIDk1IDEzNSwgMTAwIDExOCIKICAgICAgICBzdHJva2U9IiMwMDk0NDQiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0g4pSA4pSAIEFSUk9XIEhFQURTIGF0IGFyYyB0aXBzIOKUgOKUgCAtLT4KICA8IS0tIERhcmsgZ3JlZW4gYXJyb3cgKHRvcCwgcG9pbnRpbmcgdXBwZXItcmlnaHQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw1Mikgcm90YXRlKC0zMCkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC03IDE0LDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+CiAgPC9nPgogIDwhLS0gTGlnaHQgZ3JlZW4gYXJyb3cgKHNsaWdodGx5IGJlbG93LCBwb2ludGluZyB1cHBlci1yaWdodCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY1LDQ1KSByb3RhdGUoLTI1KSI+CiAgICA8cG9seWdvbiBwb2ludHM9IjAsLTYgMTIsMCAwLDYiIGZpbGw9IiM4REM2M0YiLz4KICA8L2c+CiAgPCEtLSBHb2xkL3llbGxvdyBhcnJvdyAobWlkZGxlKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzAsNTYpIHJvdGF0ZSgtMTUpIj4KICAgIDxwb2x5Z29uIHBvaW50cz0iMCwtNiAxMiwwIDAsNiIgZmlsbD0iI0Y3OTQxRCIvPgogIDwvZz4KICA8IS0tIEJsdWUgYXJyb3cgKGxvd2VyKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzYsNjYpIHJvdGF0ZSgtNSkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC02IDEyLDAgMCw2IiBmaWxsPSIjMjlBQkUyIi8+CiAgPC9nPgoKICA8IS0tIOKUgOKUgCBUTUEgQk9MRCBMRVRURVJTIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMDgiIHk9IjEwOCIgY2xhc3M9InRtYS1sZXR0ZXIiIGZvbnQtc2l6ZT0iNzgiIGRvbWluYW50LWJhc2VsaW5lPSJhdXRvIj5UTUE8L3RleHQ+CgogIDwhLS0g4pSA4pSAIFNVQlRJVExFIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMzAiIHk9IjEyOCIgY2xhc3M9InRtYS1zdWIiIGZvbnQtc2l6ZT0iMTAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pgo8L3N2Zz4=" alt="TMA" style="width:42px;height:auto;"/>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTUgMTU1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzFBNUNBQ30udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMUE1Q0FDO2xldHRlci1zcGFjaW5nOjFweH08L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNIDggMTE2IEMgMCA2OCwyMCAxNiw3NiA3IEMgMTE0IDEsMTQ2IDIxLDE1MSA1NCIgc3Ryb2tlPSIjOERDNjNGIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLDU0KSByb3RhdGUoLTY4KSI+PHBvbHlnb24gcG9pbnRzPSIwLC04IDE0LDAgMCw4IiBmaWxsPSIjOERDNjNGIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgMTI0IEMgNyA3NiwyOCAyMyw4NSAxMyBDIDEyNCA2LDE1NyAyNywxNjIgNjEiIHN0cm9rZT0iI0Y3OTQxRCIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2Miw2MSkgcm90YXRlKC02OCkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iI0Y3OTQxRCIvPjwvZz48cGF0aCBkPSJNIDI0IDEzMiBDIDE1IDg0LDM2IDMwLDk0IDE5IEMgMTM1IDExLDE2OCAzMywxNzQgNjciIHN0cm9rZT0iIzI5QUJFMiIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw2Nykgcm90YXRlKC02NSkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iIzI5QUJFMiIvPjwvZz48cGF0aCBkPSJNIDggMTE2IEMgLTEgMTQyLDEzIDE1MSw0MCAxNDggQyA2OCAxNDQsODMgMTI5LDg2IDExMiIgc3Ryb2tlPSIjMDA5NDQ0IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg2LDExMikgcm90YXRlKDI1KSI+PHBvbHlnb24gcG9pbnRzPSIwLC03IDEzLDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+PC9nPjx0ZXh0IHg9IjE0NSIgeT0iMTAyIiBjbGFzcz0idGwiIGZvbnQtc2l6ZT0iNjgiPlRNQTwvdGV4dD48dGV4dCB4PSIyMDgiIHk9IjEyNCIgY2xhc3M9InRzIiBmb250LXNpemU9IjkuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pjwvc3ZnPg==" alt="TMA" style="width:42px;height:auto;"/>
           <div class="official-form-tma-text">
             <div class="tma-country">United Republic of Tanzania</div>
             <div class="tma-authority">Tanzania Meteorological Authority</div>
@@ -3222,11 +3909,6 @@ function buildForm626(ym) {
 
   if (recs.length === 0) { el.innerHTML = noDataBanner(ym); return; }
 
-  // Accumulators for summary strip
-  let sumDry=0,cDry=0,sumWet=0,cWet=0,sumDew=0,cDew=0;
-  let sumRain=0,sumSun=0,sumWind=0,sumRad=0,sumEvap=0;
-  let maxTmax=null,minTmin=null;
-
   // Station number: parse into 8 digits (WMO station index)
   const stnStr = (state.wmoIndex||'00000000').replace(/\D/g,'').padStart(8,'0').slice(-8).split('');
   const yrStr  = String(y).split('');
@@ -3238,24 +3920,6 @@ function buildForm626(ym) {
   for (let d = 1; d <= days; d++) {
     const am = getRec(recs, d, '0600');
     const pm = getRec(recs, d, '1200');
-
-    if (am) {
-      if(am.dry!==null){sumDry+=am.dry;cDry++;}
-      if(am.wet!==null){sumWet+=am.wet;cWet++;}
-      if(am.dew!==null){sumDew+=am.dew;cDew++;}
-      if(am.rain!==null) sumRain+=am.rain;
-      if(am.sunshine!==null) sumSun+=am.sunshine;
-      if(am.windRun!==null) sumWind+=am.windRun;
-      if(am.radiation!==null) sumRad+=am.radiation;
-      if(am.evapStd!==null) sumEvap+=am.evapStd;
-      if(am.tmax!==null&&(maxTmax===null||am.tmax>maxTmax)) maxTmax=am.tmax;
-      if(am.tmin!==null&&(minTmin===null||am.tmin<minTmin)) minTmin=am.tmin;
-    }
-    if(pm){
-      if(pm.dry!==null){sumDry+=pm.dry;cDry++;}
-      if(pm.wet!==null){sumWet+=pm.wet;cWet++;}
-      if(pm.dew!==null){sumDew+=pm.dew;cDew++;}
-    }
 
     const dayStr  = pad(d).split('');
 
@@ -3327,22 +3991,6 @@ function buildForm626(ym) {
     </tr>`;
   }
 
-  const meanDry = cDry ? (sumDry/cDry).toFixed(1) : '—';
-  const meanWet = cWet ? (sumWet/cWet).toFixed(1) : '—';
-  const meanDew = cDew ? (sumDew/cDew).toFixed(1) : '—';
-
-  const sumHtml = `
-    <div class="official-summary-box"><div class="official-summary-box-label">Total Rainfall</div><div class="official-summary-box-val">${sumRain.toFixed(1)} mm</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Rain Days ≥1mm</div><div class="official-summary-box-val">${recs.filter(r=>r.session==='0600'&&r.rain>=1).length}</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Mean Dry Bulb</div><div class="official-summary-box-val">${meanDry}°C</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Mean Wet Bulb</div><div class="official-summary-box-val">${meanWet}°C</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Max Temp</div><div class="official-summary-box-val">${fmt(maxTmax)}°C</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Min Temp</div><div class="official-summary-box-val">${fmt(minTmin)}°C</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Total Wind Run</div><div class="official-summary-box-val">${sumWind.toFixed(1)} km</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Total Sunshine</div><div class="official-summary-box-val">${sumSun.toFixed(1)} h</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Total Radiation</div><div class="official-summary-box-val">${sumRad.toFixed(2)} MJ/m²</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Pan Evaporation</div><div class="official-summary-box-val">${sumEvap.toFixed(1)} mm</div></div>`;
-
   const tblHtml = `
   <div class="f626-scroll-wrap">
   <table class="f626-tbl">
@@ -3399,7 +4047,7 @@ function buildForm626(ym) {
       <div class="official-form-logo-row">
         <div class="form-number-box"><span style="font-size:10px;color:#777">Form No.</span><span>626</span></div>
         <div class="form-tma-emblem">
-          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjAgMTYwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnRtYS1sZXR0ZXIgeyBmb250LWZhbWlseTogQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogOTAwOyBmaWxsOiAjMjlBQkUyOyB9CiAgICAgIC50bWEtc3ViICAgIHsgZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyBmaWxsOiAjMjlBQkUyOyBsZXR0ZXItc3BhY2luZzogMS4ycHg7IH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgoKICA8IS0tIOKUgOKUgCBTV0lSTCBBUkMgKHRoZSBsb29waW5nIG92YWwgcGF0aCkg4pSA4pSAIC0tPgogIDwhLS0gT3V0ZXIgYXJjIOKAlCBsaWdodCBncmVlbiAtLT4KICA8cGF0aCBkPSJNIDE4IDEyMCBDIDEwIDcwLCAzMCAyMCwgODUgMTUgQyAxMzAgMTAsIDE2NSAzMCwgMTc1IDU1IgogICAgICAgIHN0cm9rZT0iIzhEQzYzRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0gTWlkZGxlIGFyYyDigJQgeWVsbG93L2dvbGQgLS0+CiAgPHBhdGggZD0iTSAyMiAxMjggQyAxMiA3OCwgMzUgMjUsIDkwIDE4IEMgMTM4IDEyLCAxNzIgMzQsIDE4MCA2MiIKICAgICAgICBzdHJva2U9IiNGNzk0MUQiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIElubmVyIGFyYyAxIOKAlCBibHVlIC0tPgogIDxwYXRoIGQ9Ik0gMjYgMTM2IEMgMTUgODYsIDQwIDMyLCA5NiAyNCBDIDE0NSAxNywgMTgwIDQwLCAxODYgNzAiCiAgICAgICAgc3Ryb2tlPSIjMjlBQkUyIiBzdHJva2Utd2lkdGg9IjMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBPdXRlciBjbG9zaW5nIGFyYyDigJQgZGFyayBncmVlbiAoY29tZXMgYXJvdW5kIGJvdHRvbSkgLS0+CiAgPHBhdGggZD0iTSAxOCAxMjAgQyA1IDE0NSwgMjAgMTYwLCA1MCAxNTUgQyA4MCAxNTAsIDk1IDEzNSwgMTAwIDExOCIKICAgICAgICBzdHJva2U9IiMwMDk0NDQiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0g4pSA4pSAIEFSUk9XIEhFQURTIGF0IGFyYyB0aXBzIOKUgOKUgCAtLT4KICA8IS0tIERhcmsgZ3JlZW4gYXJyb3cgKHRvcCwgcG9pbnRpbmcgdXBwZXItcmlnaHQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw1Mikgcm90YXRlKC0zMCkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC03IDE0LDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+CiAgPC9nPgogIDwhLS0gTGlnaHQgZ3JlZW4gYXJyb3cgKHNsaWdodGx5IGJlbG93LCBwb2ludGluZyB1cHBlci1yaWdodCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY1LDQ1KSByb3RhdGUoLTI1KSI+CiAgICA8cG9seWdvbiBwb2ludHM9IjAsLTYgMTIsMCAwLDYiIGZpbGw9IiM4REM2M0YiLz4KICA8L2c+CiAgPCEtLSBHb2xkL3llbGxvdyBhcnJvdyAobWlkZGxlKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzAsNTYpIHJvdGF0ZSgtMTUpIj4KICAgIDxwb2x5Z29uIHBvaW50cz0iMCwtNiAxMiwwIDAsNiIgZmlsbD0iI0Y3OTQxRCIvPgogIDwvZz4KICA8IS0tIEJsdWUgYXJyb3cgKGxvd2VyKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzYsNjYpIHJvdGF0ZSgtNSkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC02IDEyLDAgMCw2IiBmaWxsPSIjMjlBQkUyIi8+CiAgPC9nPgoKICA8IS0tIOKUgOKUgCBUTUEgQk9MRCBMRVRURVJTIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMDgiIHk9IjEwOCIgY2xhc3M9InRtYS1sZXR0ZXIiIGZvbnQtc2l6ZT0iNzgiIGRvbWluYW50LWJhc2VsaW5lPSJhdXRvIj5UTUE8L3RleHQ+CgogIDwhLS0g4pSA4pSAIFNVQlRJVExFIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMzAiIHk9IjEyOCIgY2xhc3M9InRtYS1zdWIiIGZvbnQtc2l6ZT0iMTAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pgo8L3N2Zz4=" alt="TMA" style="width:42px;height:auto;"/>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTUgMTU1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzFBNUNBQ30udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMUE1Q0FDO2xldHRlci1zcGFjaW5nOjFweH08L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNIDggMTE2IEMgMCA2OCwyMCAxNiw3NiA3IEMgMTE0IDEsMTQ2IDIxLDE1MSA1NCIgc3Ryb2tlPSIjOERDNjNGIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLDU0KSByb3RhdGUoLTY4KSI+PHBvbHlnb24gcG9pbnRzPSIwLC04IDE0LDAgMCw4IiBmaWxsPSIjOERDNjNGIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgMTI0IEMgNyA3NiwyOCAyMyw4NSAxMyBDIDEyNCA2LDE1NyAyNywxNjIgNjEiIHN0cm9rZT0iI0Y3OTQxRCIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2Miw2MSkgcm90YXRlKC02OCkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iI0Y3OTQxRCIvPjwvZz48cGF0aCBkPSJNIDI0IDEzMiBDIDE1IDg0LDM2IDMwLDk0IDE5IEMgMTM1IDExLDE2OCAzMywxNzQgNjciIHN0cm9rZT0iIzI5QUJFMiIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw2Nykgcm90YXRlKC02NSkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iIzI5QUJFMiIvPjwvZz48cGF0aCBkPSJNIDggMTE2IEMgLTEgMTQyLDEzIDE1MSw0MCAxNDggQyA2OCAxNDQsODMgMTI5LDg2IDExMiIgc3Ryb2tlPSIjMDA5NDQ0IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg2LDExMikgcm90YXRlKDI1KSI+PHBvbHlnb24gcG9pbnRzPSIwLC03IDEzLDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+PC9nPjx0ZXh0IHg9IjE0NSIgeT0iMTAyIiBjbGFzcz0idGwiIGZvbnQtc2l6ZT0iNjgiPlRNQTwvdGV4dD48dGV4dCB4PSIyMDgiIHk9IjEyNCIgY2xhc3M9InRzIiBmb250LXNpemU9IjkuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pjwvc3ZnPg==" alt="TMA" style="width:42px;height:auto;"/>
           <div class="official-form-tma-text">
             <div class="tma-country">United Republic of Tanzania</div>
             <div class="tma-authority">Tanzania Meteorological Authority</div>
@@ -3417,7 +4065,6 @@ function buildForm626(ym) {
       <div class="official-form-meta-item"><span class="meta-label">Month &amp; Year:</span><span class="meta-value">${getMonthLabel(ym)}</span></div>
     </div>
     ${tblHtml}
-    <div class="official-summary">${sumHtml}</div>
     <div class="official-form-footer">
       <span>Effective Date: October 31, 2019</span>
       <span style="font-size:9px;color:#888">Auto-populated from Form 601 submissions</span>
@@ -3458,11 +4105,12 @@ function buildForm10C(ym) {
       <tr class="total-row"><td>TOTAL</td><td colspan="2">—</td><td>${total.toFixed(1)}</td><td>${cnt?(total/cnt/24).toFixed(2):'—'}</td><td>${cnt?(total/cnt/24).toFixed(1):'—'}</td></tr>
       <tr class="mean-row"><td>MEAN</td><td colspan="2">—</td><td>${cnt?(total/cnt).toFixed(1):'—'}</td><td>${cnt?(total/cnt/24).toFixed(2):'—'}</td><td>${cnt?(total/cnt/24).toFixed(1):'—'}</td></tr>
     </tfoot></table>`;
-  const sumHtml=`
-    <div class="official-summary-box"><div class="official-summary-box-label">Total Wind Run</div><div class="official-summary-box-val">${total.toFixed(1)} km</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Mean km/day</div><div class="official-summary-box-val">${cnt?(total/cnt).toFixed(1):'—'}</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Mean km/hr</div><div class="official-summary-box-val">${cnt?(total/cnt/24).toFixed(2):'—'}</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Days recorded</div><div class="official-summary-box-val">${cnt} / ${days}</div></div>`;
+  const sumHtml=makeSummaryTable([
+    ['Total Wind Run', `${total.toFixed(1)} km`],
+    ['Mean km/day', `${cnt?(total/cnt).toFixed(1):'—'}`],
+    ['Mean km/hr', `${cnt?(total/cnt/24).toFixed(2):'—'}`],
+    ['Days recorded', `${cnt} / ${days}`],
+  ]);
   el.innerHTML=officialFormHtml('Form No. 10C','Wind Run Readings','',
     [['Station name',state.stationName],['WMO Index No.',state.wmoIndex],['Data type','WINDRUN'],['Month / Year',getMonthLabel(ym)]],
     tblHtml,'Effective Date: October 31, 2019','Revision No. 01',sumHtml);
@@ -3509,10 +4157,11 @@ function buildForm446(ym) {
     <tfoot>
       <tr class="total-row"><td>TOTAL</td><td>${totRain.toFixed(1)}</td><td>—</td><td>—</td><td>${totEvap.toFixed(1)}</td><td>—</td><td>—</td></tr>
     </tfoot></table>`;
-  const sumHtml=`
-    <div class="official-summary-box"><div class="official-summary-box-label">Total Rainfall</div><div class="official-summary-box-val">${totRain.toFixed(1)} mm</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Total Evaporation</div><div class="official-summary-box-val">${totEvap.toFixed(1)} mm</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Mean Daily Evap.</div><div class="official-summary-box-val">${recs.filter(r=>r.session==='0600'&&r.evapStd!==null).length?(totEvap/recs.filter(r=>r.session==='0600'&&r.evapStd!==null).length).toFixed(1):'—'} mm</div></div>`;
+  const sumHtml=makeSummaryTable([
+    ['Total Rainfall', `${totRain.toFixed(1)} mm`],
+    ['Total Evaporation', `${totEvap.toFixed(1)} mm`],
+    ['Mean Daily Evap.', `${recs.filter(r=>r.session==='0600'&&r.evapStd!==null).length?(totEvap/recs.filter(r=>r.session==='0600'&&r.evapStd!==null).length).toFixed(1):'—'} mm`],
+  ]);
   el.innerHTML=officialFormHtml('Form No. 446','Evaporation from Standard Evaporation Pan','',
     [['Station name',state.stationName],['WMO Index No.',state.wmoIndex],['Pan No.','1'],['Month/Year',getMonthLabel(ym)]],
     tblHtml,'Effective Date: October 31, 2019','Revision No. 03',sumHtml);
@@ -3554,11 +4203,12 @@ function buildForm616(ym) {
       <tr class="total-row"><td>Total</td><td>—</td><td>${totDistill.toFixed(1)}</td><td>—</td><td>${totMjm.toFixed(2)}</td><td>${totSun.toFixed(1)}</td><td>—</td></tr>
       <tr class="mean-row"><td>Daily Mean</td><td>—</td><td>${cnt?(totDistill/cnt).toFixed(1):'—'}</td><td>—</td><td>${cnt?(totMjm/cnt).toFixed(2):'—'}</td><td>${cnt?(totSun/cnt).toFixed(1):'—'}</td><td>—</td></tr>
     </tfoot></table>`;
-  const sumHtml=`
-    <div class="official-summary-box"><div class="official-summary-box-label">Total Radiation</div><div class="official-summary-box-val">${totMjm.toFixed(2)} MJ/m²</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Daily Mean Rad.</div><div class="official-summary-box-val">${cnt?(totMjm/cnt).toFixed(2):'—'} MJ/m²</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Total Sunshine</div><div class="official-summary-box-val">${totSun.toFixed(1)} hrs</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Days recorded</div><div class="official-summary-box-val">${cnt} / ${days}</div></div>`;
+  const sumHtml=makeSummaryTable([
+    ['Total Radiation', `${totMjm.toFixed(2)} MJ/m²`],
+    ['Daily Mean Rad.', `${cnt?(totMjm/cnt).toFixed(2):'—'} MJ/m²`],
+    ['Total Sunshine', `${totSun.toFixed(1)} hrs`],
+    ['Days recorded', `${cnt} / ${days}`],
+  ]);
   el.innerHTML=officialFormHtml('Form No. 616','Reading of Gunn-Bellani Radiation Integrator','',
     [['Station name',state.stationName],['WMO Index No.',state.wmoIndex],['Month & Year',getMonthLabel(ym)],['Calibration','R = 24.6d + 32.4']],
     tblHtml,'Effective Date: October 31, 2019','Revision No. 12',sumHtml);
@@ -3601,11 +4251,12 @@ function buildForm10Var(ym, field, dataType, unit, renderId) {
       <tr class="total-row"><td>TOTAL</td>${times.map((t,i)=>i===2?`<td>${cnt?sum.toFixed(dec):'—'}</td>`:i===4?`<td>${cnt?sum.toFixed(dec):'—'}</td>`:'<td>—</td>').join('')}</tr>
       <tr class="mean-row"><td>MEAN</td>${times.map((t,i)=>i===2?`<td><strong>${mean}</strong></td>`:i===4?`<td>${cnt?mean:'—'}</td>`:'<td>—</td>').join('')}</tr>
     </tfoot></table>`;
-  const sumHtml=`
-    <div class="official-summary-box"><div class="official-summary-box-label">Mean ${dataType}</div><div class="official-summary-box-val">${mean} ${unit}</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Maximum</div><div class="official-summary-box-val">${fmt(maxV,dec)} ${unit}</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Minimum</div><div class="official-summary-box-val">${fmt(minV,dec)} ${unit}</div></div>
-    <div class="official-summary-box"><div class="official-summary-box-label">Observations</div><div class="official-summary-box-val">${cnt} / ${days*2}</div></div>`;
+  const sumHtml=makeSummaryTable([
+    [`Mean ${dataType}`, `${mean} ${unit}`],
+    ['Maximum', `${fmt(maxV,dec)} ${unit}`],
+    ['Minimum', `${fmt(minV,dec)} ${unit}`],
+    ['Observations', `${cnt} / ${days*2}`],
+  ]);
   el.innerHTML=officialFormHtml('Form No. 10',`Recording of Various Weather Parameters: ${dataType} (${unit})`, '',
     [['Station name',state.stationName],['WMO Index No.',state.wmoIndex],['Data type',dataType],['Month / Year',getMonthLabel(ym)]],
     tblHtml,'Effective Date: October 31, 2019','Revision No. 12',sumHtml);
@@ -3975,18 +4626,18 @@ function buildAgro5(ym) {
       <tbody>${rows}</tbody>
     </table></div>`;
 
-  const sumHtml=smKeys.map((k,ki)=>{
+  const sumHtml=makeSummaryTable(smKeys.map((k,ki)=>{
     const rHavingSm=recs.filter(r=>r.sm&&r.sm[k]!==null&&r.sm[k]!==undefined);
     const mean=rHavingSm.length?(rHavingSm.reduce((a,r)=>a+r.sm[k],0)/rHavingSm.length).toFixed(1):'—';
-    return `<div class="official-summary-box"><div class="official-summary-box-label">Mean ${depths[ki]}cm</div><div class="official-summary-box-val">${mean}%</div></div>`;
-  }).join('');
+    return [`Mean ${depths[ki]}cm`, `${mean}%`];
+  }));
 
   el.innerHTML=`<div class="official-form-wrap">
     <div class="official-form-header">
       <div class="official-form-logo-row">
         <div class="form-number-box"><span style="font-size:10px;color:#777">Form No.</span><span>AGRO 5</span></div>
         <div class="form-tma-emblem">
-          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjAgMTYwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnRtYS1sZXR0ZXIgeyBmb250LWZhbWlseTogQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogOTAwOyBmaWxsOiAjMjlBQkUyOyB9CiAgICAgIC50bWEtc3ViICAgIHsgZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyBmaWxsOiAjMjlBQkUyOyBsZXR0ZXItc3BhY2luZzogMS4ycHg7IH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgoKICA8IS0tIOKUgOKUgCBTV0lSTCBBUkMgKHRoZSBsb29waW5nIG92YWwgcGF0aCkg4pSA4pSAIC0tPgogIDwhLS0gT3V0ZXIgYXJjIOKAlCBsaWdodCBncmVlbiAtLT4KICA8cGF0aCBkPSJNIDE4IDEyMCBDIDEwIDcwLCAzMCAyMCwgODUgMTUgQyAxMzAgMTAsIDE2NSAzMCwgMTc1IDU1IgogICAgICAgIHN0cm9rZT0iIzhEQzYzRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0gTWlkZGxlIGFyYyDigJQgeWVsbG93L2dvbGQgLS0+CiAgPHBhdGggZD0iTSAyMiAxMjggQyAxMiA3OCwgMzUgMjUsIDkwIDE4IEMgMTM4IDEyLCAxNzIgMzQsIDE4MCA2MiIKICAgICAgICBzdHJva2U9IiNGNzk0MUQiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIElubmVyIGFyYyAxIOKAlCBibHVlIC0tPgogIDxwYXRoIGQ9Ik0gMjYgMTM2IEMgMTUgODYsIDQwIDMyLCA5NiAyNCBDIDE0NSAxNywgMTgwIDQwLCAxODYgNzAiCiAgICAgICAgc3Ryb2tlPSIjMjlBQkUyIiBzdHJva2Utd2lkdGg9IjMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBPdXRlciBjbG9zaW5nIGFyYyDigJQgZGFyayBncmVlbiAoY29tZXMgYXJvdW5kIGJvdHRvbSkgLS0+CiAgPHBhdGggZD0iTSAxOCAxMjAgQyA1IDE0NSwgMjAgMTYwLCA1MCAxNTUgQyA4MCAxNTAsIDk1IDEzNSwgMTAwIDExOCIKICAgICAgICBzdHJva2U9IiMwMDk0NDQiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0g4pSA4pSAIEFSUk9XIEhFQURTIGF0IGFyYyB0aXBzIOKUgOKUgCAtLT4KICA8IS0tIERhcmsgZ3JlZW4gYXJyb3cgKHRvcCwgcG9pbnRpbmcgdXBwZXItcmlnaHQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw1Mikgcm90YXRlKC0zMCkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC03IDE0LDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+CiAgPC9nPgogIDwhLS0gTGlnaHQgZ3JlZW4gYXJyb3cgKHNsaWdodGx5IGJlbG93LCBwb2ludGluZyB1cHBlci1yaWdodCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY1LDQ1KSByb3RhdGUoLTI1KSI+CiAgICA8cG9seWdvbiBwb2ludHM9IjAsLTYgMTIsMCAwLDYiIGZpbGw9IiM4REM2M0YiLz4KICA8L2c+CiAgPCEtLSBHb2xkL3llbGxvdyBhcnJvdyAobWlkZGxlKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzAsNTYpIHJvdGF0ZSgtMTUpIj4KICAgIDxwb2x5Z29uIHBvaW50cz0iMCwtNiAxMiwwIDAsNiIgZmlsbD0iI0Y3OTQxRCIvPgogIDwvZz4KICA8IS0tIEJsdWUgYXJyb3cgKGxvd2VyKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzYsNjYpIHJvdGF0ZSgtNSkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC02IDEyLDAgMCw2IiBmaWxsPSIjMjlBQkUyIi8+CiAgPC9nPgoKICA8IS0tIOKUgOKUgCBUTUEgQk9MRCBMRVRURVJTIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMDgiIHk9IjEwOCIgY2xhc3M9InRtYS1sZXR0ZXIiIGZvbnQtc2l6ZT0iNzgiIGRvbWluYW50LWJhc2VsaW5lPSJhdXRvIj5UTUE8L3RleHQ+CgogIDwhLS0g4pSA4pSAIFNVQlRJVExFIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMzAiIHk9IjEyOCIgY2xhc3M9InRtYS1zdWIiIGZvbnQtc2l6ZT0iMTAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pgo8L3N2Zz4=" alt="TMA" style="width:42px;height:auto;"/>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTUgMTU1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzFBNUNBQ30udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMUE1Q0FDO2xldHRlci1zcGFjaW5nOjFweH08L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNIDggMTE2IEMgMCA2OCwyMCAxNiw3NiA3IEMgMTE0IDEsMTQ2IDIxLDE1MSA1NCIgc3Ryb2tlPSIjOERDNjNGIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLDU0KSByb3RhdGUoLTY4KSI+PHBvbHlnb24gcG9pbnRzPSIwLC04IDE0LDAgMCw4IiBmaWxsPSIjOERDNjNGIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgMTI0IEMgNyA3NiwyOCAyMyw4NSAxMyBDIDEyNCA2LDE1NyAyNywxNjIgNjEiIHN0cm9rZT0iI0Y3OTQxRCIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2Miw2MSkgcm90YXRlKC02OCkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iI0Y3OTQxRCIvPjwvZz48cGF0aCBkPSJNIDI0IDEzMiBDIDE1IDg0LDM2IDMwLDk0IDE5IEMgMTM1IDExLDE2OCAzMywxNzQgNjciIHN0cm9rZT0iIzI5QUJFMiIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw2Nykgcm90YXRlKC02NSkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iIzI5QUJFMiIvPjwvZz48cGF0aCBkPSJNIDggMTE2IEMgLTEgMTQyLDEzIDE1MSw0MCAxNDggQyA2OCAxNDQsODMgMTI5LDg2IDExMiIgc3Ryb2tlPSIjMDA5NDQ0IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg2LDExMikgcm90YXRlKDI1KSI+PHBvbHlnb24gcG9pbnRzPSIwLC03IDEzLDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+PC9nPjx0ZXh0IHg9IjE0NSIgeT0iMTAyIiBjbGFzcz0idGwiIGZvbnQtc2l6ZT0iNjgiPlRNQTwvdGV4dD48dGV4dCB4PSIyMDgiIHk9IjEyNCIgY2xhc3M9InRzIiBmb250LXNpemU9IjkuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pjwvc3ZnPg==" alt="TMA" style="width:42px;height:auto;"/>
           <div class="official-form-tma-text">
             <div class="tma-country">United Republic of Tanzania</div>
             <div class="tma-authority">Tanzania Meteorological Authority</div>
@@ -4172,7 +4823,7 @@ function buildForm202(ym) {
       <div class="official-form-logo-row">
         <div class="form-number-box"><span style="font-size:10px;color:#777">Form No.</span><span>202</span></div>
         <div class="form-tma-emblem">
-          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNjAgMTYwIj4KICA8ZGVmcz4KICAgIDxzdHlsZT4KICAgICAgLnRtYS1sZXR0ZXIgeyBmb250LWZhbWlseTogQXJpYWwgQmxhY2ssIEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogOTAwOyBmaWxsOiAjMjlBQkUyOyB9CiAgICAgIC50bWEtc3ViICAgIHsgZm9udC1mYW1pbHk6IEFyaWFsLCBzYW5zLXNlcmlmOyBmb250LXdlaWdodDogNzAwOyBmaWxsOiAjMjlBQkUyOyBsZXR0ZXItc3BhY2luZzogMS4ycHg7IH0KICAgIDwvc3R5bGU+CiAgPC9kZWZzPgoKICA8IS0tIOKUgOKUgCBTV0lSTCBBUkMgKHRoZSBsb29waW5nIG92YWwgcGF0aCkg4pSA4pSAIC0tPgogIDwhLS0gT3V0ZXIgYXJjIOKAlCBsaWdodCBncmVlbiAtLT4KICA8cGF0aCBkPSJNIDE4IDEyMCBDIDEwIDcwLCAzMCAyMCwgODUgMTUgQyAxMzAgMTAsIDE2NSAzMCwgMTc1IDU1IgogICAgICAgIHN0cm9rZT0iIzhEQzYzRiIgc3Ryb2tlLXdpZHRoPSIzLjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogIDwhLS0gTWlkZGxlIGFyYyDigJQgeWVsbG93L2dvbGQgLS0+CiAgPHBhdGggZD0iTSAyMiAxMjggQyAxMiA3OCwgMzUgMjUsIDkwIDE4IEMgMTM4IDEyLCAxNzIgMzQsIDE4MCA2MiIKICAgICAgICBzdHJva2U9IiNGNzk0MUQiIHN0cm9rZS13aWR0aD0iMy41IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz4KICA8IS0tIElubmVyIGFyYyAxIOKAlCBibHVlIC0tPgogIDxwYXRoIGQ9Ik0gMjYgMTM2IEMgMTUgODYsIDQwIDMyLCA5NiAyNCBDIDE0NSAxNywgMTgwIDQwLCAxODYgNzAiCiAgICAgICAgc3Ryb2tlPSIjMjlBQkUyIiBzdHJva2Utd2lkdGg9IjMuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CiAgPCEtLSBPdXRlciBjbG9zaW5nIGFyYyDigJQgZGFyayBncmVlbiAoY29tZXMgYXJvdW5kIGJvdHRvbSkgLS0+CiAgPHBhdGggZD0iTSAxOCAxMjAgQyA1IDE0NSwgMjAgMTYwLCA1MCAxNTUgQyA4MCAxNTAsIDk1IDEzNSwgMTAwIDExOCIKICAgICAgICBzdHJva2U9IiMwMDk0NDQiIHN0cm9rZS13aWR0aD0iMyIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogIDwhLS0g4pSA4pSAIEFSUk9XIEhFQURTIGF0IGFyYyB0aXBzIOKUgOKUgCAtLT4KICA8IS0tIERhcmsgZ3JlZW4gYXJyb3cgKHRvcCwgcG9pbnRpbmcgdXBwZXItcmlnaHQpIC0tPgogIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw1Mikgcm90YXRlKC0zMCkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC03IDE0LDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+CiAgPC9nPgogIDwhLS0gTGlnaHQgZ3JlZW4gYXJyb3cgKHNsaWdodGx5IGJlbG93LCBwb2ludGluZyB1cHBlci1yaWdodCkgLS0+CiAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTY1LDQ1KSByb3RhdGUoLTI1KSI+CiAgICA8cG9seWdvbiBwb2ludHM9IjAsLTYgMTIsMCAwLDYiIGZpbGw9IiM4REM2M0YiLz4KICA8L2c+CiAgPCEtLSBHb2xkL3llbGxvdyBhcnJvdyAobWlkZGxlKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzAsNTYpIHJvdGF0ZSgtMTUpIj4KICAgIDxwb2x5Z29uIHBvaW50cz0iMCwtNiAxMiwwIDAsNiIgZmlsbD0iI0Y3OTQxRCIvPgogIDwvZz4KICA8IS0tIEJsdWUgYXJyb3cgKGxvd2VyKSAtLT4KICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNzYsNjYpIHJvdGF0ZSgtNSkiPgogICAgPHBvbHlnb24gcG9pbnRzPSIwLC02IDEyLDAgMCw2IiBmaWxsPSIjMjlBQkUyIi8+CiAgPC9nPgoKICA8IS0tIOKUgOKUgCBUTUEgQk9MRCBMRVRURVJTIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMDgiIHk9IjEwOCIgY2xhc3M9InRtYS1sZXR0ZXIiIGZvbnQtc2l6ZT0iNzgiIGRvbWluYW50LWJhc2VsaW5lPSJhdXRvIj5UTUE8L3RleHQ+CgogIDwhLS0g4pSA4pSAIFNVQlRJVExFIOKUgOKUgCAtLT4KICA8dGV4dCB4PSIxMzAiIHk9IjEyOCIgY2xhc3M9InRtYS1zdWIiIGZvbnQtc2l6ZT0iMTAuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pgo8L3N2Zz4=" alt="TMA" style="width:42px;height:auto;"/>
+          <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyOTUgMTU1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzFBNUNBQ30udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMUE1Q0FDO2xldHRlci1zcGFjaW5nOjFweH08L3N0eWxlPjwvZGVmcz48cGF0aCBkPSJNIDggMTE2IEMgMCA2OCwyMCAxNiw3NiA3IEMgMTE0IDEsMTQ2IDIxLDE1MSA1NCIgc3Ryb2tlPSIjOERDNjNGIiBzdHJva2Utd2lkdGg9IjQuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTUxLDU0KSByb3RhdGUoLTY4KSI+PHBvbHlnb24gcG9pbnRzPSIwLC04IDE0LDAgMCw4IiBmaWxsPSIjOERDNjNGIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgMTI0IEMgNyA3NiwyOCAyMyw4NSAxMyBDIDEyNCA2LDE1NyAyNywxNjIgNjEiIHN0cm9rZT0iI0Y3OTQxRCIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE2Miw2MSkgcm90YXRlKC02OCkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iI0Y3OTQxRCIvPjwvZz48cGF0aCBkPSJNIDI0IDEzMiBDIDE1IDg0LDM2IDMwLDk0IDE5IEMgMTM1IDExLDE2OCAzMywxNzQgNjciIHN0cm9rZT0iIzI5QUJFMiIgc3Ryb2tlLXdpZHRoPSI0LjUiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE3NCw2Nykgcm90YXRlKC02NSkiPjxwb2x5Z29uIHBvaW50cz0iMCwtNyAxMywwIDAsNyIgZmlsbD0iIzI5QUJFMiIvPjwvZz48cGF0aCBkPSJNIDggMTE2IEMgLTEgMTQyLDEzIDE1MSw0MCAxNDggQyA2OCAxNDQsODMgMTI5LDg2IDExMiIgc3Ryb2tlPSIjMDA5NDQ0IiBzdHJva2Utd2lkdGg9IjQiIGZpbGw9Im5vbmUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPjxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDg2LDExMikgcm90YXRlKDI1KSI+PHBvbHlnb24gcG9pbnRzPSIwLC03IDEzLDAgMCw3IiBmaWxsPSIjMDA5NDQ0Ii8+PC9nPjx0ZXh0IHg9IjE0NSIgeT0iMTAyIiBjbGFzcz0idGwiIGZvbnQtc2l6ZT0iNjgiPlRNQTwvdGV4dD48dGV4dCB4PSIyMDgiIHk9IjEyNCIgY2xhc3M9InRzIiBmb250LXNpemU9IjkuNSIgdGV4dC1hbmNob3I9Im1pZGRsZSI+VEFOWkFOSUEgTUVURU9ST0xPR0lDQUwgQVVUSE9SSVRZPC90ZXh0Pjwvc3ZnPg==" alt="TMA" style="width:42px;height:auto;"/>
           <div class="official-form-tma-text">
             <div class="tma-country">United Republic of Tanzania</div>
             <div class="tma-authority">Tanzania Meteorological Authority</div>
@@ -4288,10 +4939,49 @@ function refreshMyRecords() {
       <td>${r.rh??'—'}</td><td>${r.dry??'—'}</td><td>${r.wet??'—'}</td><td>${r.dew??'—'}</td>
       <td>${r.windRun??'—'}</td><td>${r.sunshine??'—'}</td>
       <td>${r.radiation??'—'}</td><td>${r.evapStd??'—'}</td>
-      <td><span class="badge badge-teal">Approved</span></td>
-      <td style="white-space:nowrap"><button class="btn btn-sm btn-wa" title="Share via WhatsApp to Admin" onclick="shareObsWithAdmin('${r.key}','wa')">📱</button> <button class="btn btn-sm btn-sms" title="Send SMS to Admin" onclick="shareObsWithAdmin('${r.key}','sms')">✉</button></td>
+      <td>${r.status==='approved'?'<span class="badge badge-teal">Approved</span>':'<span class="badge badge-amber">Pending</span>'}</td>
+      <td style="white-space:nowrap">${r.status!=='approved'?`<button class="btn btn-sm" title="Edit this observation" onclick="editObservation('${r.key}')" style="background:var(--tma-blue);color:#fff;border:none">✏ Edit</button> `:''}
+      <button class="btn btn-sm btn-wa" title="Share via WhatsApp to Admin" onclick="shareObsWithAdmin('${r.key}','wa')">📱</button> <button class="btn btn-sm btn-sms" title="Send SMS to Admin" onclick="shareObsWithAdmin('${r.key}','sms')">✉</button></td>
     </tr>`).join('');
   }
+}
+
+function editObservation(key) {
+  const r = state.records.find(rec => rec.key === key);
+  if (!r) { showToast('Not found','Observation record not found','error'); return; }
+  // Navigate to form and set session
+  showPage('obsForms', document.querySelector('.nav-item[onclick*="obsForms"]'));
+  selectSession(r.session);
+  // Helper to set input value safely
+  const setVal = (id, v) => { const el = document.getElementById(id); if(el && v !== null && v !== undefined) el.value = v; };
+  // Temperature screen
+  setVal('t_dry', r.dry); setVal('t_wet', r.wet);
+  setVal('t_max', r.tmax); setVal('t_maxr', r.tmaxReset);
+  setVal('t_min', r.tmin); setVal('t_minr', r.tminReset);
+  // Wind / anemometer
+  setVal('ane_present', r.windAct); setVal('ane_prev', r.windPrev);
+  const dirEl = document.getElementById('ane_dir');
+  if (dirEl && r.windDir) dirEl.value = r.windDir;
+  setVal('ane_speed', r.windSpeed);
+  calcWindRun();
+  // Rainfall & evaporation
+  setVal('rain_std', r.rain);
+  setVal('evap_rain', r.evap446Rain); setVal('evap_cups_out', r.evapCupsOut);
+  setVal('evap_cups_in', r.evapCupsIn); setVal('evap_anem_reset', r.evapAnemReset);
+  // Radiation
+  setVal('rad_no', r.radNo); setVal('rad_read', r.radRead);
+  setVal('rad_reset', r.radReset);
+  // Sunshine
+  setVal('sun_mins', r.sunMins); calcSunshineHours();
+  // Soil temperature
+  if (r.soilTemp) {
+    setVal('st_surf', r.soilTemp.surf); setVal('st_5', r.soilTemp.d5);
+    setVal('st_10', r.soilTemp.d10); setVal('st_20', r.soilTemp.d20);
+    setVal('st_30', r.soilTemp.d30); setVal('st_50', r.soilTemp.d50);
+    setVal('st_100', r.soilTemp.d100);
+  }
+  calcPsychrometric();
+  showToast('Editing record', `Loaded ${r.session} UTC observation from ${r.date}. Correct and re-submit.`, 'info');
 }
 
 function refreshProductsPage(){
@@ -4325,6 +5015,51 @@ function refreshMessagesPage(){
   }
 }
 
+function approveObsRecord(key) {
+  const rec = state.records.find(r => r.key === key);
+  if (!rec) return;
+  rec.status = 'approved';
+  saveState();
+  updateObsStatusInSupabase(key, 'approved');
+  state.adminNotifications.unshift({title:`✓ Observation approved — ${rec.session} UTC · ${rec.date}`,desc:`Rain:${rec.rain??'—'}mm | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | RH:${rec.rh??'—'}%`,time:'Just now'});
+  showToast('Observation approved', `${rec.session} UTC observation from ${rec.date} is now approved.`, 'success');
+  refreshPendingObs();
+  filterDashObs('today');
+}
+
+function rejectObsRecord(key) {
+  if (!confirm('Reject and delete this observation? This cannot be undone.')) return;
+  const rec = state.records.find(r => r.key === key);
+  if (!rec) return;
+  state.records = state.records.filter(r => r.key !== key);
+  saveState();
+  showToast('Observation rejected', `${rec.session} UTC observation from ${rec.date} has been removed.`, 'info');
+  refreshPendingObs();
+  filterDashObs('today');
+}
+
+function refreshPendingObs() {
+  const pending = state.records.filter(r => r.status !== 'approved');
+  const empty   = document.getElementById('admin-pending-obs-empty');
+  const table   = document.getElementById('admin-pending-obs-table');
+  const rows    = document.getElementById('admin-pending-obs-rows');
+  const badge   = document.getElementById('admin-pending-obs-badge');
+  if (!empty || !table || !rows) return;
+  if (badge) { badge.textContent = pending.length; badge.style.display = pending.length ? '' : 'none'; }
+  if (pending.length === 0) { empty.style.display=''; table.style.display='none'; return; }
+  empty.style.display = 'none'; table.style.display = '';
+  rows.innerHTML = [...pending].reverse().map(r => `<tr>
+    <td>${r.date}</td><td class="mono">${r.session}</td>
+    <td>${r.stationName||state.stationName}</td><td>${r.observerName||state.observerName}</td>
+    <td>${r.rain??'—'}</td><td>${r.tmax??'—'}</td><td>${r.tmin??'—'}</td>
+    <td>${r.rh??'—'}</td><td>${r.sunshine??'—'}</td>
+    <td style="white-space:nowrap">
+      <button class="btn btn-sm" style="background:var(--tma-green);color:#fff;border:none" onclick="approveObsRecord('${r.key}')">✓ Approve</button>
+      <button class="btn btn-sm" style="background:var(--tma-red);color:#fff;border:none;margin-left:4px" onclick="rejectObsRecord('${r.key}')">✕ Reject</button>
+    </td>
+  </tr>`).join('');
+}
+
 function refreshAdminDash(){
   const {y,m,day}=getNow();
   document.getElementById('admin-stat-observers').textContent=state.approvedObservers.length;
@@ -4337,6 +5072,7 @@ function refreshAdminDash(){
   document.getElementById('admin-stat-pending').textContent=state.pendingApprovals.length;
   document.getElementById('admin-stat-products').textContent=state.products.length;
   document.getElementById('admin-stat-sh-requests').textContent=state.stakeholderRequests.length;
+  refreshPendingObs();
   const le=document.getElementById('admin-live-empty'),ll=document.getElementById('admin-live-list');
   if(le&&ll){
     if(state.adminNotifications.length===0){le.style.display='';ll.innerHTML='';}
@@ -4393,14 +5129,16 @@ function refreshApprovals(){
   }
 }
 
-function approveObserver(i){const o=state.pendingApprovals[i];if(!o)return;o.approvedDate=getTodayStr();state.approvedObservers.unshift(o);state.pendingApprovals.splice(i,1);saveState();updateApprovalBadge();refreshApprovals();refreshObservers();showToast('Observer approved',`${o.name} can now log in.`,'success');}
-function approveStakeholder(i){const s=state.pendingApprovals[i];if(!s)return;s.approvedDate=getTodayStr();state.approvedStakeholders.unshift(s);state.pendingApprovals.splice(i,1);saveState();updateApprovalBadge();refreshApprovals();refreshManageStakeholders();showToast('Stakeholder approved',`${s.name} can now log in.`,'success');}
+function approveObserver(i){const o=state.pendingApprovals[i];if(!o)return;o.approvedDate=getTodayStr();state.approvedObservers.unshift(o);state.pendingApprovals.splice(i,1);saveState();pushUserToSupabase('observers',{name:o.name,title:o.title||null,station:o.station||null,phone:o.phone||null,email:o.email||null,password:o.password||null,approved_date:o.approvedDate});updateApprovalBadge();refreshApprovals();refreshObservers();showToast('Observer approved',`${o.name} can now log in.`,'success');}
+function approveStakeholder(i){const s=state.pendingApprovals[i];if(!s)return;s.approvedDate=getTodayStr();state.approvedStakeholders.unshift(s);state.pendingApprovals.splice(i,1);saveState();pushUserToSupabase('stakeholders',{name:s.name,org:s.org||null,position:s.position||null,phone:s.phone||null,email:s.email||null,password:s.password||null,approved_date:s.approvedDate});updateApprovalBadge();refreshApprovals();refreshManageStakeholders();showToast('Stakeholder approved',`${s.name} can now log in.`,'success');}
 function rejectObserver(i){state.pendingApprovals.splice(i,1);updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
 function rejectApproval(i){state.pendingApprovals.splice(i,1);updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
 
 function updateApprovalBadge(){
   const b=document.getElementById('approvalBadge'),c=state.pendingApprovals.length;
   if(b){b.textContent=c;b.style.display=c>0?'':'none';}
+  const tb=document.getElementById('tabApprovalBadge');
+  if(tb){tb.textContent=c;tb.style.display=c>0?'':'none';}
   const sp=document.getElementById('admin-stat-pending'); if(sp) sp.textContent=c;
 }
 
@@ -4426,7 +5164,9 @@ function uploadProduct(){
   if(!title||!cat){showToast('Missing fields','Enter title and select category','warning');return;}
   const icons={'Monthly Weather Outlook':'🌤️','Agrometeorological Bulletin':'📋','Seasonal Weather Outlook':'🌦️','Climatological Report':'📊','Early Warning Bulletin':'🌡️','Other':'📁'};
   const access=document.getElementById('prod-access')?.value||'All observers & stakeholders';
-  state.products.unshift({title,cat,access,icon:icons[cat]||'📁',date:getTodayStr(),downloads:0});
+  const _newProd={title,cat,access,icon:icons[cat]||'📁',date:getTodayStr(),downloads:0};
+  state.products.unshift(_newProd);
+  pushProductToSupabase(_newProd);
   if(document.getElementById('prod-title')) document.getElementById('prod-title').value='';
   showToast('Product uploaded',`"${title}" is now available`,'success');
   refreshAdminProducts();
@@ -4457,11 +5197,85 @@ function deleteObserver(i){const o=state.approvedObservers[i];if(!o)return;if(!c
 function refreshManageStakeholders(){
   const e=document.getElementById('stakeholders-empty'),t=document.getElementById('stakeholders-table'),r=document.getElementById('stakeholders-rows');
   if(!e||!t||!r) return;
+  const allCbk=document.getElementById('sh-chk-all'); if(allCbk) allCbk.checked=false;
   if(state.approvedStakeholders.length===0){e.style.display='';t.style.display='none';}
-  else{e.style.display='none';t.style.display='';r.innerHTML=state.approvedStakeholders.map((s,i)=>`<tr><td>${s.name}</td><td>${s.org||'—'}</td><td>${s.position||'—'}</td><td>${s.phone||'—'}</td><td>${s.email||'—'}</td><td>${s.approvedDate||'—'}</td><td><span class="badge badge-teal">Active</span></td><td style="white-space:nowrap"><button class="btn btn-sm btn-wa" title="WhatsApp" onclick="contactMemberWA('sh',${i})">📱 WA</button> <button class="btn btn-sm btn-sms" title="Send SMS" onclick="contactMemberSMS('sh',${i})">✉ SMS</button></td><td><button class="btn btn-sm btn-danger" onclick="deleteStakeholder(${i})">Remove</button></td></tr>`).join('');}
+  else{
+    e.style.display='none';t.style.display='';
+    r.innerHTML=state.approvedStakeholders.map((s,i)=>`<tr>
+      <td style="text-align:center"><input type="checkbox" class="sh-row-chk" data-idx="${i}"/></td>
+      <td>${s.name}</td><td>${s.org||'—'}</td><td>${s.position||'—'}</td>
+      <td>${s.phone||'—'}</td><td>${s.email||'—'}</td>
+      <td>${s.approvedDate||'—'}</td>
+      <td><span class="badge badge-teal">Active</span></td>
+      <td style="white-space:nowrap;display:flex;gap:3px;flex-wrap:wrap">
+        <button class="btn btn-sm btn-wa" title="WhatsApp" onclick="contactMemberWA('sh',${i})">📱 WA</button>
+        <button class="btn btn-sm btn-sms" title="Send SMS" onclick="contactMemberSMS('sh',${i})">✉ SMS</button>
+        <button class="btn btn-sm" style="background:#1565c0;color:#fff;border-color:#1565c0" title="Email" onclick="contactMemberEmail('sh',${i})">@ Email</button>
+      </td>
+      <td><button class="btn btn-sm btn-danger" onclick="deleteStakeholder(${i})">Remove</button></td>
+    </tr>`).join('');
+  }
 }
 
 function deleteStakeholder(i){const s=state.approvedStakeholders[i];if(!s)return;if(!confirm(`Remove stakeholder "${s.name}"?`))return;state.approvedStakeholders.splice(i,1);saveState();refreshManageStakeholders();showToast('Stakeholder removed',`${s.name} removed.`);}
+
+function adminRegisterStakeholder(){
+  const fname=(document.getElementById('sh-reg-fname')?.value||'').trim();
+  const lname=(document.getElementById('sh-reg-lname')?.value||'').trim();
+  const org=(document.getElementById('sh-reg-org')?.value||'').trim();
+  const position=(document.getElementById('sh-reg-position')?.value||'').trim();
+  const phone=(document.getElementById('sh-reg-phone')?.value||'').trim();
+  const email=(document.getElementById('sh-reg-email')?.value||'').trim();
+  if(!fname||!lname||!org){showToast('Missing fields','First name, last name and organization are required.','error');return;}
+  const name=`${fname} ${lname}`;
+  const _newSH={name,org,position,phone,email,approvedDate:getTodayStr()};
+  state.approvedStakeholders.unshift(_newSH);
+  saveState();
+  pushUserToSupabase('stakeholders',{name:_newSH.name,org:_newSH.org||null,position:_newSH.position||null,phone:_newSH.phone||null,email:_newSH.email||null,approved_date:_newSH.approvedDate});
+  refreshManageStakeholders();
+  ['sh-reg-fname','sh-reg-lname','sh-reg-org','sh-reg-position','sh-reg-phone','sh-reg-email'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  showToast('Stakeholder added',`${name} has been registered.`,'success');
+}
+
+function toggleAllStakeholderCheckboxes(masterCb){
+  document.querySelectorAll('.sh-row-chk').forEach(cb=>{cb.checked=masterCb.checked;});
+}
+
+function contactMemberEmail(type,i){
+  const s=type==='sh'?state.approvedStakeholders[i]:null;
+  if(!s||!s.email){showToast('No email','This stakeholder has no email address.','error');return;}
+  window.open(`mailto:${s.email}`,'_blank');
+}
+
+function sendStakeholderBroadcast(mode){
+  const msg=(document.getElementById('sh-broadcast-msg')?.value||'').trim();
+  const channel=document.getElementById('sh-broadcast-channel')?.value||'whatsapp';
+  if(!msg){showToast('Empty message','Please type a message before sending.','error');return;}
+  let targets=[];
+  if(mode==='all'){
+    targets=state.approvedStakeholders;
+  } else {
+    const checked=document.querySelectorAll('.sh-row-chk:checked');
+    checked.forEach(cb=>{const idx=parseInt(cb.dataset.idx);if(state.approvedStakeholders[idx]) targets.push(state.approvedStakeholders[idx]);});
+  }
+  if(targets.length===0){showToast('None selected','Select at least one stakeholder or use "Send to All".','error');return;}
+  if(channel==='whatsapp'){
+    targets.forEach(s=>{if(s.phone) openWhatsApp(s.phone,msg);});
+    showToast('WhatsApp opened',`Opening WhatsApp for ${targets.length} stakeholder(s).`,'success');
+  } else if(channel==='sms'){
+    const phones=targets.filter(s=>s.phone).map(s=>s.phone);
+    if(phones.length===0){showToast('No phones','None of the selected stakeholders have a phone number.','error');return;}
+    sendBeemSms(phones,msg).then(ok=>{
+      if(ok) showToast('SMS sent',`SMS sent to ${phones.length} stakeholder(s).`,'success');
+      else showToast('SMS failed','Could not send SMS. Check Beem Africa settings.','error');
+    });
+  } else if(channel==='email'){
+    const emails=targets.filter(s=>s.email).map(s=>s.email);
+    if(emails.length===0){showToast('No emails','None of the selected stakeholders have an email address.','error');return;}
+    window.open(`mailto:${emails.join(',')}?subject=TMA%20AgriMet%20Portal&body=${encodeURIComponent(msg)}`,'_blank');
+    showToast('Email client opened',`Composing email to ${emails.length} stakeholder(s).`,'success');
+  }
+}
 
 // Stakeholder pages
 const STAKEHOLDER_CATS=new Set(['Monthly Weather Outlook','Agrometeorological Bulletin','Seasonal Weather Outlook']);
@@ -4507,6 +5321,7 @@ function submitProductRequest(){
     delivery:document.getElementById('req-delivery')?.value,
     name:state.stakeholderName, org:state.stakeholderOrg, userId:state.stakeholderName, time:getTodayStr()};
   state.stakeholderRequests.push(req);
+  pushSHRequestToSupabase(req);
   state.adminNotifications.unshift({title:`Product request: ${type}`,desc:`From ${state.stakeholderName} (${state.stakeholderOrg||'Stakeholder'})`,time:getTodayStr()});
   if(document.getElementById('req-type')) document.getElementById('req-type').value='';
   if(document.getElementById('req-period')) document.getElementById('req-period').value='';
@@ -4837,7 +5652,7 @@ function shareForm601AsText(channel) {
     +'MAX TEMP: '+v('t_max')+'°C | MIN TEMP: '+v('t_min')+'°C\n'
     +'RAINFALL (std): '+v('rain_std')+' mm\n'
     +'WIND RUN: '+v('ane_diff')+' km | DIRECTION: '+(document.getElementById('ane_dir')?.value||'—')+'\n'
-    +'WIND SPEED: '+v('ane_speed')+' km/h\n'
+    +'WIND SPEED: '+v('ane_speed')+' kts\n'
     +'SUNSHINE: '+v('sun_hrs')+' hrs '+v('sun_mins')+' min\n'
     +'RADIATION: '+v('rad_mjm')+' MJ/m²\n'
     +'EVAPORATION (std): '+v('evap_std')+' mm\n'
@@ -4928,7 +5743,10 @@ function filterDashObs(mode) {
     <td>${r.rh??'—'}</td><td>${r.vap??'—'}</td>
     <td>${r.windRun??'—'}</td><td>${r.windDir||'—'}</td>
     <td>${r.sunshine??'—'}</td><td>${r.radiation??'—'}</td><td>${r.evapStd??'—'}</td>
-    <td><span class="badge badge-teal">Approved</span></td>
+    <td>${r.status==='approved'
+      ?'<span class="badge badge-teal">Approved</span>'
+      :`<span class="badge badge-amber">Pending</span> <button class="btn btn-sm" style="background:var(--tma-green);color:#fff;border:none;font-size:10px;padding:2px 6px" onclick="approveObsRecord('${r.key}')">✓ Approve</button> <button class="btn btn-sm" style="background:var(--tma-red);color:#fff;border:none;font-size:10px;padding:2px 6px" onclick="rejectObsRecord('${r.key}')">✕ Reject</button>`}
+    </td>
   </tr>`).join('');
 }
 
@@ -4958,15 +5776,283 @@ function initReturnWASMSButtons() {
   });
 }
 
+// ═══════════════════════════════════════════════════════════════
+//  SUPABASE SYNC HELPERS
+// ═══════════════════════════════════════════════════════════════
+
+function _sbReady() { return typeof supabase !== 'undefined'; }
+
+async function pushObsToSupabase(rec) {
+  if (!_sbReady()) return;
+  const { error } = await supabase.from('observations').upsert({
+    ref_key:           rec.key,
+    obs_date:          rec.date.split('/').reverse().join('-'),
+    obs_day:           rec.day,
+    obs_month:         rec.month,
+    obs_year:          rec.year,
+    session:           rec.session,
+    status:            rec.status,
+    station_name:      rec.stationName,
+    observer_name:     rec.observerName,
+    dry_bulb:          rec.dry,
+    wet_bulb:          rec.wet,
+    depression:        rec.depn,
+    dew_point:         rec.dew,
+    relative_humidity: rec.rh,
+    vapour_pressure:   rec.vap,
+    temp_max:          rec.tmax,
+    temp_max_reset:    rec.tmaxReset,
+    temp_min:          rec.tmin,
+    temp_min_reset:    rec.tminReset,
+    wind_act_km:       rec.windAct,
+    wind_prev_km:      rec.windPrev,
+    wind_run_km:       rec.windRun,
+    wind_direction:    rec.windDir,
+    wind_speed_kmh:    rec.windSpeed,
+    rainfall_std_mm:   rec.rain,
+    evap_rain_mm:      rec.evap446Rain,
+    evap_cups_out:     rec.evapCupsOut,
+    evap_cups_in:      rec.evapCupsIn,
+    evap_std_mm:       rec.evapStd,
+    evap_anem_reset:   rec.evapAnemReset,
+    rad_number:        rec.radNo,
+    rad_reading:       rec.radRead,
+    rad_reset:         rec.radReset,
+    rad_distillate:    rec.radDistill,
+    radiation_mjm2:    rec.radiation,
+    sunshine_hours:    rec.sunshine,
+    sunshine_mins:     rec.sunMins,
+    soil_temp:         rec.soilTemp || null,
+    soil_moisture:     rec.sm || null,
+  }, { onConflict: 'ref_key' });
+  if (error) console.error('Supabase obs upsert error:', error.message);
+}
+
+async function updateObsStatusInSupabase(key, status) {
+  if (!_sbReady()) return;
+  const { error } = await supabase.from('observations')
+    .update({ status })
+    .eq('ref_key', key);
+  if (error) console.error('Supabase status update error:', error.message);
+}
+
+async function pushPhenoToSupabase(rec) {
+  if (!_sbReady()) return;
+  const dateIso = rec.date.split('/').reverse().join('-');
+  const { error } = await supabase.from('phenological_observations').upsert({
+    ref_key:        rec.key,
+    obs_date:       dateIso,
+    obs_day:        rec.day,
+    obs_month:      rec.month,
+    obs_year:       rec.year,
+    station:        rec.station,
+    observer:       rec.observer,
+    crop:           rec.crop,
+    crop_name:      rec.cropName,
+    variety:        rec.variety,
+    plot:           rec.plot,
+    area_ha:        rec.area,
+    plant_date:     rec.plantDate || null,
+    dap:            rec.dap,
+    phase_code:     rec.phaseCode,
+    phase_name:     rec.phaseName,
+    height_cm:      rec.height,
+    plants_ha:      rec.plantsHa,
+    stems_m2:       rec.stemsM2,
+    tillers:        rec.tillers,
+    pest:           rec.pest,
+    pest_severity:  rec.pestSev,
+    pest_pct:       rec.pestPct,
+    stress:         rec.stress,
+    lodging:        rec.lodging,
+    yield_expected: rec.yieldExp,
+    yield_actual:   rec.yieldAct,
+    harvest_date:   rec.harvestDate || null,
+    rep1:           rec.rep1,
+    rep2:           rec.rep2,
+    rep3:           rec.rep3,
+    rep4:           rec.rep4,
+    rep_total:      rec.repTotal,
+    rep_pct:        rec.repPct,
+    plant_no:       rec.plantNo,
+    year_planted:   rec.yearPlanted,
+    n_plants:       rec.nPlants,
+    dekadal:        rec.dekadal || null,
+    remarks:        rec.remarks,
+  }, { onConflict: 'ref_key' });
+  if (error) console.error('Supabase pheno upsert error:', error.message);
+}
+
+async function pushUserToSupabase(table, data) {
+  if (!_sbReady()) return;
+  const { error } = await supabase.from(table).insert(data);
+  if (error) console.error(`Supabase ${table} insert error:`, error.message);
+}
+
+async function pushPendingToSupabase(item) {
+  if (!_sbReady()) return;
+  const { error } = await supabase.from('pending_approvals').insert({
+    type:           item.type,
+    name:           item.name,
+    title:          item.title || null,
+    station:        item.station || null,
+    org:            item.org || null,
+    position:       item.position || null,
+    phone:          item.phone || null,
+    email:          item.email || null,
+    password:       item.password || null,
+    submitted_date: item.submittedDate || null,
+    status:         'pending',
+  });
+  if (error) console.error('Supabase pending insert error:', error.message);
+}
+
+async function pushProductToSupabase(prod) {
+  if (!_sbReady()) return;
+  const { error } = await supabase.from('products').insert({
+    title:        prod.title,
+    category:     prod.cat,
+    access_level: prod.access,
+    icon:         prod.icon,
+    upload_date:  getTodayStr().split('/').reverse().join('-'),
+    downloads:    0,
+  });
+  if (error) console.error('Supabase product insert error:', error.message);
+}
+
+async function pushSHRequestToSupabase(req) {
+  if (!_sbReady()) return;
+  const { error } = await supabase.from('stakeholder_requests').insert({
+    type:             req.type,
+    period:           req.period || null,
+    purpose:          req.purpose || null,
+    delivery:         req.delivery || null,
+    stakeholder_name: req.name,
+    stakeholder_org:  req.org || null,
+    request_time:     req.time,
+  });
+  if (error) console.error('Supabase SH request insert error:', error.message);
+}
+
+async function loadFromSupabase() {
+  if (!_sbReady()) return;
+  try {
+    const [obsRes, phenoRes, obsvrRes, shRes, pendRes, prodRes, reqRes] = await Promise.all([
+      supabase.from('observations').select('*'),
+      supabase.from('phenological_observations').select('*'),
+      supabase.from('observers').select('*'),
+      supabase.from('stakeholders').select('*'),
+      supabase.from('pending_approvals').select('*'),
+      supabase.from('products').select('*'),
+      supabase.from('stakeholder_requests').select('*'),
+    ]);
+
+    if (obsRes.data) {
+      obsRes.data.forEach(row => {
+        const rec = {
+          key: row.ref_key, date: row.obs_date, day: row.obs_day,
+          month: row.obs_month, year: row.obs_year, session: row.session,
+          status: row.status, stationName: row.station_name,
+          observerName: row.observer_name,
+          dry: row.dry_bulb, wet: row.wet_bulb, depn: row.depression,
+          dew: row.dew_point, rh: row.relative_humidity, vap: row.vapour_pressure,
+          tmax: row.temp_max, tmaxReset: row.temp_max_reset,
+          tmin: row.temp_min, tminReset: row.temp_min_reset,
+          windAct: row.wind_act_km, windPrev: row.wind_prev_km,
+          windRun: row.wind_run_km, windDir: row.wind_direction,
+          windSpeed: row.wind_speed_kmh, rain: row.rainfall_std_mm,
+          evap446Rain: row.evap_rain_mm, evapCupsOut: row.evap_cups_out,
+          evapCupsIn: row.evap_cups_in, evapStd: row.evap_std_mm,
+          evapAnemReset: row.evap_anem_reset, radNo: row.rad_number,
+          radRead: row.rad_reading, radReset: row.rad_reset,
+          radDistill: row.rad_distillate, radiation: row.radiation_mjm2,
+          sunshine: row.sunshine_hours, sunMins: row.sunshine_mins,
+          soilTemp: row.soil_temp, sm: row.soil_moisture,
+        };
+        if (!state.records.find(r => r.key === rec.key)) state.records.push(rec);
+      });
+    }
+
+    if (phenoRes.data) {
+      phenoRes.data.forEach(row => {
+        const rec = {
+          type: 'phenological', key: row.ref_key, date: row.obs_date,
+          day: row.obs_day, month: row.obs_month, year: row.obs_year,
+          station: row.station, observer: row.observer,
+          crop: row.crop, cropName: row.crop_name, variety: row.variety,
+          plot: row.plot, area: row.area_ha, plantDate: row.plant_date,
+          dap: row.dap, phaseCode: row.phase_code, phaseName: row.phase_name,
+          height: row.height_cm, plantsHa: row.plants_ha,
+          stemsM2: row.stems_m2, tillers: row.tillers,
+          pest: row.pest, pestSev: row.pest_severity, pestPct: row.pest_pct,
+          stress: row.stress, lodging: row.lodging,
+          yieldExp: row.yield_expected, yieldAct: row.yield_actual,
+          harvestDate: row.harvest_date,
+          rep1: row.rep1, rep2: row.rep2, rep3: row.rep3, rep4: row.rep4,
+          repTotal: row.rep_total, repPct: row.rep_pct,
+          plantNo: row.plant_no, yearPlanted: row.year_planted,
+          nPlants: row.n_plants, dekadal: row.dekadal, remarks: row.remarks,
+        };
+        if (!state.phenoRecords.find(r => r.key === rec.key)) state.phenoRecords.push(rec);
+      });
+    }
+
+    if (obsvrRes.data) {
+      obsvrRes.data.forEach(row => {
+        const o = { name: row.name, title: row.title, station: row.station,
+          phone: row.phone, email: row.email, password: row.password,
+          approvedDate: row.approved_date };
+        if (!state.approvedObservers.find(x => x.email === o.email)) state.approvedObservers.push(o);
+      });
+    }
+
+    if (shRes.data) {
+      shRes.data.forEach(row => {
+        const s = { name: row.name, org: row.org, position: row.position,
+          phone: row.phone, email: row.email, password: row.password,
+          approvedDate: row.approved_date };
+        if (!state.approvedStakeholders.find(x => x.email === s.email)) state.approvedStakeholders.push(s);
+      });
+    }
+
+    if (pendRes.data) {
+      pendRes.data.forEach(row => {
+        const p = { type: row.type, name: row.name, title: row.title,
+          station: row.station, org: row.org, position: row.position,
+          phone: row.phone, email: row.email, password: row.password,
+          submittedDate: row.submitted_date };
+        if (!state.pendingApprovals.find(x => x.email === p.email && x.type === p.type))
+          state.pendingApprovals.push(p);
+      });
+    }
+
+    if (prodRes.data) {
+      prodRes.data.forEach(row => {
+        const pr = { title: row.title, cat: row.category, access: row.access_level,
+          icon: row.icon, date: row.upload_date, downloads: row.downloads || 0 };
+        if (!state.products.find(x => x.title === pr.title)) state.products.push(pr);
+      });
+    }
+
+    if (reqRes.data) {
+      reqRes.data.forEach(row => {
+        const r = { type: row.type, period: row.period, purpose: row.purpose,
+          delivery: row.delivery, name: row.stakeholder_name,
+          org: row.stakeholder_org, time: row.request_time };
+        state.stakeholderRequests.push(r);
+      });
+    }
+  } catch(e) { console.error('loadFromSupabase error:', e); }
+}
+
 // ── INIT ───────────────────────────────────────────────────────
-state.currentYM=currentYM();
-updateClock();
 setInterval(updateClock,30000);
 const adf=document.getElementById('admin-filter-date');
 if(adf){const {y,m,day}=getNow();adf.value=`${y}-${pad(m)}-${pad(day)}`;}
 const mf=document.getElementById('recordsMonthFilter');
 if(mf){const {y,m}=getNow();mf.value=`${y}-${pad(m)}`;}
 initReturnWASMSButtons();
+enterPublicView();
 </script>
 </body>
 </html>
