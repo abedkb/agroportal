@@ -2041,11 +2041,12 @@ body{
         <div class="grid-2">
           <div class="card">
             <div class="card-title">Request a specific meteorological product</div>
-            <div class="field"><label>Product type</label><select id="req-type"><option value="">-- Select product type --</option><option>Monthly Weather Outlook</option><option>Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Early Warning Bulletin</option><option>Climatological Report</option><option>Other</option></select></div>
+            <div class="field"><label>Product type / Nature of product *</label><select id="req-type"><option value="">-- Select product type --</option><option>Monthly Weather Outlook</option><option>Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Early Warning Bulletin</option><option>Climatological Report</option><option>Other</option></select></div>
+            <div class="field"><label>Your location / District *</label><input type="text" id="req-location" placeholder="e.g. Dodoma Region, Tanzania"/></div>
             <div class="field"><label>Period / month / season</label><input type="text" id="req-period" placeholder="e.g. May 2026"/></div>
-            <div class="field"><label>Purpose</label><textarea id="req-purpose" style="min-height:70px"></textarea></div>
-            <div class="field"><label>Preferred delivery</label><select id="req-delivery"><option>Email</option><option>WhatsApp</option><option>Download from portal</option></select></div>
-            <button class="btn btn-primary btn-full" style="background:var(--tma-teal);border-color:var(--tma-teal)" onclick="submitProductRequest()">Send request to Admin</button>
+            <div class="field"><label>Purpose / Additional details</label><textarea id="req-purpose" style="min-height:70px" placeholder="Describe how you intend to use this product..."></textarea></div>
+            <div class="field"><label>Preferred receiving means *</label><select id="req-delivery"><option>Email</option><option>WhatsApp</option><option>Download from portal</option><option>Physical collection</option></select></div>
+            <button class="btn btn-primary btn-full" style="background:var(--tma-teal);border-color:var(--tma-teal)" onclick="submitProductRequest()">&#128231; Send request to Admin</button>
           </div>
           <div class="card"><div class="card-title">My previous requests</div><div class="empty-state" id="req-history-empty"><div class="empty-state-icon">✉</div><div class="empty-state-title">No requests yet</div></div><div id="req-history-list"></div></div>
         </div>
@@ -2171,7 +2172,16 @@ body{
             <div class="field"><label>Product title</label><input type="text" id="prod-title"/></div>
             <div class="field"><label>Category</label><select id="prod-cat"><option value="">-- Select category --</option><option>Monthly Weather Outlook</option><option>Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Climatological Report</option><option>Early Warning Bulletin</option><option>Other</option></select></div>
             <div class="field"><label>Access</label><select id="prod-access"><option>All observers &amp; stakeholders</option><option>Observers only</option><option>Stakeholders only</option></select></div>
-            <div class="field"><label>File (PDF)</label><div class="upload-zone"><div style="font-size:13px;color:var(--text-secondary)">Click to select or drag &amp; drop</div><div style="font-size:11px;color:var(--text-tertiary);margin-top:4px">PDF · Max 50 MB</div></div></div>
+            <div class="field"><label>File (PDF / Word / Excel)</label>
+              <input type="file" id="prod-file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" style="display:none" onchange="onProdFileChosen(this)"/>
+              <div class="upload-zone" id="prod-upload-zone" onclick="document.getElementById('prod-file').click()"
+                ondragover="event.preventDefault();this.style.borderColor='var(--tma-blue-m)'"
+                ondragleave="this.style.borderColor=''"
+                ondrop="event.preventDefault();this.style.borderColor='';const f=event.dataTransfer.files[0];if(f){const inp=document.getElementById('prod-file');const dt=new DataTransfer();dt.items.add(f);inp.files=dt.files;onProdFileChosen(inp);}">
+                <div id="prod-file-label" style="font-size:13px;color:var(--text-secondary)">&#128194; Click to browse files or drag &amp; drop here</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px">PDF, Word, Excel · Max 50 MB</div>
+              </div>
+            </div>
             <div class="field"><label>Notes</label><textarea id="prod-notes" style="min-height:60px"></textarea></div>
             <button class="btn btn-primary btn-full" onclick="uploadProduct()">Upload product</button>
           </div>
@@ -2310,6 +2320,33 @@ body{
   </div>
 </div>
 
+<!-- ===== ADMIN RESPOND TO REQUEST MODAL ===== -->
+<div class="msg-modal-overlay" id="adminRespondOverlay" onclick="if(event.target===this)closeAdminRespondModal()">
+  <div class="msg-modal" style="max-width:560px">
+    <div class="msg-modal-title" style="display:flex;align-items:center;justify-content:space-between">
+      <span>&#128231; Respond to Product Request</span>
+      <button class="btn btn-sm" onclick="closeAdminRespondModal()" style="padding:2px 8px;font-size:12px">&#10005;</button>
+    </div>
+    <div id="adminRespondDetails" style="background:var(--bg-secondary);border-radius:var(--radius);padding:.75rem;margin-bottom:.875rem;font-size:12px;line-height:1.7;color:var(--text-secondary)"></div>
+    <div class="field"><label>Your response message</label>
+      <textarea id="adminRespondMsg" style="min-height:100px;resize:vertical" placeholder="Type your response to this stakeholder here..."></textarea>
+    </div>
+    <div class="field"><label>Attach a document (optional)</label>
+      <input type="file" id="adminRespondFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" style="display:none" onchange="onRespFileChosen(this)"/>
+      <div class="upload-zone" onclick="document.getElementById('adminRespondFile').click()" style="padding:1rem">
+        <div id="adminRespondFileLabel" style="font-size:13px;color:var(--text-secondary)">&#128194; Click to attach a document</div>
+        <div style="font-size:11px;color:var(--text-tertiary);margin-top:3px">PDF, Word, Excel · Max 50 MB</div>
+      </div>
+    </div>
+    <div class="msg-modal-footer">
+      <button class="btn btn-sm" onclick="closeAdminRespondModal()">Cancel</button>
+      <button class="btn btn-sm" style="background:#1565c0;color:#fff;border-color:#1565c0" onclick="sendAdminResponse('email')">&#64; Send via Email</button>
+      <button class="btn btn-sm btn-wa" onclick="sendAdminResponse('wa')">&#128241; Send via WhatsApp</button>
+      <button class="btn btn-sm btn-primary" onclick="sendAdminResponse('both')">Send Both</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"><div class="toast-title" id="toastTitle">—</div><div class="toast-msg" id="toastMsg"></div></div>
 
 <script>
@@ -2383,6 +2420,7 @@ const state = {
   role: null, currentUser: null,
   stationName: 'Station', observerName: 'Observer', wmoIndex: '—',
   stakeholderName: 'Stakeholder', stakeholderOrg: 'Organization',
+  stakeholderPhone: '', stakeholderEmail: '', stakeholderLocation: '',
   records: [],
   products: [], pendingApprovals: [],
   approvedObservers: [],
@@ -2512,6 +2550,7 @@ function loginAs(role, user) {
     showPage('adminDash',null);
   } else if (role==='stakeholder') {
     state.stakeholderName=user.name; state.stakeholderOrg=user.org;
+    state.stakeholderPhone=user.phone||''; state.stakeholderEmail=user.email||'';
     const el=document.getElementById('stakeholderTabs'); if(el)el.style.display='';
     if(tnAvatar){tnAvatar.textContent=nameInitials(user.name);}
     if(tnName)tnName.textContent=user.name;
@@ -5084,11 +5123,17 @@ function refreshAdminDash(){
   const re=document.getElementById('admin-sh-req-empty'),rl=document.getElementById('admin-sh-req-list');
   if(re&&rl){
     if(state.stakeholderRequests.length===0){re.style.display='';rl.innerHTML='';}
-    else{re.style.display='none';rl.innerHTML=state.stakeholderRequests.slice(0,6).map(r=>`<div class="notif notif-warn" style="margin-bottom:.5rem">
+    else{re.style.display='none';rl.innerHTML=state.stakeholderRequests.slice(0,6).map((r,i)=>`<div class="notif notif-warn" style="margin-bottom:.5rem;flex-wrap:wrap;gap:.5rem">
       <div class="notif-icon" style="background:var(--tma-teal-l);color:var(--tma-teal)">✉</div>
-      <div class="notif-body"><div class="notif-title" style="font-size:12px">${r.type}</div>
-      <div class="notif-desc" style="font-size:11px">${r.name} · ${r.org||''}</div>
-      <div class="notif-time">${r.time}</div></div><span class="badge badge-teal">Request</span></div>`).join('');}
+      <div class="notif-body" style="flex:1;min-width:0">
+        <div class="notif-title" style="font-size:12px">${r.type}</div>
+        <div class="notif-desc" style="font-size:11px"><strong>${r.name}</strong>${r.location?' · '+r.location:''} · ${r.org||''}</div>
+        <div class="notif-desc" style="font-size:11px">Delivery: <em>${r.delivery}</em>${r.period?' · '+r.period:''}</div>
+        <div class="notif-time">${r.time}</div>
+        <div style="display:flex;gap:4px;margin-top:5px;flex-wrap:wrap">
+          <button class="btn btn-sm btn-wa" onclick="openAdminRespondModal(${i})" style="font-size:11px;padding:3px 8px">&#128231; Respond</button>
+        </div>
+      </div></div>`).join('');}
   }
 }
 
@@ -5158,18 +5203,82 @@ function refreshAdminProducts(){
 
 function deleteProduct(i){state.products.splice(i,1);refreshAdminProducts();showToast('Product removed','Product has been deleted.');}
 
+function onProdFileChosen(input){
+  const f=input.files[0];
+  const lbl=document.getElementById('prod-file-label');
+  const zone=document.getElementById('prod-upload-zone');
+  if(lbl) lbl.textContent=f?'✅ '+f.name:'📂 Click to browse files or drag & drop here';
+  if(zone) zone.style.borderColor=f?'var(--tma-green)':'';
+}
+
 function uploadProduct(){
   const title=document.getElementById('prod-title')?.value?.trim();
   const cat=document.getElementById('prod-cat')?.value;
+  const fileInput=document.getElementById('prod-file');
   if(!title||!cat){showToast('Missing fields','Enter title and select category','warning');return;}
   const icons={'Monthly Weather Outlook':'🌤️','Agrometeorological Bulletin':'📋','Seasonal Weather Outlook':'🌦️','Climatological Report':'📊','Early Warning Bulletin':'🌡️','Other':'📁'};
   const access=document.getElementById('prod-access')?.value||'All observers & stakeholders';
-  const _newProd={title,cat,access,icon:icons[cat]||'📁',date:getTodayStr(),downloads:0};
+  const fileName=fileInput?.files?.[0]?.name||null;
+  const _newProd={title,cat,access,icon:icons[cat]||'📁',date:getTodayStr(),downloads:0,fileName};
   state.products.unshift(_newProd);
   pushProductToSupabase(_newProd);
   if(document.getElementById('prod-title')) document.getElementById('prod-title').value='';
-  showToast('Product uploaded',`"${title}" is now available`,'success');
+  if(fileInput){fileInput.value='';onProdFileChosen(fileInput);}
+  showToast('Product uploaded',`"${title}" is now available`+(fileName?` (${fileName})`:''),'success');
   refreshAdminProducts();
+}
+
+// ── Admin respond to stakeholder request modal ──────────────────
+let _respCtx={};
+function openAdminRespondModal(reqIdx){
+  const r=state.stakeholderRequests[reqIdx];
+  if(!r) return;
+  _respCtx={reqIdx,r};
+  const det=document.getElementById('adminRespondDetails');
+  if(det) det.innerHTML=
+    `<strong>Stakeholder:</strong> ${r.name}${r.location?' &nbsp;|&nbsp; <strong>Location:</strong> '+r.location:''}<br>`
+    +`<strong>Organization:</strong> ${r.org||'—'} &nbsp;|&nbsp; <strong>Phone:</strong> ${r.phone||'—'} &nbsp;|&nbsp; <strong>Email:</strong> ${r.email||'—'}<br>`
+    +`<strong>Product:</strong> ${r.type}${r.period?' &nbsp;|&nbsp; <strong>Period:</strong> '+r.period:''}<br>`
+    +`<strong>Preferred delivery:</strong> ${r.delivery}${r.purpose?'<br><strong>Purpose:</strong> '+r.purpose:''}`;
+  const msgEl=document.getElementById('adminRespondMsg');
+  if(msgEl) msgEl.value=`Dear ${r.name},\n\nThank you for your request for "${r.type}".\n\n[Your response here]\n\nBest regards,\nTMA Administrator`;
+  const fileLbl=document.getElementById('adminRespondFileLabel');
+  if(fileLbl) fileLbl.textContent='📂 Click to attach a document';
+  const fi=document.getElementById('adminRespondFile');
+  if(fi) fi.value='';
+  document.getElementById('adminRespondOverlay').classList.add('open');
+}
+function closeAdminRespondModal(){
+  document.getElementById('adminRespondOverlay').classList.remove('open');
+  _respCtx={};
+}
+function onRespFileChosen(input){
+  const f=input.files[0];
+  const lbl=document.getElementById('adminRespondFileLabel');
+  if(lbl) lbl.textContent=f?'✅ '+f.name:'📂 Click to attach a document';
+}
+function sendAdminResponse(channel){
+  const msg=(document.getElementById('adminRespondMsg')?.value||'').trim();
+  const r=_respCtx.r;
+  if(!msg){showToast('Empty message','Please type a response message','warning');return;}
+  if(!r){closeAdminRespondModal();return;}
+  const hasFile=!!(document.getElementById('adminRespondFile')?.files?.[0]);
+  const fileNote=hasFile?'\n\n[Document attached — see email/WhatsApp attachment]':'';
+  const fullMsg=msg+fileNote;
+  closeAdminRespondModal();
+  if(channel==='wa'||channel==='both'){
+    if(r.phone) openWhatsApp(r.phone,fullMsg);
+    else showToast('No phone','This stakeholder has no phone number on record','warning');
+  }
+  if(channel==='email'||channel==='both'){
+    if(r.email){
+      const sub=encodeURIComponent('Re: '+r.type+' — TMA AgriMet');
+      const body=encodeURIComponent(msg+(hasFile?'\n\n[Please find the document attached.]':''));
+      window.open('mailto:'+r.email+'?subject='+sub+'&body='+body,'_blank');
+    } else showToast('No email','This stakeholder has no email address on record','warning');
+  }
+  if(!r.phone&&!r.email) showToast('No contact','Stakeholder has no phone or email on record','warning');
+  else showToast('Response sent','Message opened via '+channel+'. Remember to attach the file if applicable.','success');
 }
 
 function refreshAdminMessages(){
@@ -5177,7 +5286,29 @@ function refreshAdminMessages(){
   const se=document.getElementById('admin-sh-comms-empty'),sl=document.getElementById('admin-sh-comms-list');
   if(se&&sl){
     if(state.stakeholderRequests.length===0){se.style.display='';sl.innerHTML='';}
-    else{se.style.display='none';sl.innerHTML=state.stakeholderRequests.map(r=>`<div class="notif notif-warn" style="margin-bottom:.5rem"><div class="notif-icon" style="background:var(--tma-teal-l);color:var(--tma-teal)">✉</div><div class="notif-body"><div class="notif-title">${r.type}</div><div class="notif-desc">From: ${r.name} · ${r.org||''} · ${r.period||'—'}</div><div class="notif-time">${r.time}</div></div></div>`).join('');}
+    else{se.style.display='none';sl.innerHTML=state.stakeholderRequests.map((r,i)=>`
+      <div class="notif notif-warn" style="margin-bottom:.75rem;flex-wrap:wrap;gap:.5rem;padding:.75rem;border-radius:8px">
+        <div class="notif-icon" style="background:var(--tma-teal-l);color:var(--tma-teal);align-self:flex-start">✉</div>
+        <div class="notif-body" style="flex:1;min-width:0">
+          <div class="notif-title" style="font-size:13px;font-weight:600">${r.type}</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 1rem;margin:.4rem 0;font-size:12px;color:var(--text-secondary)">
+            <span>&#128100; <strong>Name:</strong> ${r.name}</span>
+            <span>&#127759; <strong>Location:</strong> ${r.location||'—'}</span>
+            <span>&#127970; <strong>Organization:</strong> ${r.org||'—'}</span>
+            <span>&#128241; <strong>Phone:</strong> ${r.phone||'—'}</span>
+            <span>&#64; <strong>Email:</strong> ${r.email||'—'}</span>
+            <span>&#128197; <strong>Period:</strong> ${r.period||'—'}</span>
+            <span>&#128230; <strong>Receiving means:</strong> ${r.delivery}</span>
+            <span>&#128336; <strong>Requested:</strong> ${r.time}</span>
+          </div>
+          ${r.purpose?`<div style="font-size:12px;color:var(--text-secondary);margin-bottom:.4rem">&#128203; <strong>Purpose:</strong> ${r.purpose}</div>`:''}
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:.5rem">
+            <button class="btn btn-sm btn-wa" onclick="openAdminRespondModal(${i})">&#128231; Respond &amp; Send Product</button>
+            ${r.phone?`<button class="btn btn-sm" style="background:var(--tma-teal-l);color:var(--tma-teal);border-color:var(--tma-teal)" onclick="openWhatsApp('${r.phone}','Dear ${r.name}, regarding your request for ${r.type}...')">&#128241; Quick WhatsApp</button>`:''}
+            ${r.email?`<button class="btn btn-sm" style="background:#1565c0;color:#fff;border-color:#1565c0" onclick="window.open('mailto:${r.email}?subject=Re: ${encodeURIComponent(r.type)} — TMA AgriMet&body=Dear ${encodeURIComponent(r.name)},%0A%0AThank you for your request for ${encodeURIComponent(r.type)}.%0A%0A','_blank')">&#64; Quick Email</button>`:''}
+          </div>
+        </div>
+      </div>`).join('');}
   }
   const e=document.getElementById('admin-comms-empty'),l=document.getElementById('admin-comms-list');
   if(!e||!l) return;
@@ -5303,7 +5434,7 @@ function refreshStakeholderRequest(){
   if(!he||!hl) return;
   const myReqs=state.stakeholderRequests.filter(r=>r.userId===state.stakeholderName);
   if(myReqs.length===0){he.style.display='';hl.innerHTML='';}
-  else{he.style.display='none';hl.innerHTML=myReqs.map(r=>`<div class="notif notif-warn" style="margin-bottom:.5rem"><div class="notif-icon" style="background:var(--tma-teal-l);color:var(--tma-teal)">✉</div><div class="notif-body"><div class="notif-title">${r.type}</div><div class="notif-desc">${r.period||'—'} · ${r.delivery}</div><div class="notif-time">${r.time}</div></div><span class="badge badge-teal">Sent</span></div>`).join('');}
+  else{he.style.display='none';hl.innerHTML=myReqs.map(r=>`<div class="notif notif-warn" style="margin-bottom:.5rem"><div class="notif-icon" style="background:var(--tma-teal-l);color:var(--tma-teal)">✉</div><div class="notif-body"><div class="notif-title">${r.type}</div><div class="notif-desc">${r.location?r.location+' · ':''}${r.period||'—'} · <em>${r.delivery}</em></div><div class="notif-time">${r.time}</div></div><span class="badge badge-teal">Sent</span></div>`).join('');}
 }
 
 function refreshStakeholderMessages(){
@@ -5315,19 +5446,40 @@ function refreshStakeholderMessages(){
 
 function submitProductRequest(){
   const type=document.getElementById('req-type')?.value;
+  const location=(document.getElementById('req-location')?.value||'').trim();
   if(!type){showToast('Missing field','Please select a product type','warning');return;}
-  const req={type,period:document.getElementById('req-period')?.value?.trim(),
+  if(!location){showToast('Missing field','Please enter your location / district','warning');return;}
+  const req={type,location,period:document.getElementById('req-period')?.value?.trim(),
     purpose:document.getElementById('req-purpose')?.value?.trim(),
     delivery:document.getElementById('req-delivery')?.value,
-    name:state.stakeholderName, org:state.stakeholderOrg, userId:state.stakeholderName, time:getTodayStr()};
+    name:state.stakeholderName, org:state.stakeholderOrg,
+    phone:state.stakeholderPhone, email:state.stakeholderEmail,
+    userId:state.stakeholderName, time:getTodayStr()};
   state.stakeholderRequests.push(req);
   pushSHRequestToSupabase(req);
-  state.adminNotifications.unshift({title:`Product request: ${type}`,desc:`From ${state.stakeholderName} (${state.stakeholderOrg||'Stakeholder'})`,time:getTodayStr()});
+  state.adminNotifications.unshift({title:`Product request: ${type}`,desc:`From ${state.stakeholderName} · ${location}`,time:getTodayStr()});
   if(document.getElementById('req-type')) document.getElementById('req-type').value='';
+  if(document.getElementById('req-location')) document.getElementById('req-location').value='';
   if(document.getElementById('req-period')) document.getElementById('req-period').value='';
   if(document.getElementById('req-purpose')) document.getElementById('req-purpose').value='';
+  // Auto-notify admin via WhatsApp with full request details
+  const waMsg='*TMA AgriMet — Product Request*\n'
+    +'─────────────────────\n'
+    +'*Stakeholder:* '+state.stakeholderName+'\n'
+    +'*Organization:* '+(state.stakeholderOrg||'—')+'\n'
+    +'*Location:* '+location+'\n'
+    +'*Phone:* '+(state.stakeholderPhone||'—')+'\n'
+    +'*Email:* '+(state.stakeholderEmail||'—')+'\n'
+    +'─────────────────────\n'
+    +'*Product requested:* '+type+'\n'
+    +'*Period:* '+(req.period||'—')+'\n'
+    +'*Purpose:* '+(req.purpose||'—')+'\n'
+    +'*Preferred receiving means:* '+req.delivery+'\n'
+    +'─────────────────────\n'
+    +'Sent: '+getTodayStr();
+  openWhatsApp(ADMIN_PHONE, waMsg);
   updateApprovalBadge();
-  showToast('Request sent',`Your request for "${type}" has been sent to Admin (${ADMIN_PHONE}).`,'success');
+  showToast('Request sent',`Your request for "${type}" has been sent to Admin.`,'success');
   refreshStakeholderRequest();
 }
 
@@ -5923,13 +6075,16 @@ async function pushProductToSupabase(prod) {
 async function pushSHRequestToSupabase(req) {
   if (!_sbReady()) return;
   const { error } = await supabaseClient.from('stakeholder_requests').insert({
-    type:             req.type,
-    period:           req.period || null,
-    purpose:          req.purpose || null,
-    delivery:         req.delivery || null,
-    stakeholder_name: req.name,
-    stakeholder_org:  req.org || null,
-    request_time:     req.time,
+    type:               req.type,
+    period:             req.period || null,
+    purpose:            req.purpose || null,
+    delivery:           req.delivery || null,
+    stakeholder_name:   req.name,
+    stakeholder_org:    req.org || null,
+    stakeholder_location: req.location || null,
+    stakeholder_phone:  req.phone || null,
+    stakeholder_email:  req.email || null,
+    request_time:       req.time,
   });
   if (error) console.error('Supabase SH request insert error:', error.message);
 }
@@ -6038,7 +6193,9 @@ async function loadFromSupabase() {
       reqRes.data.forEach(row => {
         const r = { type: row.type, period: row.period, purpose: row.purpose,
           delivery: row.delivery, name: row.stakeholder_name,
-          org: row.stakeholder_org, time: row.request_time };
+          org: row.stakeholder_org, location: row.stakeholder_location||'',
+          phone: row.stakeholder_phone||'', email: row.stakeholder_email||'',
+          time: row.request_time };
         state.stakeholderRequests.push(r);
       });
     }
