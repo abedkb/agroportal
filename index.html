@@ -1115,6 +1115,7 @@ body{
       <button class="tab-btn" data-page="adminDash" onclick="showPage('adminDash',this)">&#8862; Dashboard</button>
       <button class="tab-btn" data-page="approvals" onclick="showPage('approvals',this)">&#10003; Approvals <span class="tab-badge" id="tabApprovalBadge" style="display:none">0</span></button>
       <button class="tab-btn" data-page="allRecords" onclick="showPage('allRecords',this)">&#8801; All Records</button>
+      <button class="tab-btn" data-page="returns" onclick="showPage('returns',this)">&#128203; Returns</button>
       <button class="tab-btn" data-page="uploadProducts" onclick="showPage('uploadProducts',this)">&#10570; Upload</button>
       <button class="tab-btn" data-page="adminMessages" onclick="showPage('adminMessages',this)">&#9711; Comms</button>
       <button class="tab-btn" data-page="observers" onclick="showPage('observers',this)">&#9673; Observers</button>
@@ -1853,6 +1854,15 @@ body{
           </div>
         </div>
 
+        <!-- Admin-only station + month filter (hidden for observers) -->
+        <div id="admin-station-filter" style="display:none;background:var(--tma-blue-l);border:0.5px solid var(--tma-blue);border-radius:var(--radius);padding:.625rem 1rem;margin-bottom:.75rem;align-items:center;gap:.75rem;flex-wrap:wrap">
+          <span style="font-size:12px;font-weight:500;color:var(--tma-blue-dk)">&#9673; Admin view — Filter by station:</span>
+          <select id="admin-returns-station" class="btn btn-sm" onchange="onAdminStationChange()" style="min-width:200px">
+            <option value="">-- All stations --</option>
+          </select>
+          <span id="admin-returns-info" style="font-size:11px;color:var(--text-tertiary);font-family:'IBM Plex Mono',monospace"></span>
+        </div>
+
         <!-- ACCORDION: Form 626 -->
         <div class="ret-acc-item">
           <div class="ret-acc-header" id="hdr-ret-626" data-retid="ret-626">
@@ -2041,6 +2051,10 @@ body{
         <div class="grid-2">
           <div class="card">
             <div class="card-title">Request a specific meteorological product</div>
+            <div class="field-row">
+              <div class="field"><label>Your full name *</label><input type="text" id="req-contact-name" placeholder="e.g. Juma Ally"/></div>
+              <div class="field"><label>Your phone number *</label><input type="tel" id="req-contact-phone" placeholder="e.g. 0712 345 678"/></div>
+            </div>
             <div class="field"><label>Product type / Nature of product *</label><select id="req-type"><option value="">-- Select product type --</option><option>Monthly Weather Outlook</option><option>Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Early Warning Bulletin</option><option>Climatological Report</option><option>Other</option></select></div>
             <div class="field"><label>Your location / District *</label><input type="text" id="req-location" placeholder="e.g. Dodoma Region, Tanzania"/></div>
             <div class="field"><label>Period / month / season</label><input type="text" id="req-period" placeholder="e.g. May 2026"/></div>
@@ -2430,6 +2444,7 @@ const state = {
   sessionSubmitted: { '0600': false, '1200': false },
   currentYM: null,
   phenoRecords: [],
+  returnStationFilter: null,
 };
 
 // ── PERSISTENCE: save & load records from localStorage ──────────
@@ -2522,7 +2537,7 @@ function stats(arr) {
   return {mean:total/vals.length,total,max:Math.max(...vals),min:Math.min(...vals),count:vals.length};
 }
 const getRec = (recs,day,sess) => recs.find(r=>r.day===day&&r.session===sess)||null;
-const monthRecs = ym => { const [y,m]=ym.split('-').map(Number); return state.records.filter(r=>r.year===y&&r.month===m); };
+const monthRecs = ym => { const [y,m]=ym.split('-').map(Number); return state.records.filter(r=>r.year===y&&r.month===m&&(!state.returnStationFilter||r.stationName===state.returnStationFilter)); };
 
 // ── AUTH ────────────────────────────────────────────────────────
 function switchAuthTab(tab) {
@@ -2642,7 +2657,7 @@ function enterPublicView() {
   document.getElementById('sessionBadge').style.display='none';
   const logoutBtn=document.getElementById('topnavLogoutBtn'); if(logoutBtn) logoutBtn.style.display='none';
   const loginBtn=document.getElementById('staffLoginBtn'); if(loginBtn) loginBtn.style.display='';
-  loadState(); loadPhenoState();
+  loadState(); loadPhenoState(); loadFromSupabase();
   showPage('stakeholderDash',null);
   setTimeout(()=>{refreshStakeholderDash();},80);
   setTodayDate(); updateClock();
@@ -2738,7 +2753,7 @@ function showPage(id,navEl) {
     dashboard:['Observer Dashboard',`${state.stationName} · ${getTodayStr()}`],
     obsForms:['Fill Observation','Form 601 — Agricultural Meteorological Observations'],
     myRecords:['My Records','Submission history'],
-    returns:['Climatological Returns','Auto-populated from Form 601 · All 11 forms'],
+    returns:[state.role==='admin'?'Climatological Returns — All Stations':'Climatological Returns','Auto-populated from Form 601 submissions'],
     products:['Products & Downloads','Meteorological products from TMA Admin'],
     messages:['Notifications','SMS, WhatsApp & dashboard messages'],
     stakeholderDash:['Stakeholder Dashboard',`${state.stakeholderOrg} · ${getTodayStr()}`],
@@ -3821,6 +3836,25 @@ function onReturnMonthChange(){
 function refreshAllReturns() {
   const ym=state.currentYM||currentYM();
   const ml=document.getElementById('currentMonthLabel'); if(ml) ml.textContent=getMonthLabel(ym);
+  // Show/populate admin station filter
+  const stFilter=document.getElementById('admin-station-filter');
+  if(stFilter){
+    if(state.role==='admin'){
+      stFilter.style.display='flex';
+      const stSel=document.getElementById('admin-returns-station');
+      if(stSel){
+        const stations=[...new Set(state.records.map(r=>r.stationName).filter(Boolean))].sort();
+        const prev=state.returnStationFilter||'';
+        stSel.innerHTML='<option value="">-- All stations --</option>'+stations.map(s=>`<option value="${s}"${s===prev?' selected':''}>${s}</option>`).join('');
+        state.returnStationFilter=prev||null;
+        const info=document.getElementById('admin-returns-info');
+        if(info) info.textContent=stations.length?`${stations.length} station${stations.length!==1?'s':''} in system`:'No station data yet';
+      }
+    } else {
+      stFilter.style.display='none';
+      state.returnStationFilter=null;
+    }
+  }
   // Update record count badge
   const recs=monthRecs(ym);
   const countEl=document.getElementById('returns-rec-count');
@@ -3833,6 +3867,12 @@ function refreshAllReturns() {
     }
   });
   refreshReturnStatus(ym);
+}
+
+function onAdminStationChange(){
+  const stSel=document.getElementById('admin-returns-station');
+  state.returnStationFilter=stSel?.value||null;
+  refreshAllReturns();
 }
 
 function buildReturnById(retId,ym) {
@@ -5430,6 +5470,11 @@ function refreshStakeholderProducts(){
 }
 
 function refreshStakeholderRequest(){
+  // Pre-fill contact details for logged-in stakeholders
+  const nameEl=document.getElementById('req-contact-name');
+  const phoneEl=document.getElementById('req-contact-phone');
+  if(nameEl&&!nameEl.value&&state.stakeholderName&&state.stakeholderName!=='Guest'&&state.stakeholderName!=='Stakeholder') nameEl.value=state.stakeholderName;
+  if(phoneEl&&!phoneEl.value&&state.stakeholderPhone) phoneEl.value=state.stakeholderPhone;
   const he=document.getElementById('req-history-empty'),hl=document.getElementById('req-history-list');
   if(!he||!hl) return;
   const myReqs=state.stakeholderRequests.filter(r=>r.userId===state.stakeholderName);
@@ -5445,19 +5490,27 @@ function refreshStakeholderMessages(){
 }
 
 function submitProductRequest(){
+  const contactName=(document.getElementById('req-contact-name')?.value||'').trim();
+  const contactPhone=(document.getElementById('req-contact-phone')?.value||'').trim();
   const type=document.getElementById('req-type')?.value;
   const location=(document.getElementById('req-location')?.value||'').trim();
+  if(!contactName){showToast('Missing field','Please enter your name','warning');return;}
+  if(!contactPhone){showToast('Missing field','Please enter your phone number','warning');return;}
   if(!type){showToast('Missing field','Please select a product type','warning');return;}
   if(!location){showToast('Missing field','Please enter your location / district','warning');return;}
+  const reqName=contactName||state.stakeholderName;
+  const reqPhone=contactPhone||state.stakeholderPhone;
   const req={type,location,period:document.getElementById('req-period')?.value?.trim(),
     purpose:document.getElementById('req-purpose')?.value?.trim(),
     delivery:document.getElementById('req-delivery')?.value,
-    name:state.stakeholderName, org:state.stakeholderOrg,
-    phone:state.stakeholderPhone, email:state.stakeholderEmail,
+    name:reqName, org:state.stakeholderOrg,
+    phone:reqPhone, email:state.stakeholderEmail,
     userId:state.stakeholderName, time:getTodayStr()};
   state.stakeholderRequests.push(req);
   pushSHRequestToSupabase(req);
-  state.adminNotifications.unshift({title:`Product request: ${type}`,desc:`From ${state.stakeholderName} · ${location}`,time:getTodayStr()});
+  state.adminNotifications.unshift({title:`Product request: ${type}`,desc:`From ${reqName} · ${location}`,time:getTodayStr()});
+  if(document.getElementById('req-contact-name')) document.getElementById('req-contact-name').value='';
+  if(document.getElementById('req-contact-phone')) document.getElementById('req-contact-phone').value='';
   if(document.getElementById('req-type')) document.getElementById('req-type').value='';
   if(document.getElementById('req-location')) document.getElementById('req-location').value='';
   if(document.getElementById('req-period')) document.getElementById('req-period').value='';
@@ -5465,10 +5518,10 @@ function submitProductRequest(){
   // Auto-notify admin via WhatsApp with full request details
   const waMsg='*TMA AgriMet — Product Request*\n'
     +'─────────────────────\n'
-    +'*Stakeholder:* '+state.stakeholderName+'\n'
+    +'*Name:* '+reqName+'\n'
     +'*Organization:* '+(state.stakeholderOrg||'—')+'\n'
     +'*Location:* '+location+'\n'
-    +'*Phone:* '+(state.stakeholderPhone||'—')+'\n'
+    +'*Phone:* '+(reqPhone||'—')+'\n'
     +'*Email:* '+(state.stakeholderEmail||'—')+'\n'
     +'─────────────────────\n'
     +'*Product requested:* '+type+'\n'
