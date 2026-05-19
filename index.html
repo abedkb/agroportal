@@ -5881,7 +5881,7 @@ function refreshApprovals(){
   }
 }
 
-function approveObserver(i){const o=state.pendingApprovals[i];if(!o)return;o.approvedDate=getTodayStr();state.approvedObservers.unshift(o);state.pendingApprovals.splice(i,1);saveState();pushUserToSupabase('observers',{name:o.name,title:o.title||null,station:o.station||null,phone:o.phone||null,email:o.email||null,password:o.password||null,approved_date:o.approvedDate});updateApprovalBadge();refreshApprovals();refreshObservers();showToast('Observer approved',`${o.name} can now log in.`,'success');}
+function approveObserver(i){const o=state.pendingApprovals[i];if(!o)return;o.approvedDate=getTodayStr();state.approvedObservers.unshift(o);state.pendingApprovals.splice(i,1);saveState();pushUserToSupabase('observers',{name:o.name,title:o.title||null,station:o.station||null,phone:o.phone||null,email:o.email||null,password:o.password||null,approved_date:o.approvedDate?o.approvedDate.split('/').reverse().join('-'):null});updateApprovalBadge();refreshApprovals();refreshObservers();showToast('Observer approved',`${o.name} can now log in.`,'success');}
 function approveStakeholder(i){const s=state.pendingApprovals[i];if(!s)return;s.approvedDate=getTodayStr();state.approvedStakeholders.unshift(s);state.pendingApprovals.splice(i,1);saveState();pushUserToSupabase('stakeholders',{name:s.name,org:s.org||null,position:s.position||null,phone:s.phone||null,email:s.email||null,password:s.password||null,approved_date:s.approvedDate});updateApprovalBadge();refreshApprovals();refreshManageStakeholders();showToast('Stakeholder approved',`${s.name} can now log in.`,'success');}
 function rejectObserver(i){state.pendingApprovals.splice(i,1);updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
 function rejectApproval(i){state.pendingApprovals.splice(i,1);updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
@@ -6107,7 +6107,7 @@ function adminRegisterStakeholder(){
   const _newSH={name,org,position,phone,email,approvedDate:getTodayStr()};
   state.approvedStakeholders.unshift(_newSH);
   saveState();
-  pushUserToSupabase('stakeholders',{name:_newSH.name,org:_newSH.org||null,position:_newSH.position||null,phone:_newSH.phone||null,email:_newSH.email||null,approved_date:_newSH.approvedDate});
+  pushUserToSupabase('stakeholders',{name:_newSH.name,org:_newSH.org||null,position:_newSH.position||null,phone:_newSH.phone||null,email:_newSH.email||null,approved_date:_newSH.approvedDate?_newSH.approvedDate.split('/').reverse().join('-'):null});
   refreshManageStakeholders();
   ['sh-reg-fname','sh-reg-lname','sh-reg-org','sh-reg-position','sh-reg-phone','sh-reg-email'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   showToast('Stakeholder added',`${name} has been registered.`,'success');
@@ -6823,7 +6823,7 @@ async function pushPendingToSupabase(item) {
     phone:          item.phone || null,
     email:          item.email || null,
     password:       item.password || null,
-    submitted_date: item.submittedDate || null,
+    submitted_date: item.submittedDate ? item.submittedDate.split('/').reverse().join('-') : null,
     status:         'pending',
   });
   if (error) console.error('Supabase pending insert error:', error.message);
