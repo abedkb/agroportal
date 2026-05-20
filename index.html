@@ -1185,7 +1185,7 @@ body{
         <div class="lp-cta-row">
           <button class="lp-cta-teal" onclick="enterPublicView()">Stakeholder Dashboard</button>
           <button class="lp-cta-blue" onclick="openStaffLogin()">Observer Login</button>
-          <button class="lp-cta-secondary" onclick="openStaffLogin()">Admin Login</button>
+          <button class="lp-cta-secondary" onclick="openAdminLogin()">Admin Login</button>
         </div>
         <p class="lp-hero-hint">Stakeholders enter directly &nbsp;&middot;&nbsp; Observers &amp; Admins sign in with their credentials</p>
       </div>
@@ -3066,6 +3066,9 @@ const monthRecs = ym => { const [y,m]=ym.split('-').map(Number); return state.re
 
 // ── AUTH ────────────────────────────────────────────────────────
 function switchAuthTab(tab) {
+  // Always restore register tab visibility when manually switching
+  const regTab = document.getElementById('tab-register');
+  if (regTab && tab === 'login') regTab.style.display = '';
   document.getElementById('loginForm').style.display    = tab==='login'?'':'none';
   document.getElementById('registerForm').style.display = tab==='register'?'':'none';
   ['login','register'].forEach(t => {
@@ -3138,7 +3141,10 @@ async function tryLogin() {
   // this browser's localStorage has never seen the approved account.
   // We query by email OR phone, then verify password client-side.
   if (_sbReady()) {
-    showErr('Checking credentials…');
+    // Disable button silently while checking — no visible "checking" message
+    const loginBtn = document.querySelector('#loginForm .btn-primary');
+    const origText = loginBtn?.textContent;
+    if (loginBtn) { loginBtn.disabled = true; loginBtn.textContent = 'Signing in…'; }
     try {
       const isEmail = id.includes('@');
       const field   = isEmail ? 'email' : 'phone';
@@ -3157,6 +3163,7 @@ async function tryLogin() {
         // Sync into local state so the rest of the session works
         if (!state.approvedObservers.find(x=>x.email===obsObj.email))
           state.approvedObservers.unshift(obsObj);
+        if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = origText; }
         hideErr(); loginAs('observer', obsObj); return;
       }
 
@@ -3167,17 +3174,21 @@ async function tryLogin() {
           approvedDate:s.approved_date };
         if (!state.approvedStakeholders.find(x=>x.email===shObj.email))
           state.approvedStakeholders.unshift(shObj);
+        if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = origText; }
         hideErr(); loginAs('stakeholder', shObj); return;
       }
 
       if (pendRes.data) {
+        if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = origText; }
         showErr('Your account is pending administrator approval.'); return;
       }
 
       // Wrong credentials confirmed by DB
+      if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = origText; }
       showErr('Incorrect phone/email or password.'); return;
 
     } catch(e) {
+      if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = origText; }
       console.warn('Supabase login check failed, falling back to local state:', e);
     }
   }
@@ -3237,9 +3248,36 @@ function enterPublicView() {
 }
 
 function openStaffLogin() {
+  // Observer / general staff — show all tabs including Register
+  _openAuth(false);
+}
+
+function openAdminLogin() {
+  // Admin — show only the Sign in card, hide observer register tab
+  _openAuth(true);
+}
+
+function _openAuth(adminOnly) {
   switchAuthTab('login');
-  const ls=document.getElementById('landingScreen'); if(ls) ls.style.display='none';
-  document.getElementById('authScreen').style.display='flex';
+  const ls = document.getElementById('landingScreen'); if(ls) ls.style.display='none';
+  document.getElementById('authScreen').style.display = 'flex';
+  // Show/hide the Register tab based on who is logging in
+  const regTab = document.getElementById('tab-register');
+  const regForm = document.getElementById('registerForm');
+  const regShForm = document.getElementById('registerShForm');
+  if (adminOnly) {
+    // Admin sees ONLY the sign-in card — no registration tabs
+    if (regTab) regTab.style.display = 'none';
+    if (regForm) regForm.style.display = 'none';
+    if (regShForm) regShForm.style.display = 'none';
+    // Update card subtitle
+    const subtitle = document.querySelector('.auth-card .auth-logo div div:last-child');
+    if (subtitle) subtitle.textContent = 'Administrator Access';
+  } else {
+    // Observer/stakeholder — restore full tabs
+    if (regTab) regTab.style.display = '';
+    switchAuthTab('login');
+  }
 }
 
 function backToPortal() {
@@ -4358,27 +4396,76 @@ function proceedAfterTempWarn() {
 }
 
 // ── FORM 601 VALIDATION ────────────────────────────────────────
+// ── FIX 4a: '////' is the official WMO missing-data symbol.
+// Every required field must contain either a valid number OR exactly '////'.
+// An empty field is NOT accepted — observer must consciously mark missing data.
+const MISSING_MARKER = '////';
+
 function validateForm601() {
   const missing = [];
+
   const has = id => {
     const el = document.getElementById(id);
-    if (!el) return true; // element absent — skip
-    const v = el.value?.trim();
-    return v !== '' && v !== null && v !== undefined;
+    if (!el || el.closest('[style*="display: none"]') || el.closest('[style*="display:none"]')) return true;
+    const v = (el.value ?? '').trim();
+    if (v === '') return false;               // truly empty — not OK
+    if (v === MISSING_MARKER) return true;    // observer marked it missing — OK
+    return !isNaN(parseFloat(v));             // must be a number
   };
-  // Core fields required for every session
-  [['t_dry','Dry bulb temperature'],['t_wet','Wet bulb temperature'],
-   ['t_max','Maximum temperature'],['t_min','Minimum temperature'],
-   ['ane_speed','Wind speed']].forEach(([id,lbl])=>{ if(!has(id)) missing.push(lbl); });
-  // Wind direction — select must not be on the blank placeholder
+
+  // Fields required for BOTH sessions
+  const common = [
+    ['t_dry',   'Dry bulb temperature'],
+    ['t_wet',   'Wet bulb temperature'],
+    ['t_max',   'Maximum temperature'],
+    ['t_min',   'Minimum temperature'],
+    ['ane_speed','Wind speed'],
+    ['t_rh',    'Relative humidity'],
+  ];
+
+  // Fields required for 0600 only
+  const only0600 = [
+    ['t_maxr',      'Maximum temperature reset'],
+    ['t_minr',      'Minimum temperature reset'],
+    ['ane_present', 'Anemometer present reading'],
+    ['ane_prev',    'Anemometer previous reading'],
+    ['rain_std',    'Rainfall (standard gauge)'],
+    ['evap_std',    'Evaporation (standard)'],
+    ['sun_hrs',     'Sunshine hours'],
+    ['ane_diff',    'Wind run'],
+    ['rad_mjm',     'Radiation (MJ/m²)'],
+    ['st_surf',     'Soil temperature (surface)'],
+    ['st_5',        'Soil temperature (5 cm)'],
+    ['st_10',       'Soil temperature (10 cm)'],
+    ['st_20',       'Soil temperature (20 cm)'],
+    ['st_30',       'Soil temperature (30 cm)'],
+    ['st_50',       'Soil temperature (50 cm)'],
+    ['st_100',      'Soil temperature (100 cm)'],
+  ];
+
+  // Fields required for 1200 only
+  const only1200 = [
+    ['st_surf',  'Soil temperature (surface)'],
+    ['st_5',     'Soil temperature (5 cm)'],
+    ['st_10',    'Soil temperature (10 cm)'],
+    ['st_20',    'Soil temperature (20 cm)'],
+    ['st_30',    'Soil temperature (30 cm)'],
+    ['st_50',    'Soil temperature (50 cm)'],
+    ['st_100',   'Soil temperature (100 cm)'],
+  ];
+
+  common.forEach(([id,lbl]) => { if (!has(id)) missing.push(lbl); });
+
+  // Wind direction — select must not be on blank placeholder
   const wdEl = document.getElementById('ane_dir');
   if (!wdEl || !wdEl.value) missing.push('Wind direction');
-  // 0600z extra fields
+
   if (currentSession === '0600') {
-    [['t_maxr','Maximum reset'],['t_minr','Minimum reset'],
-     ['ane_present','Anemometer present reading'],['ane_prev','Anemometer previous reading'],
-     ['rain_std','Rainfall (standard gauge)']].forEach(([id,lbl])=>{ if(!has(id)) missing.push(lbl); });
+    only0600.forEach(([id,lbl]) => { if (!has(id)) missing.push(lbl); });
+  } else {
+    only1200.forEach(([id,lbl]) => { if (!has(id)) missing.push(lbl); });
   }
+
   return missing;
 }
 
@@ -4389,7 +4476,8 @@ function checkTempThresholds() {
     : [['t_dry','Dry bulb'],['t_wet','Wet bulb'],['t_max','Maximum'],['t_min','Minimum']];
   tempFields.forEach(([id,lbl])=>{
     const v = inp(id);
-    if (v===null||v===9999) return; // blank or missing-data code — skip
+    if (v===null) return; // blank — skip
+    const raw=document.getElementById(id)?.value?.trim();if(raw===MISSING_MARKER)return; // missing marker — skip
     if (v < 0 || v > 40) issues.push(`${lbl}: ${v}°C is outside normal range (0–40°C)`);
   });
   return issues;
@@ -4400,7 +4488,7 @@ function submitObservation() {
   const missing = validateForm601();
   if (missing.length > 0) {
     const listed = missing.slice(0,4).join(', ') + (missing.length>4 ? ` and ${missing.length-4} more` : '');
-    showToast('Incomplete form', `Please fill all fields or enter 9999 for missing data. Empty: ${listed}`, 'error');
+    showToast('Incomplete form', `All fields must be filled. Use ${MISSING_MARKER} for any missing parameters. Empty: ${listed}`, 'error');
     return;
   }
   const thresholdIssues = checkTempThresholds();
@@ -4443,8 +4531,70 @@ function _doSubmit601() {
   state.currentYM=`${y}-${pad(m)}`;
   const ms=document.getElementById('returns-month-select'); if(ms) ms.value=state.currentYM;
   const ref=`OBS-${y}${pad(m)}${pad(day)}-${currentSession}`;
-  state.notifications.unshift({type:'sms',title:'Observation sent for approval',desc:`TMA: Obs ${rec.date} ${currentSession}UTC submitted. Pending admin approval. Rain:${rec.rain??'—'}mm MaxT:${rec.tmax??'—'}°C MinT:${rec.tmin??'—'}°C RH:${rec.rh??'—'}%`,time:'Just now'});
-  state.adminNotifications.unshift({title:`⏳ Pending approval — ${currentSession} UTC · ${rec.date}`,desc:`Rain:${rec.rain??'—'}mm | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | RH:${rec.rh??'—'}% | Dry:${rec.dry??'—'}°C | Wind:${rec.windRun??'—'}km | Sun:${rec.sunshine??'—'}h`,time:`Just now · Awaiting approval`});
+  // ── FIX 4b: Session-specific parameter summaries ──────────────
+  // 0600 UTC: full parameters  |  1200 UTC: psychrometric + soil only
+  const fmt = v => (v===null||v===undefined) ? '—' : v;
+  const soilSummary = () => {
+    const st = rec.soilTemp || {};
+    const vals = [
+      st.surf!=null?`Surf:${st.surf}°C`:'',
+      st.d5!=null?`5cm:${st.d5}°C`:'',
+      st.d10!=null?`10cm:${st.d10}°C`:'',
+      st.d20!=null?`20cm:${st.d20}°C`:'',
+      st.d30!=null?`30cm:${st.d30}°C`:'',
+      st.d50!=null?`50cm:${st.d50}°C`:'',
+      st.d100!=null?`100cm:${st.d100}°C`:'',
+    ].filter(Boolean);
+    return vals.length ? vals.join(' | ') : '—';
+  };
+
+  let obsDesc, adminDesc, autoMsg;
+  if (currentSession === '0600') {
+    obsDesc = `TMA: Obs ${rec.date} 0600UTC submitted. Pending admin approval.`
+      +` Rain:${fmt(rec.rain)}mm Tmax:${fmt(rec.tmax)}°C Tmin:${fmt(rec.tmin)}°C`
+      +` Dry:${fmt(rec.dry)}°C Wet:${fmt(rec.wet)}°C RH:${fmt(rec.rh)}%`
+      +` Evap:${fmt(rec.evapStd)}mm Sun:${fmt(rec.sunshine)}h WindRun:${fmt(rec.windRun)}km Rad:${fmt(rec.radiation)}MJ/m²`;
+    adminDesc = `Rain:${fmt(rec.rain)}mm | Tmax:${fmt(rec.tmax)}°C | Tmin:${fmt(rec.tmin)}°C`
+      +` | Dry:${fmt(rec.dry)}°C | Wet:${fmt(rec.wet)}°C | RH:${fmt(rec.rh)}%`
+      +` | Evap:${fmt(rec.evapStd)}mm | Sun:${fmt(rec.sunshine)}h | WindRun:${fmt(rec.windRun)}km`
+      +` | Rad:${fmt(rec.radiation)}MJ/m² | Soil → ${soilSummary()}`;
+    autoMsg = `*TMA AgroMet — 0600 UTC Observation*\n`
+      +`Station: ${rec.stationName} | Observer: ${rec.observerName}\n`
+      +`Date: ${rec.date} | Ref: OBS-${rec.key}\n`
+      +'\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n'
+      +`Rainfall:     ${fmt(rec.rain)} mm\n`
+      +`Max Temp:     ${fmt(rec.tmax)} \u00b0C\n`
+      +`Min Temp:     ${fmt(rec.tmin)} \u00b0C\n`
+      +`Dry Bulb:     ${fmt(rec.dry)} \u00b0C\n`
+      +`Wet Bulb:     ${fmt(rec.wet)} \u00b0C\n`
+      +`Rel. Humidity:${fmt(rec.rh)} %\n`
+      +`Evaporation:  ${fmt(rec.evapStd)} mm\n`
+      +`Sunshine:     ${fmt(rec.sunshine)} hrs\n`
+      +`Wind Run:     ${fmt(rec.windRun)} km\n`
+      +`Radiation:    ${fmt(rec.radiation)} MJ/m\u00b2\n`
+      +'Soil Temps:   '+soilSummary()+'\n'
+      +'Status: Pending approval';
+  } else {
+    obsDesc = `TMA: Obs ${rec.date} 1200UTC submitted. Pending admin approval.`
+      +` Dry:${fmt(rec.dry)}°C Wet:${fmt(rec.wet)}°C RH:${fmt(rec.rh)}%`;
+    adminDesc = `Dry:${fmt(rec.dry)}°C | Wet:${fmt(rec.wet)}°C | RH:${fmt(rec.rh)}%`
+      +` | Soil → ${soilSummary()}`;
+    autoMsg = `*TMA AgroMet — 1200 UTC Observation*\n`
+      +`Station: ${rec.stationName} | Observer: ${rec.observerName}\n`
+      +`Date: ${rec.date} | Ref: OBS-${rec.key}\n`
+      +'\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n'
+      +`Dry Bulb:     ${fmt(rec.dry)} \u00b0C\n`
+      +`Wet Bulb:     ${fmt(rec.wet)} \u00b0C\n`
+      +`Rel. Humidity:${fmt(rec.rh)} %\n`
+      +'Soil Temps:   '+soilSummary()+'\n'
+      +'Status: Pending approval';
+  }
+
+  state.notifications.unshift({type:'sms', title:'Observation sent for approval', desc:obsDesc, time:'Just now'});
+  state.adminNotifications.unshift({title:`⏳ Pending — ${currentSession} UTC · ${rec.date}`, desc:adminDesc, time:'Just now · Awaiting approval'});
+
+  // Auto-send to admin WhatsApp on submission
+  setTimeout(() => openWhatsApp(ADMIN_PHONE, autoMsg), 1800);
   saveState();
   showToast('Observation submitted','Sent for admin approval. Status: Pending. Ref: '+ref,'info');
   setTimeout(()=>{clearForm();showPage('myRecords',document.querySelector('.nav-item[onclick*="myRecords"]'));},1600);
@@ -6238,7 +6388,18 @@ function refreshObservers(){
   else{e.style.display='none';t.style.display='';r.innerHTML=state.approvedObservers.map((o,i)=>`<tr><td>${o.name}</td><td>${o.title||'—'}</td><td>${o.station||'—'}</td><td>${o.phone||'—'}</td><td>${o.email||'—'}</td><td>${o.approvedDate||'—'}</td><td><span class="badge badge-teal">Active</span></td><td style="white-space:nowrap"><button class="btn btn-sm btn-wa" title="WhatsApp" onclick="contactMemberWA('obs',${i})">📱 WA</button> <button class="btn btn-sm btn-sms" title="Send SMS" onclick="contactMemberSMS('obs',${i})">✉ SMS</button></td><td><button class="btn btn-sm btn-danger" onclick="deleteObserver(${i})">Remove</button></td></tr>`).join('');}
 }
 
-function deleteObserver(i){const o=state.approvedObservers[i];if(!o)return;if(!confirm(`Remove observer "${o.name}"?`))return;state.approvedObservers.splice(i,1);saveState();refreshObservers();showToast('Observer removed',`${o.name} removed.`);}
+async function deleteObserver(i){
+  const o=state.approvedObservers[i];if(!o)return;
+  if(!confirm(`Remove observer "${o.name}"? They will immediately lose login access.`))return;
+  // Remove from Supabase FIRST so the account is gone on all devices instantly
+  if(_sbReady()&&o.email){
+    const {error}=await supabaseClient.from('observers').delete().eq('email',o.email);
+    if(error){showToast('Error','Could not remove from database: '+error.message,'error');return;}
+  }
+  state.approvedObservers.splice(i,1);
+  saveState();refreshObservers();
+  showToast('Observer removed',`${o.name} has been removed and can no longer log in.`,'success');
+}
 
 function refreshManageStakeholders(){
   const e=document.getElementById('stakeholders-empty'),t=document.getElementById('stakeholders-table'),r=document.getElementById('stakeholders-rows');
@@ -6263,7 +6424,17 @@ function refreshManageStakeholders(){
   }
 }
 
-function deleteStakeholder(i){const s=state.approvedStakeholders[i];if(!s)return;if(!confirm(`Remove stakeholder "${s.name}"?`))return;state.approvedStakeholders.splice(i,1);saveState();refreshManageStakeholders();showToast('Stakeholder removed',`${s.name} removed.`);}
+async function deleteStakeholder(i){
+  const s=state.approvedStakeholders[i];if(!s)return;
+  if(!confirm(`Remove stakeholder "${s.name}"? They will immediately lose login access.`))return;
+  if(_sbReady()&&s.email){
+    const {error}=await supabaseClient.from('stakeholders').delete().eq('email',s.email);
+    if(error){showToast('Error','Could not remove from database: '+error.message,'error');return;}
+  }
+  state.approvedStakeholders.splice(i,1);
+  saveState();refreshManageStakeholders();
+  showToast('Stakeholder removed',`${s.name} has been removed and can no longer log in.`,'success');
+}
 
 function adminRegisterStakeholder(){
   const fname=(document.getElementById('sh-reg-fname')?.value||'').trim();
