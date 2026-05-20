@@ -3123,15 +3123,67 @@ function loginAs(role, user) {
   refreshReturnStatus(state.currentYM);
 }
 
-function tryLogin() {
-  loadState(); // ensure latest user data
+async function tryLogin() {
   const id=(document.getElementById('login-identifier')?.value||'').trim();
   const pw=(document.getElementById('login-password')?.value||'');
   const errEl=document.getElementById('login-error');
   const showErr=m=>{errEl.textContent=m;errEl.style.display=''};
   const hideErr=()=>{errEl.style.display='none'};
   if(!id||!pw){showErr('Please enter your phone / email and password.');return;}
+
+  // Admin check (hardcoded — no DB lookup needed)
   if((id===ADMIN_CREDENTIALS.phone||id===ADMIN_CREDENTIALS.email)&&pw===ADMIN_CREDENTIALS.password){hideErr();loginAs('admin',null);return;}
+
+  // ── FIX 3: Query Supabase directly so login works on any device, even if
+  // this browser's localStorage has never seen the approved account.
+  // We query by email OR phone, then verify password client-side.
+  if (_sbReady()) {
+    showErr('Checking credentials…');
+    try {
+      const isEmail = id.includes('@');
+      const field   = isEmail ? 'email' : 'phone';
+
+      const [obsRes, shRes, pendRes] = await Promise.all([
+        supabaseClient.from('observers').select('*').eq(field, id).maybeSingle(),
+        supabaseClient.from('stakeholders').select('*').eq(field, id).maybeSingle(),
+        supabaseClient.from('pending_approvals').select('email,phone,type').eq(field, id).maybeSingle(),
+      ]);
+
+      if (obsRes.data && obsRes.data.password === pw) {
+        const o = obsRes.data;
+        const obsObj = { name:o.name, title:o.title, station:o.station,
+          phone:o.phone, email:o.email, password:o.password,
+          approvedDate:o.approved_date };
+        // Sync into local state so the rest of the session works
+        if (!state.approvedObservers.find(x=>x.email===obsObj.email))
+          state.approvedObservers.unshift(obsObj);
+        hideErr(); loginAs('observer', obsObj); return;
+      }
+
+      if (shRes.data && shRes.data.password === pw) {
+        const s = shRes.data;
+        const shObj = { name:s.name, org:s.org, position:s.position,
+          phone:s.phone, email:s.email, password:s.password,
+          approvedDate:s.approved_date };
+        if (!state.approvedStakeholders.find(x=>x.email===shObj.email))
+          state.approvedStakeholders.unshift(shObj);
+        hideErr(); loginAs('stakeholder', shObj); return;
+      }
+
+      if (pendRes.data) {
+        showErr('Your account is pending administrator approval.'); return;
+      }
+
+      // Wrong credentials confirmed by DB
+      showErr('Incorrect phone/email or password.'); return;
+
+    } catch(e) {
+      console.warn('Supabase login check failed, falling back to local state:', e);
+    }
+  }
+
+  // ── Offline fallback: use local state (same behaviour as before)
+  loadState();
   const obs=state.approvedObservers.find(o=>(o.phone===id||o.email===id)&&o.password===pw);
   if(obs){hideErr();loginAs('observer',obs);return;}
   const sh=state.approvedStakeholders.find(s=>(s.phone===id||s.email===id)&&s.password===pw);
@@ -3209,7 +3261,7 @@ function closeSidebar(){
   document.body.style.overflow='';
 }
 
-function submitRegister() {
+async function submitRegister() {
   const fname=document.getElementById('reg-fname')?.value?.trim();
   const lname=document.getElementById('reg-lname')?.value?.trim();
   const title=document.getElementById('reg-title')?.value;
@@ -3220,39 +3272,73 @@ function submitRegister() {
     showToast('Invalid email address','Only official TMA email addresses are accepted (e.g. juma.ally@meteo.go.tz)','error');
     return;
   }
-  const allAccounts=[...state.approvedObservers,...state.pendingApprovals];
-  if(allAccounts.some(u=>u.email&&u.email.toLowerCase()===email)){
-    showToast('Email already registered','This email address is already linked to an existing account','error');
-    return;
+
+  // ── FIX 1: Check Supabase directly for duplicates so we catch records
+  // that exist in the DB but aren't yet in this browser's local state.
+  // This prevents duplicate pending rows when the same person registers
+  // from a different device or after clearing localStorage.
+  if (_sbReady()) {
+    const [obsCheck, pendCheck] = await Promise.all([
+      supabaseClient.from('observers').select('email').eq('email', email).maybeSingle(),
+      supabaseClient.from('pending_approvals').select('email').eq('email', email).maybeSingle(),
+    ]);
+    if (obsCheck.data || pendCheck.data) {
+      showToast('Email already registered','This email address is already linked to an existing account','error');
+      return;
+    }
+  } else {
+    // Offline fallback: check local state only
+    const allAccounts=[...state.approvedObservers,...state.pendingApprovals];
+    if(allAccounts.some(u=>u.email&&u.email.toLowerCase()===email)){
+      showToast('Email already registered','This email address is already linked to an existing account','error');
+      return;
+    }
   }
+
   const name=[fname,document.getElementById('reg-mname')?.value?.trim(),lname].filter(Boolean).join(' ');
   const _obsReg={type:'observer',name,title,station,
     phone:document.getElementById('reg-phone')?.value?.trim(),
     email,
     password:document.getElementById('reg-password')?.value||'',
     submittedDate:getTodayStr()};
-  state.pendingApprovals.push(_obsReg);
-  saveState();
-  pushPendingToSupabase(_obsReg);
+
+  // ── Push ONLY to Supabase; real-time will update state.pendingApprovals
+  // on all open devices automatically. Pushing to local state AND Supabase
+  // was the root cause of duplicate entries.
+  await pushPendingToSupabase(_obsReg);
   updateApprovalBadge();
   showToast('Registration submitted','Your request has been sent to the administrator.','success');
   switchAuthTab('login');
 }
 
-function submitStakeholderRegister() {
+async function submitStakeholderRegister() {
   const fname=document.getElementById('sh-fname')?.value?.trim();
   const lname=document.getElementById('sh-lname')?.value?.trim();
   const org=document.getElementById('sh-org')?.value?.trim();
   if(!fname||!lname||!org){showToast('Missing fields','Please fill in name and organization','warning');return;}
+  const email=(document.getElementById('sh-email')?.value?.trim()||'').toLowerCase();
+
+  // ── FIX 1b: Same duplicate-check against Supabase for stakeholders
+  if (_sbReady() && email) {
+    const [shCheck, pendCheck] = await Promise.all([
+      supabaseClient.from('stakeholders').select('email').eq('email', email).maybeSingle(),
+      supabaseClient.from('pending_approvals').select('email').eq('email', email).maybeSingle(),
+    ]);
+    if (shCheck.data || pendCheck.data) {
+      showToast('Email already registered','This email address is already linked to an existing account','error');
+      return;
+    }
+  }
+
   const _shReg={type:'stakeholder',name:`${fname} ${lname}`,org,
     position:document.getElementById('sh-position')?.value?.trim(),
     phone:document.getElementById('sh-phone')?.value?.trim(),
-    email:document.getElementById('sh-email')?.value?.trim(),
+    email,
     password:document.getElementById('sh-password')?.value||'',
     submittedDate:getTodayStr()};
-  state.pendingApprovals.push(_shReg);
-  saveState();
-  pushPendingToSupabase(_shReg);
+
+  // ── Push ONLY to Supabase; real-time brings it to all devices
+  await pushPendingToSupabase(_shReg);
   updateApprovalBadge();
   showToast('Registration submitted','Your stakeholder request has been sent.','success');
   switchAuthTab('login');
@@ -5908,10 +5994,67 @@ function refreshApprovals(){
   }
 }
 
-function approveObserver(i){const o=state.pendingApprovals[i];if(!o)return;o.approvedDate=getTodayStr();state.approvedObservers.unshift(o);state.pendingApprovals.splice(i,1);saveState();pushUserToSupabase('observers',{name:o.name,title:o.title||null,station:o.station||null,phone:o.phone||null,email:o.email||null,password:o.password||null,approved_date:o.approvedDate?o.approvedDate.split('/').reverse().join('-'):null});updateApprovalBadge();refreshApprovals();refreshObservers();showToast('Observer approved',`${o.name} can now log in.`,'success');}
-function approveStakeholder(i){const s=state.pendingApprovals[i];if(!s)return;s.approvedDate=getTodayStr();state.approvedStakeholders.unshift(s);state.pendingApprovals.splice(i,1);saveState();pushUserToSupabase('stakeholders',{name:s.name,org:s.org||null,position:s.position||null,phone:s.phone||null,email:s.email||null,password:s.password||null,approved_date:s.approvedDate?s.approvedDate.split('/').reverse().join('-'):null});updateApprovalBadge();refreshApprovals();refreshManageStakeholders();showToast('Stakeholder approved',`${s.name} can now log in.`,'success');}
-function rejectObserver(i){state.pendingApprovals.splice(i,1);updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
-function rejectApproval(i){state.pendingApprovals.splice(i,1);updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
+// ── FIX 2: After approving/rejecting, DELETE the row from Supabase
+// pending_approvals so it never comes back on next login.
+async function deletePendingFromSupabase(email, type) {
+  if (!_sbReady() || !email) return;
+  const { error } = await supabaseClient
+    .from('pending_approvals')
+    .delete()
+    .eq('email', email)
+    .eq('type', type);
+  if (error) console.error('Delete pending error:', error.message);
+}
+
+async function approveObserver(i){
+  const o=state.pendingApprovals[i];if(!o)return;
+  o.approvedDate=getTodayStr();
+  state.approvedObservers.unshift(o);
+  state.pendingApprovals.splice(i,1);
+  saveState();
+  // Insert into observers table using upsert to avoid duplicate if already exists
+  await supabaseClient.from('observers').upsert({
+    name:o.name,title:o.title||null,station:o.station||null,
+    phone:o.phone||null,email:o.email||null,password:o.password||null,
+    approved_date:o.approvedDate?o.approvedDate.split('/').reverse().join('-'):null
+  }, { onConflict: 'email' });
+  // Remove from pending_approvals in Supabase so it never resurfaces
+  await deletePendingFromSupabase(o.email, 'observer');
+  updateApprovalBadge();refreshApprovals();refreshObservers();
+  showToast('Observer approved',`${o.name} can now log in.`,'success');
+}
+
+async function approveStakeholder(i){
+  const s=state.pendingApprovals[i];if(!s)return;
+  s.approvedDate=getTodayStr();
+  state.approvedStakeholders.unshift(s);
+  state.pendingApprovals.splice(i,1);
+  saveState();
+  await supabaseClient.from('stakeholders').upsert({
+    name:s.name,org:s.org||null,position:s.position||null,
+    phone:s.phone||null,email:s.email||null,password:s.password||null,
+    approved_date:s.approvedDate?s.approvedDate.split('/').reverse().join('-'):null
+  }, { onConflict: 'email' });
+  await deletePendingFromSupabase(s.email, 'stakeholder');
+  updateApprovalBadge();refreshApprovals();refreshManageStakeholders();
+  showToast('Stakeholder approved',`${s.name} can now log in.`,'success');
+}
+
+async function rejectObserver(i){
+  const o=state.pendingApprovals[i];if(!o)return;
+  state.pendingApprovals.splice(i,1);
+  await deletePendingFromSupabase(o.email, o.type);
+  updateApprovalBadge();refreshApprovals();
+  showToast('Rejected','Registration has been rejected.');
+}
+
+async function rejectApproval(i){
+  const o=state.pendingApprovals[i];if(!o)return;
+  state.pendingApprovals.splice(i,1);
+  await deletePendingFromSupabase(o.email, o.type);
+  updateApprovalBadge();refreshApprovals();
+  showToast('Rejected','Registration has been rejected.');
+}
 
 function updateApprovalBadge(){
   const b=document.getElementById('approvalBadge'),c=state.pendingApprovals.length;
@@ -6960,32 +7103,30 @@ async function loadFromSupabase() {
       });
     }
 
+    // Arrays were cleared above — push every row without dedup guards.
+    // Dedup in the DB is enforced by UNIQUE(email) on observers/stakeholders.
     if (obsvrRes.data) {
       obsvrRes.data.forEach(row => {
-        const o = { name: row.name, title: row.title, station: row.station,
-          phone: row.phone, email: row.email, password: row.password,
-          approvedDate: row.approved_date };
-        if (!state.approvedObservers.find(x => x.email === o.email)) state.approvedObservers.push(o);
+        state.approvedObservers.push({ name: row.name, title: row.title,
+          station: row.station, phone: row.phone, email: row.email,
+          password: row.password, approvedDate: row.approved_date });
       });
     }
 
     if (shRes.data) {
       shRes.data.forEach(row => {
-        const s = { name: row.name, org: row.org, position: row.position,
-          phone: row.phone, email: row.email, password: row.password,
-          approvedDate: row.approved_date };
-        if (!state.approvedStakeholders.find(x => x.email === s.email)) state.approvedStakeholders.push(s);
+        state.approvedStakeholders.push({ name: row.name, org: row.org,
+          position: row.position, phone: row.phone, email: row.email,
+          password: row.password, approvedDate: row.approved_date });
       });
     }
 
     if (pendRes.data) {
       pendRes.data.forEach(row => {
-        const p = { type: row.type, name: row.name, title: row.title,
-          station: row.station, org: row.org, position: row.position,
-          phone: row.phone, email: row.email, password: row.password,
-          submittedDate: row.submitted_date };
-        if (!state.pendingApprovals.find(x => x.email === p.email && x.type === p.type))
-          state.pendingApprovals.push(p);
+        state.pendingApprovals.push({ type: row.type, name: row.name,
+          title: row.title, station: row.station, org: row.org,
+          position: row.position, phone: row.phone, email: row.email,
+          password: row.password, submittedDate: row.submitted_date });
       });
     }
 
