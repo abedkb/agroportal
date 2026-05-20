@@ -416,8 +416,8 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;back
 .upload-zone:hover{border-color:var(--tma-blue-m);background:var(--tma-blue-l)}
 
 /* TOAST */
-.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--bg-primary);border:0.5px solid var(--border-medium);border-radius:var(--radius-lg);padding:.75rem 1.1rem;font-size:13px;display:none;max-width:340px;z-index:9999;animation:slideIn .2s ease}
-.toast.show{display:block}
+.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.92);background:var(--bg-primary);border:0.5px solid var(--border-medium);border-radius:var(--radius-lg);padding:1rem 1.4rem;font-size:13.5px;display:none;width:90%;max-width:380px;z-index:9999;box-shadow:0 8px 40px rgba(0,0,0,0.18);text-align:center;animation:toastPop .2s ease forwards}
+.toast.show{display:block;transform:translate(-50%,-50%) scale(1)}
 .toast.success{background:var(--tma-green-l);border-color:#9FE1CB}
 .toast.warning{background:var(--tma-amber-l);border-color:#FAC775}
 .toast-title{font-weight:500}
@@ -965,7 +965,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
   .field-row,.field-row3{grid-template-columns:1fr}
 
   /* Toast: full-width at bottom */
-  .toast{left:1rem;right:1rem;max-width:none;bottom:1rem}
+  .toast{left:50%;right:auto;transform:translate(-50%,-50%) scale(0.92);width:92%;max-width:360px}
 
   /* Form switcher buttons */
   .form-btn{padding:8px 14px;font-size:13px}
@@ -1474,7 +1474,38 @@ body{
 <div class="auth-screen" id="authScreen" style="display:none">
   <div class="auth-card">
     <div class="auth-logo" style="flex-direction:column;align-items:center;gap:8px;margin-bottom:1.2rem">
-      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMTAgMTA1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzE1NjVDMH0udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMTU2NUMwfTwvc3R5bGU+PC9kZWZzPjxwYXRoIGQ9Ik0gNSA5NSBDIDUgNTUgNDggMjggNjAgNiIgc3Ryb2tlPSIjMUVCNTNBIiBzdHJva2Utd2lkdGg9IjguNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjAsNikgcm90YXRlKC02MCkiPjxwb2x5Z29uIHBvaW50cz0iMTMsMCAtOSwtNiAtOSw2IiBmaWxsPSIjMUVCNTNBIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgOTUgQyAxNiA2MCA1MSAzNSA2MiAxOCIgc3Ryb2tlPSIjRkNEMTE2IiBzdHJva2Utd2lkdGg9IjYuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjIsMTgpIHJvdGF0ZSgtNTcpIj48cG9seWdvbiBwb2ludHM9IjExLDAgLTgsLTUgLTgsNSIgZmlsbD0iI0ZDRDExNiIvPjwvZz48cGF0aCBkPSJNIDYyIDE0IEMgNjggMjggNjAgNDggMzIgNTgiIHN0cm9rZT0iIzE1NjVDMCIgc3Ryb2tlLXdpZHRoPSI1IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzMiw1OCkgcm90YXRlKDE3NSkiPjxwb2x5Z29uIHBvaW50cz0iMTAsMCAtOCwtNC41IC04LDQuNSIgZmlsbD0iIzE1NjVDMCIvPjwvZz48dGV4dCB4PSI4OCIgeT0iODEiIGNsYXNzPSJ0bCIgZm9udC1zaXplPSI2OCI+VE1BPC90ZXh0Pjx0ZXh0IHg9Ijg4IiB5PSI5NyIgY2xhc3M9InRzIiBmb250LXNpemU9IjkiIGxldHRlci1zcGFjaW5nPSIwLjUiPlRBTlpBTklBIE1FVEVPUk9MT0dJQ0FMIEFVVEhPUklUWTwvdGV4dD48L3N2Zz4=" alt="TMA Logo" style="width:200px;height:auto;filter:drop-shadow(0 2px 8px rgba(13,71,161,0.18))"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 118" style="width:230px;height:auto;display:block;margin:0 auto">
+  <defs>
+    <style>
+      .tl2{font-family:"Arial Black",Arial,sans-serif;font-weight:900;fill:#1565C0}
+      .ts2{font-family:Arial,sans-serif;font-weight:700;fill:#1565C0;letter-spacing:0.8px}
+    </style>
+  </defs>
+
+  <!-- GREEN arrow — outermost, tallest, sweeps from lower-left up to upper-right -->
+  <path d="M 10 108 C 14 72, 42 36, 82 6"
+        stroke="#22B335" stroke-width="9.5" fill="none" stroke-linecap="round"/>
+  <!-- green arrowhead: pointing roughly NE at tip (82,6) -->
+  <polygon points="82,6 60,22 74,28" fill="#22B335"/>
+
+  <!-- YELLOW arrow — parallel, slightly inner and shorter -->
+  <path d="M 22 108 C 26 76, 52 46, 84 24"
+        stroke="#F5D000" stroke-width="7.5" fill="none" stroke-linecap="round"/>
+  <!-- yellow arrowhead at (84,24) pointing NE -->
+  <polygon points="84,24 65,34 73,46" fill="#F5D000"/>
+
+  <!-- BLUE arrow — innermost, starts near green/yellow tips, arcs inward back toward left -->
+  <path d="M 80 14 C 100 22, 102 50, 84 68 C 72 80, 50 88, 34 98"
+        stroke="#1565C0" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+  <!-- blue arrowhead at end (34,98) pointing roughly SW -->
+  <polygon points="34,98 52,86 44,100" fill="#1565C0"/>
+
+  <!-- TMA — large bold -->
+  <text x="104" y="90" class="tl2" font-size="82">TMA</text>
+
+  <!-- Subtitle -->
+  <text x="104" y="110" class="ts2" font-size="10.5">TANZANIA METEOROLOGICAL AUTHORITY</text>
+</svg>
       <div style="text-align:center">
         <div style="font-size:17px;font-weight:700;color:#0D47A1;letter-spacing:.3px;line-height:1.2">AgroMet Portal</div>
         <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">Tanzania Meteorological Authority</div>
@@ -1557,7 +1588,20 @@ body{
   <!-- TOP NAVIGATION BAR -->
   <div class="topnav">
     <div class="topnav-brand">
-      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMzQiPjxwYXRoIGQ9Ik0gMiAzMiBDIDIgMTggMTYgOSAyMCAyIiBzdHJva2U9IiMxRUI1M0EiIHN0cm9rZS13aWR0aD0iMi44IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMCwyKSByb3RhdGUoLTYwKSI+PHBvbHlnb24gcG9pbnRzPSI0LjUsMCAtMywtMiAtMywyIiBmaWxsPSIjMUVCNTNBIi8+PC9nPjxwYXRoIGQ9Ik0gNiAzMiBDIDYgMjAgMTkgMTMgMjMgNyIgc3Ryb2tlPSIjRkNEMTE2IiBzdHJva2Utd2lkdGg9IjIuMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjMsNykgcm90YXRlKC01NykiPjxwb2x5Z29uIHBvaW50cz0iMy41LDAgLTIuNSwtMS42IC0yLjUsMS42IiBmaWxsPSIjRkNEMTE2Ii8+PC9nPjxwYXRoIGQ9Ik0gMjMgNSBDIDI2IDEwIDIyIDE3IDEyIDIwIiBzdHJva2U9IiM5MENBRjkiIHN0cm9rZS13aWR0aD0iMS44IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMiwyMCkgcm90YXRlKDE3NSkiPjxwb2x5Z29uIHBvaW50cz0iMy41LDAgLTIuNSwtMS41IC0yLjUsMS41IiBmaWxsPSIjOTBDQUY5Ii8+PC9nPjx0ZXh0IHg9IjI4IiB5PSIyNiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc2l6ZT0iMjIiIGZpbGw9IiNmZmZmZmYiPlRNQTwvdGV4dD48L3N2Zz4=" alt="TMA" style="height:36px;width:auto;flex-shrink:0"/>
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 38" style="height:38px;width:auto;flex-shrink:0">
+  <defs><style>.tn{font-family:"Arial Black",Arial,sans-serif;font-weight:900;fill:#fff}</style></defs>
+  <!-- Green arrow -->
+  <path d="M 3 36 C 5 24, 16 12, 30 3" stroke="#22B335" stroke-width="3.8" fill="none" stroke-linecap="round"/>
+  <polygon points="30,3 21,10 26,14" fill="#22B335"/>
+  <!-- Yellow arrow -->
+  <path d="M 8 36 C 10 26, 20 16, 31 10" stroke="#F5D000" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <polygon points="31,10 23,14 27,20" fill="#F5D000"/>
+  <!-- Blue arrow -->
+  <path d="M 29 5 C 37 9, 38 20, 31 27 C 26 31, 18 33, 12 36" stroke="#90CAF9" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <polygon points="12,36 20,30 15,37" fill="#90CAF9"/>
+  <!-- TMA text -->
+  <text x="42" y="31" class="tn" font-size="30">TMA</text>
+</svg>
       <div class="topnav-brand-text">
         <span class="topnav-brand-name">AgroMet Portal</span>
         <span class="topnav-brand-sub">Tanzania Meteorological Authority</span>
@@ -1922,9 +1966,10 @@ body{
               </div>
             </div>
             <div class="form-actions">
-              <button class="btn btn-primary" onclick="submitObservation()">Submit observation</button>
+              <div id="form601-lock-banner" style="display:none;background:var(--tma-amber-l);border:1px solid var(--tma-amber);border-radius:var(--radius);padding:.6rem .9rem;font-size:12.5px;color:var(--tma-amber);display:none;align-items:center;gap:.75rem;margin-bottom:.5rem"></div>
+              <button class="btn btn-primary" id="form601-submit-btn" onclick="submitObservation()">Submit observation</button>
               <button class="btn" onclick="saveDraft()">Save draft</button>
-              <button class="btn" onclick="clearForm()">Clear form</button>
+              <button class="btn" id="form601-clear-btn" onclick="clearForm()">Clear form</button>
               <span class="form-note">Submitting notifies admin via SMS &amp; WhatsApp (0755863325)</span>
               <span style="display:inline-block;width:1px;height:20px;background:var(--border-medium);margin:0 4px;vertical-align:middle"></span>
               <span class="form-note" style="margin-right:4px">Share filled data:</span>
@@ -3030,7 +3075,7 @@ const isoToDisplay = s => { if(!s) return '—'; const p=s.match(/^(\d{4})-(\d{2
 const getMonthLabel = ym => { const [y,m]=ym.split('-'); return `${MONTHS[+m-1]} ${y}`; };
 const daysInMonth = (y,m) => new Date(y,m,0).getDate();
 const currentYM = () => { const {y,m}=getNow(); return `${y}-${pad(m)}`; };
-const inp = id => { const v=parseFloat(document.getElementById(id)?.value); return isNaN(v)?null:v; };
+const inp = id => { const raw=(document.getElementById(id)?.value??'').trim(); if(!raw||raw==='8888')return null; const v=parseFloat(raw); return isNaN(v)?null:v; };
 const inpStr = id => document.getElementById(id)?.value?.trim() || null;
 const fmt = (v,dec=1) => v===null||v===undefined?'—':parseFloat(v).toFixed(dec);
 const fmtCell = (v,dec=1,cls='') => {
@@ -3907,6 +3952,8 @@ function switchReturn(retId) { showPage('returns',null); setTimeout(()=>toggleRe
 
 // ── SESSION SELECTOR ───────────────────────────────────────────
 let currentSession='0600';
+let _editingKey = null;   // null = new entry, string = editing existing record
+
 function selectSession(s) {
   currentSession=s;
   ['aneTime','tempTime','rainTime','sunTime','cloudTime','soilTempTime','soilMoistTime'].forEach(id=>{
@@ -3919,6 +3966,8 @@ function selectSession(s) {
   // Show/hide fields that are exclusive to the 0600z observation
   const is0600 = s === '0600';
   document.querySelectorAll('.col-0600').forEach(el => { el.style.display = is0600 ? '' : 'none'; });
+  // Check if this session was already submitted today (and not in edit mode)
+  _checkSessionLock(s);
   ['section-rain-evap','section-rad-sun','section-soil-moist'].forEach(id => {
     const el = document.getElementById(id); if(el) el.style.display = is0600 ? '' : 'none';
   });
@@ -4399,7 +4448,7 @@ function proceedAfterTempWarn() {
 // ── FIX 4a: '////' is the official WMO missing-data symbol.
 // Every required field must contain either a valid number OR exactly '////'.
 // An empty field is NOT accepted — observer must consciously mark missing data.
-const MISSING_MARKER = '////';
+const MISSING_MARKER = '8888';
 
 function validateForm601() {
   const missing = [];
@@ -4408,9 +4457,9 @@ function validateForm601() {
     const el = document.getElementById(id);
     if (!el || el.closest('[style*="display: none"]') || el.closest('[style*="display:none"]')) return true;
     const v = (el.value ?? '').trim();
-    if (v === '') return false;               // truly empty — not OK
-    if (v === MISSING_MARKER) return true;    // observer marked it missing — OK
-    return !isNaN(parseFloat(v));             // must be a number
+    if (v === '') return false;        // truly empty — not OK
+    if (v === '8888') return true;     // 8888 = observer-marked missing data — OK
+    return !isNaN(parseFloat(v));      // must be a valid number
   };
 
   // Fields required for BOTH sessions
@@ -4477,7 +4526,7 @@ function checkTempThresholds() {
   tempFields.forEach(([id,lbl])=>{
     const v = inp(id);
     if (v===null) return; // blank — skip
-    const raw=document.getElementById(id)?.value?.trim();if(raw===MISSING_MARKER)return; // missing marker — skip
+    if (v === 8888) return; // 8888 = observer-marked missing data — skip range check
     if (v < 0 || v > 40) issues.push(`${lbl}: ${v}°C is outside normal range (0–40°C)`);
   });
   return issues;
@@ -4488,7 +4537,7 @@ function submitObservation() {
   const missing = validateForm601();
   if (missing.length > 0) {
     const listed = missing.slice(0,4).join(', ') + (missing.length>4 ? ` and ${missing.length-4} more` : '');
-    showToast('Incomplete form', `All fields must be filled. Use ${MISSING_MARKER} for any missing parameters. Empty: ${listed}`, 'error');
+    showToast('Incomplete form', `All fields must be filled. Use 8888 for any missing parameters. Empty: ${listed}`, 'error');
     return;
   }
   const thresholdIssues = checkTempThresholds();
@@ -4593,10 +4642,13 @@ function _doSubmit601() {
   state.notifications.unshift({type:'sms', title:'Observation sent for approval', desc:obsDesc, time:'Just now'});
   state.adminNotifications.unshift({title:`⏳ Pending — ${currentSession} UTC · ${rec.date}`, desc:adminDesc, time:'Just now · Awaiting approval'});
 
-  // Auto-send to admin WhatsApp on submission
-  setTimeout(() => openWhatsApp(ADMIN_PHONE, autoMsg), 1800);
+  // After submission — open the message modal so observer can send via WA or SMS
+  setTimeout(() => {
+    openMsgModal('Admin TMA (' + ADMIN_PHONE + ')', ADMIN_PHONE, autoMsg, 'both');
+  }, 1200);
   saveState();
   showToast('Observation submitted','Sent for admin approval. Status: Pending. Ref: '+ref,'info');
+  _editingKey = null;
   setTimeout(()=>{clearForm();showPage('myRecords',document.querySelector('.nav-item[onclick*="myRecords"]'));},1600);
 }
 
@@ -5950,6 +6002,8 @@ function refreshMyRecords() {
 function editObservation(key) {
   const r = state.records.find(rec => rec.key === key);
   if (!r) { showToast('Not found','Observation record not found','error'); return; }
+  // Mark we are editing this record so the lock won't re-trigger
+  _editingKey = key;
   // Navigate to form and set session
   showPage('obsForms', document.querySelector('.nav-item[onclick*="obsForms"]'));
   selectSession(r.session);
@@ -6741,12 +6795,13 @@ async function sendBeemSms(phones, message) {
 let _msgCtx = {};
 function openMsgModal(toLabel, phone, defaultMsg, channel) {
   _msgCtx = {toLabel, phone, defaultMsg, channel};
-  const title = channel==='sms' ? '✉ Send SMS' : channel==='wa' ? '📱 Send via WhatsApp' : 'Send Message';
-  document.getElementById('msgModalTitle').textContent = title;
+  // Always show Send Message title — both WA and SMS always available
+  document.getElementById('msgModalTitle').textContent = 'Send Message';
   document.getElementById('msgModalTo').value = toLabel;
   document.getElementById('msgModalText').value = defaultMsg || '';
-  document.getElementById('msgModalWaBtn').style.display = channel==='sms' ? 'none' : '';
-  document.getElementById('msgModalSmsBtn').style.display = channel==='wa' ? 'none' : '';
+  // Always show BOTH buttons — user chooses their preferred channel
+  document.getElementById('msgModalWaBtn').style.display = '';
+  document.getElementById('msgModalSmsBtn').style.display = '';
   document.getElementById('msgModalOverlay').classList.add('open');
 }
 function closeMsgModal() { document.getElementById('msgModalOverlay').classList.remove('open'); }
@@ -6754,8 +6809,21 @@ function sendFromModal(channel) {
   const msg = (document.getElementById('msgModalText')?.value||'').trim();
   if (!msg) { showToast('Empty message','Please type a message before sending','warning'); return; }
   closeMsgModal();
-  if (channel==='wa') openWhatsApp(_msgCtx.phone, msg);
-  else sendBeemSms([_msgCtx.phone], msg);
+  if (channel === 'wa') {
+    openWhatsApp(_msgCtx.phone, msg);
+  } else {
+    // Native SMS — opens the device's built-in SMS app pre-filled
+    openNativeSMS(_msgCtx.phone, msg);
+  }
+}
+
+// Native SMS using sms: URI scheme (works on Android, iOS, desktop with SMS app)
+function openNativeSMS(phone, message) {
+  if (!phone) { showToast('No number', 'No phone number for this contact', 'warning'); return; }
+  const p = formatPhoneIntl(phone) || phone.replace(/\s/g,'');
+  // iOS uses & as separator, Android uses ?; we use & which works on both
+  const uri = 'sms:' + p + '?body=' + encodeURIComponent(message);
+  window.open(uri, '_self');
 }
 
 // ── Admin → Member (per-member direct contact) ──────────────────
@@ -6768,8 +6836,8 @@ function contactMemberWA(type, idx) {
 function contactMemberSMS(type, idx) {
   const m = type==='obs' ? state.approvedObservers[idx] : state.approvedStakeholders[idx];
   if (!m) return;
-  openMsgModal(m.name+' (SMS · '+(m.phone||'—')+')', m.phone,
-    'Dear '+m.name+', this is a message from TMA AgroMet portal. ', 'sms');
+  openMsgModal(m.name+' ('+(m.phone||'—')+')', m.phone,
+    'Dear '+m.name+', this is a message from TMA AgroMet portal. ', 'both');
 }
 
 // ── Admin Broadcast ─────────────────────────────────────────────
@@ -6831,13 +6899,15 @@ async function sendBroadcast() {
 function shareObsWithAdmin(recKey, channel) {
   const rec = state.records.find(r=>r.key===recKey);
   if (!rec) return;
+  const fmt = v => v??'—';
   const msg = 'TMA Observation Report\n'
-    +'Date: '+rec.date+' | Session: '+rec.session+'UTC\n'
-    +'Station: '+state.stationName+'\nObserver: '+state.observerName+'\n'
-    +'Rainfall: '+(rec.rain??'—')+'mm | Tmax: '+(rec.tmax??'—')+'°C | Tmin: '+(rec.tmin??'—')+'°C\n'
-    +'RH: '+(rec.rh??'—')+'% | Sunshine: '+(rec.sunshine??'—')+'h | Wind run: '+(rec.windRun??'—')+'km';
-  if (channel==='wa') openWhatsApp(ADMIN_PHONE, msg);
-  else openMsgModal('Admin TMA ('+ADMIN_PHONE+')', ADMIN_PHONE, msg, 'sms');
+    +'Date: '+rec.date+' | Session: '+rec.session+' UTC\n'
+    +'Station: '+state.stationName+' | Observer: '+state.observerName+'\n'
+    +'Rainfall: '+fmt(rec.rain)+'mm | Tmax: '+fmt(rec.tmax)+'°C | Tmin: '+fmt(rec.tmin)+'°C\n'
+    +'Dry: '+fmt(rec.dry)+'°C | Wet: '+fmt(rec.wet)+'°C | RH: '+fmt(rec.rh)+'%\n'
+    +'Sunshine: '+fmt(rec.sunshine)+'h | WindRun: '+fmt(rec.windRun)+'km | Rad: '+fmt(rec.radiation)+'MJ/m²';
+  // Always open modal so user can choose WA or SMS
+  openMsgModal('Admin TMA ('+ADMIN_PHONE+')', ADMIN_PHONE, msg, 'both');
 }
 
 // ── Observer → Admin: share phenological observation ────────────
@@ -6873,12 +6943,12 @@ function shareReturnSMS(retId) {
 
 // ── Observer → Admin: direct contact ───────────────────────────
 function contactAdminWA(preMsg) {
-  openWhatsApp(ADMIN_PHONE,
-    preMsg || 'Dear Admin, this is '+state.observerName+' from '+state.stationName+'. ');
+  openMsgModal('Admin TMA ('+ADMIN_PHONE+')', ADMIN_PHONE,
+    preMsg || 'Dear Admin, this is '+state.observerName+' from '+state.stationName+'. ', 'both');
 }
 function contactAdminSMS(preMsg) {
   openMsgModal('Admin TMA ('+ADMIN_PHONE+')', ADMIN_PHONE,
-    preMsg || 'Dear Admin, this is '+state.observerName+' from '+state.stationName+'. ', 'sms');
+    preMsg || 'Dear Admin, this is '+state.observerName+' from '+state.stationName+'. ', 'both');
 }
 
 // ── Stakeholder → Admin: direct contact ────────────────────────
