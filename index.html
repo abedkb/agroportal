@@ -2946,11 +2946,14 @@ const state = {
   returnStationFilter: null,
 };
 
-// ── PERSISTENCE: save & load records from localStorage ──────────
-const STORAGE_KEY = 'tma_agrimet_records_v2';
+// ── PERSISTENCE: save & load state — Supabase is the source of truth ──
+// localStorage is kept only as a fast offline cache.
+// All cross-device data comes from Supabase via loadFromSupabase().
+const STORAGE_KEY  = 'tma_agrimet_records_v2';
 const STORAGE_META = 'tma_agrimet_meta_v2';
 
 function saveState() {
+  // 1. Always keep a local cache for offline resilience
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state.records));
     localStorage.setItem(STORAGE_META, JSON.stringify({
@@ -2965,10 +2968,29 @@ function saveState() {
       pendingApprovals:     state.pendingApprovals,
     }));
     localStorage.setItem('tma_sh_requests_v1', JSON.stringify(state.stakeholderRequests));
-  } catch(e) { console.warn('Save failed:', e); }
+  } catch(e) { console.warn('Local cache save failed:', e); }
+
+  // 2. Sync meta (station/observer) to Supabase so all devices see it
+  _syncMetaToSupabase();
+}
+
+async function _syncMetaToSupabase() {
+  if (!_sbReady()) return;
+  try {
+    await supabaseClient.from('portal_meta').upsert({
+      id: 'singleton',
+      station_name:  state.stationName,
+      observer_name: state.observerName,
+      wmo_index:     state.wmoIndex,
+      current_ym:    state.currentYM,
+      updated_at:    new Date().toISOString(),
+    }, { onConflict: 'id' });
+  } catch(e) { console.warn('Meta sync to Supabase failed:', e); }
 }
 
 function loadState() {
+  // Load the local cache first so the UI is instant, then
+  // loadFromSupabase() (called at login) will override with live data.
   try {
     const recs = localStorage.getItem(STORAGE_KEY);
     if (recs) state.records = JSON.parse(recs);
@@ -2989,7 +3011,7 @@ function loadState() {
     }
     const shReqs = localStorage.getItem('tma_sh_requests_v1');
     if (shReqs) state.stakeholderRequests = JSON.parse(shReqs);
-  } catch(e) { console.warn('Load failed:', e); }
+  } catch(e) { console.warn('Local cache load failed:', e); }
 }
 
 function clearAllData() {
@@ -3092,6 +3114,8 @@ function loginAs(role, user) {
     if (role === 'admin') refreshAdminDash();
     else if (role === 'observer') refreshObsDash();
     else if (role === 'stakeholder') refreshStakeholderDash();
+    // Start real-time cross-device sync after initial data is loaded
+    initRealtimeSync();
   });
   setTimeout(initAccordionDelegation, 100);
   if (!state.currentYM) state.currentYM = currentYM();
@@ -3154,7 +3178,7 @@ function enterPublicView() {
   document.getElementById('sessionBadge').style.display='none';
   const logoutBtn=document.getElementById('topnavLogoutBtn'); if(logoutBtn) logoutBtn.style.display='none';
   const loginBtn=document.getElementById('staffLoginBtn'); if(loginBtn) loginBtn.style.display='';
-  loadState(); loadPhenoState(); loadFromSupabase();
+  loadState(); loadPhenoState(); loadFromSupabase().then(() => initRealtimeSync());
   showPage('stakeholderDash',null);
   setTimeout(()=>{refreshStakeholderDash();},80);
   setTodayDate(); updateClock();
@@ -4205,11 +4229,14 @@ function clearPhenoForm() {
 }
 
 // ── Persist phenological records ──
+// Supabase is the source of truth; localStorage is an offline cache.
 const PHENO_STORAGE_KEY = 'tma_pheno_records_v1';
 function savePhenoState() {
+  // Keep local cache; per-record Supabase sync happens in pushPhenoToSupabase() at submit time.
   try { localStorage.setItem(PHENO_STORAGE_KEY, JSON.stringify(state.phenoRecords || [])); } catch(e) {}
 }
 function loadPhenoState() {
+  // Load local cache first; Supabase will override via loadFromSupabase() at login.
   try {
     const d = localStorage.getItem(PHENO_STORAGE_KEY);
     if (d) state.phenoRecords = JSON.parse(d);
@@ -6862,7 +6889,17 @@ async function pushSHRequestToSupabase(req) {
 async function loadFromSupabase() {
   if (!_sbReady()) return;
   try {
-    const [obsRes, phenoRes, obsvrRes, shRes, pendRes, prodRes, reqRes] = await Promise.all([
+    // ── Supabase is the source of truth: clear in-memory state first
+    // so data changed/deleted on another device is correctly reflected.
+    state.records              = [];
+    state.phenoRecords         = [];
+    state.approvedObservers    = [];
+    state.approvedStakeholders = [];
+    state.pendingApprovals     = [];
+    state.products             = [];
+    state.stakeholderRequests  = [];
+
+    const [obsRes, phenoRes, obsvrRes, shRes, pendRes, prodRes, reqRes, metaRes] = await Promise.all([
       supabaseClient.from('observations').select('*'),
       supabaseClient.from('phenological_observations').select('*'),
       supabaseClient.from('observers').select('*'),
@@ -6870,6 +6907,7 @@ async function loadFromSupabase() {
       supabaseClient.from('pending_approvals').select('*'),
       supabaseClient.from('products').select('*'),
       supabaseClient.from('stakeholder_requests').select('*'),
+      supabaseClient.from('portal_meta').select('*').eq('id','singleton').maybeSingle(),
     ]);
 
     if (obsRes.data) {
@@ -6972,7 +7010,53 @@ async function loadFromSupabase() {
         if (!exists) state.stakeholderRequests.push(r);
       });
     }
+
+    // ── Load portal meta (station name, observer name etc.) from Supabase
+    if (metaRes && metaRes.data) {
+      const m = metaRes.data;
+      if (m.station_name)  state.stationName  = m.station_name;
+      if (m.observer_name) state.observerName = m.observer_name;
+      if (m.wmo_index)     state.wmoIndex     = m.wmo_index;
+      if (m.current_ym)    state.currentYM    = m.current_ym;
+    }
+
+    // ── After Supabase load, refresh the local cache so offline use is consistent
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.records));
+      localStorage.setItem(PHENO_STORAGE_KEY, JSON.stringify(state.phenoRecords));
+      localStorage.setItem('tma_users_v2', JSON.stringify({
+        approvedObservers:    state.approvedObservers,
+        approvedStakeholders: state.approvedStakeholders,
+        pendingApprovals:     state.pendingApprovals,
+      }));
+      localStorage.setItem('tma_sh_requests_v1', JSON.stringify(state.stakeholderRequests));
+    } catch(e) {}
+
   } catch(e) { console.error('loadFromSupabase error:', e); }
+}
+
+// ── REAL-TIME CROSS-DEVICE SYNC ────────────────────────────────
+// When any device writes to Supabase, all other open devices refresh
+// automatically — no page reload needed.
+function initRealtimeSync() {
+  if (!_sbReady()) return;
+  supabaseClient
+    .channel('tma-agrimet-realtime')
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'observations' },
+      () => loadFromSupabase().then(() => { refreshAllReturns(); renderRecords(); }))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'phenological_observations' },
+      () => loadFromSupabase().then(() => renderPhenoRecords && renderPhenoRecords()))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'observers' },
+      () => loadFromSupabase().then(() => { refreshObservers && refreshObservers(); refreshApprovals && refreshApprovals(); }))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'stakeholders' },
+      () => loadFromSupabase().then(() => { refreshManageStakeholders && refreshManageStakeholders(); }))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'pending_approvals' },
+      () => loadFromSupabase().then(() => { updateApprovalBadge && updateApprovalBadge(); refreshApprovals && refreshApprovals(); }))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'stakeholder_requests' },
+      () => loadFromSupabase().then(() => { refreshSHRequests && refreshSHRequests(); }))
+    .on('postgres_changes', { event: '*', schema: 'public', table: 'products' },
+      () => loadFromSupabase().then(() => { refreshProducts && refreshProducts(); }))
+    .subscribe();
 }
 
 // ── INIT ───────────────────────────────────────────────────────
