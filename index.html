@@ -5883,10 +5883,10 @@ function refreshApprovals(){
   }
 }
 
-function approveObserver(i){const o=state.pendingApprovals[i];if(!o)return;o.approvedDate=getTodayStr();state.approvedObservers.unshift(o);state.pendingApprovals.splice(i,1);saveState();pushUserToSupabase('observers',{name:o.name,title:o.title||null,station:o.station||null,phone:o.phone||null,email:o.email||null,password:o.password||null,approved_date:o.approvedDate?o.approvedDate.split('/').reverse().join('-'):null});updateApprovalBadge();refreshApprovals();refreshObservers();showToast('Observer approved',`${o.name} can now log in.`,'success');}
-function approveStakeholder(i){const s=state.pendingApprovals[i];if(!s)return;s.approvedDate=getTodayStr();state.approvedStakeholders.unshift(s);state.pendingApprovals.splice(i,1);saveState();pushUserToSupabase('stakeholders',{name:s.name,org:s.org||null,position:s.position||null,phone:s.phone||null,email:s.email||null,password:s.password||null,approved_date:s.approvedDate?s.approvedDate.split('/').reverse().join('-'):null});updateApprovalBadge();refreshApprovals();refreshManageStakeholders();showToast('Stakeholder approved',`${s.name} can now log in.`,'success');}
-function rejectObserver(i){state.pendingApprovals.splice(i,1);updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
-function rejectApproval(i){state.pendingApprovals.splice(i,1);updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
+function approveObserver(i){const o=state.pendingApprovals[i];if(!o)return;o.approvedDate=getTodayStr();state.approvedObservers.unshift(o);state.pendingApprovals.splice(i,1);saveState();updatePendingInSupabase(o,'approved');pushUserToSupabase('observers',{name:o.name,title:o.title||null,station:o.station||null,phone:o.phone||null,email:o.email||null,password:o.password||null,approved_date:o.approvedDate?o.approvedDate.split('/').reverse().join('-'):null});updateApprovalBadge();refreshApprovals();refreshObservers();showToast('Observer approved',`${o.name} can now log in.`,'success');}
+function approveStakeholder(i){const s=state.pendingApprovals[i];if(!s)return;s.approvedDate=getTodayStr();state.approvedStakeholders.unshift(s);state.pendingApprovals.splice(i,1);saveState();updatePendingInSupabase(s,'approved');pushUserToSupabase('stakeholders',{name:s.name,org:s.org||null,position:s.position||null,phone:s.phone||null,email:s.email||null,password:s.password||null,approved_date:s.approvedDate?s.approvedDate.split('/').reverse().join('-'):null});updateApprovalBadge();refreshApprovals();refreshManageStakeholders();showToast('Stakeholder approved',`${s.name} can now log in.`,'success');}
+function rejectObserver(i){const o=state.pendingApprovals[i];state.pendingApprovals.splice(i,1);updatePendingInSupabase(o,'rejected');saveState();updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
+function rejectApproval(i){const s=state.pendingApprovals[i];state.pendingApprovals.splice(i,1);updatePendingInSupabase(s,'rejected');saveState();updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
 
 function updateApprovalBadge(){
   const b=document.getElementById('approvalBadge'),c=state.pendingApprovals.length;
@@ -6821,6 +6821,12 @@ async function pushUserToSupabase(table, data) {
   if (error) console.error(`Supabase ${table} insert error:`, error.message);
 }
 
+async function updatePendingInSupabase(item, status) {
+  if (!_sbReady() || !item.id) return;
+  const { error } = await supabaseClient.from('pending_approvals').update({ status }).eq('id', item.id);
+  if (error) console.error('Supabase pending update error:', error.message);
+}
+
 async function pushPendingToSupabase(item) {
   if (!_sbReady()) return;
   const { error } = await supabaseClient.from('pending_approvals').insert({
@@ -6959,6 +6965,7 @@ async function loadFromSupabase() {
 
     if (pendRes.data) {
       state.pendingApprovals = pendRes.data.map(row => ({
+        id: row.id,
         type: row.type, name: row.name, title: row.title,
         station: row.station, org: row.org, position: row.position,
         phone: row.phone, email: row.email, password: row.password,
