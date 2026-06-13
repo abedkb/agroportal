@@ -416,8 +416,8 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;back
 .upload-zone:hover{border-color:var(--tma-blue-m);background:var(--tma-blue-l)}
 
 /* TOAST */
-.toast{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0.92);background:var(--bg-primary);border:0.5px solid var(--border-medium);border-radius:var(--radius-lg);padding:1rem 1.4rem;font-size:13.5px;display:none;width:90%;max-width:380px;z-index:9999;box-shadow:0 8px 40px rgba(0,0,0,0.18);text-align:center;animation:toastPop .2s ease forwards}
-.toast.show{display:block;transform:translate(-50%,-50%) scale(1)}
+.toast{position:fixed;bottom:1.5rem;right:1.5rem;background:var(--bg-primary);border:0.5px solid var(--border-medium);border-radius:var(--radius-lg);padding:.75rem 1.1rem;font-size:13px;display:none;max-width:340px;z-index:9999;animation:slideIn .2s ease}
+.toast.show{display:block}
 .toast.success{background:var(--tma-green-l);border-color:#9FE1CB}
 .toast.warning{background:var(--tma-amber-l);border-color:#FAC775}
 .toast-title{font-weight:500}
@@ -965,7 +965,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
   .field-row,.field-row3{grid-template-columns:1fr}
 
   /* Toast: full-width at bottom */
-  .toast{left:50%;right:auto;transform:translate(-50%,-50%) scale(0.92);width:92%;max-width:360px}
+  .toast{left:1rem;right:1rem;max-width:none;bottom:1rem}
 
   /* Form switcher buttons */
   .form-btn{padding:8px 14px;font-size:13px}
@@ -1185,7 +1185,7 @@ body{
         <div class="lp-cta-row">
           <button class="lp-cta-teal" onclick="enterPublicView()">Stakeholder Dashboard</button>
           <button class="lp-cta-blue" onclick="openStaffLogin()">Observer Login</button>
-          <button class="lp-cta-secondary" onclick="openAdminLogin()">Admin Login</button>
+          <button class="lp-cta-secondary" onclick="openStaffLogin()">Admin Login</button>
         </div>
         <p class="lp-hero-hint">Stakeholders enter directly &nbsp;&middot;&nbsp; Observers &amp; Admins sign in with their credentials</p>
       </div>
@@ -1474,38 +1474,7 @@ body{
 <div class="auth-screen" id="authScreen" style="display:none">
   <div class="auth-card">
     <div class="auth-logo" style="flex-direction:column;align-items:center;gap:8px;margin-bottom:1.2rem">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 118" style="width:230px;height:auto;display:block;margin:0 auto">
-  <defs>
-    <style>
-      .tl2{font-family:"Arial Black",Arial,sans-serif;font-weight:900;fill:#1565C0}
-      .ts2{font-family:Arial,sans-serif;font-weight:700;fill:#1565C0;letter-spacing:0.8px}
-    </style>
-  </defs>
-
-  <!-- GREEN arrow — outermost, tallest, sweeps from lower-left up to upper-right -->
-  <path d="M 10 108 C 14 72, 42 36, 82 6"
-        stroke="#22B335" stroke-width="9.5" fill="none" stroke-linecap="round"/>
-  <!-- green arrowhead: pointing roughly NE at tip (82,6) -->
-  <polygon points="82,6 60,22 74,28" fill="#22B335"/>
-
-  <!-- YELLOW arrow — parallel, slightly inner and shorter -->
-  <path d="M 22 108 C 26 76, 52 46, 84 24"
-        stroke="#F5D000" stroke-width="7.5" fill="none" stroke-linecap="round"/>
-  <!-- yellow arrowhead at (84,24) pointing NE -->
-  <polygon points="84,24 65,34 73,46" fill="#F5D000"/>
-
-  <!-- BLUE arrow — innermost, starts near green/yellow tips, arcs inward back toward left -->
-  <path d="M 80 14 C 100 22, 102 50, 84 68 C 72 80, 50 88, 34 98"
-        stroke="#1565C0" stroke-width="5.5" fill="none" stroke-linecap="round"/>
-  <!-- blue arrowhead at end (34,98) pointing roughly SW -->
-  <polygon points="34,98 52,86 44,100" fill="#1565C0"/>
-
-  <!-- TMA — large bold -->
-  <text x="104" y="90" class="tl2" font-size="82">TMA</text>
-
-  <!-- Subtitle -->
-  <text x="104" y="110" class="ts2" font-size="10.5">TANZANIA METEOROLOGICAL AUTHORITY</text>
-</svg>
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMTAgMTA1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzE1NjVDMH0udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMTU2NUMwfTwvc3R5bGU+PC9kZWZzPjxwYXRoIGQ9Ik0gNSA5NSBDIDUgNTUgNDggMjggNjAgNiIgc3Ryb2tlPSIjMUVCNTNBIiBzdHJva2Utd2lkdGg9IjguNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjAsNikgcm90YXRlKC02MCkiPjxwb2x5Z29uIHBvaW50cz0iMTMsMCAtOSwtNiAtOSw2IiBmaWxsPSIjMUVCNTNBIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgOTUgQyAxNiA2MCA1MSAzNSA2MiAxOCIgc3Ryb2tlPSIjRkNEMTE2IiBzdHJva2Utd2lkdGg9IjYuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjIsMTgpIHJvdGF0ZSgtNTcpIj48cG9seWdvbiBwb2ludHM9IjExLDAgLTgsLTUgLTgsNSIgZmlsbD0iI0ZDRDExNiIvPjwvZz48cGF0aCBkPSJNIDYyIDE0IEMgNjggMjggNjAgNDggMzIgNTgiIHN0cm9rZT0iIzE1NjVDMCIgc3Ryb2tlLXdpZHRoPSI1IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzMiw1OCkgcm90YXRlKDE3NSkiPjxwb2x5Z29uIHBvaW50cz0iMTAsMCAtOCwtNC41IC04LDQuNSIgZmlsbD0iIzE1NjVDMCIvPjwvZz48dGV4dCB4PSI4OCIgeT0iODEiIGNsYXNzPSJ0bCIgZm9udC1zaXplPSI2OCI+VE1BPC90ZXh0Pjx0ZXh0IHg9Ijg4IiB5PSI5NyIgY2xhc3M9InRzIiBmb250LXNpemU9IjkiIGxldHRlci1zcGFjaW5nPSIwLjUiPlRBTlpBTklBIE1FVEVPUk9MT0dJQ0FMIEFVVEhPUklUWTwvdGV4dD48L3N2Zz4=" alt="TMA Logo" style="width:200px;height:auto;filter:drop-shadow(0 2px 8px rgba(13,71,161,0.18))"/>
       <div style="text-align:center">
         <div style="font-size:17px;font-weight:700;color:#0D47A1;letter-spacing:.3px;line-height:1.2">AgroMet Portal</div>
         <div style="font-size:11px;color:var(--text-secondary);margin-top:2px">Tanzania Meteorological Authority</div>
@@ -1588,20 +1557,7 @@ body{
   <!-- TOP NAVIGATION BAR -->
   <div class="topnav">
     <div class="topnav-brand">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 38" style="height:38px;width:auto;flex-shrink:0">
-  <defs><style>.tn{font-family:"Arial Black",Arial,sans-serif;font-weight:900;fill:#fff}</style></defs>
-  <!-- Green arrow -->
-  <path d="M 3 36 C 5 24, 16 12, 30 3" stroke="#22B335" stroke-width="3.8" fill="none" stroke-linecap="round"/>
-  <polygon points="30,3 21,10 26,14" fill="#22B335"/>
-  <!-- Yellow arrow -->
-  <path d="M 8 36 C 10 26, 20 16, 31 10" stroke="#F5D000" stroke-width="3" fill="none" stroke-linecap="round"/>
-  <polygon points="31,10 23,14 27,20" fill="#F5D000"/>
-  <!-- Blue arrow -->
-  <path d="M 29 5 C 37 9, 38 20, 31 27 C 26 31, 18 33, 12 36" stroke="#90CAF9" stroke-width="2.2" fill="none" stroke-linecap="round"/>
-  <polygon points="12,36 20,30 15,37" fill="#90CAF9"/>
-  <!-- TMA text -->
-  <text x="42" y="31" class="tn" font-size="30">TMA</text>
-</svg>
+      <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMzQiPjxwYXRoIGQ9Ik0gMiAzMiBDIDIgMTggMTYgOSAyMCAyIiBzdHJva2U9IiMxRUI1M0EiIHN0cm9rZS13aWR0aD0iMi44IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgyMCwyKSByb3RhdGUoLTYwKSI+PHBvbHlnb24gcG9pbnRzPSI0LjUsMCAtMywtMiAtMywyIiBmaWxsPSIjMUVCNTNBIi8+PC9nPjxwYXRoIGQ9Ik0gNiAzMiBDIDYgMjAgMTkgMTMgMjMgNyIgc3Ryb2tlPSIjRkNEMTE2IiBzdHJva2Utd2lkdGg9IjIuMiIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMjMsNykgcm90YXRlKC01NykiPjxwb2x5Z29uIHBvaW50cz0iMy41LDAgLTIuNSwtMS42IC0yLjUsMS42IiBmaWxsPSIjRkNEMTE2Ii8+PC9nPjxwYXRoIGQ9Ik0gMjMgNSBDIDI2IDEwIDIyIDE3IDEyIDIwIiBzdHJva2U9IiM5MENBRjkiIHN0cm9rZS13aWR0aD0iMS44IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxMiwyMCkgcm90YXRlKDE3NSkiPjxwb2x5Z29uIHBvaW50cz0iMy41LDAgLTIuNSwtMS41IC0yLjUsMS41IiBmaWxsPSIjOTBDQUY5Ii8+PC9nPjx0ZXh0IHg9IjI4IiB5PSIyNiIgZm9udC1mYW1pbHk9IkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWYiIGZvbnQtd2VpZ2h0PSI5MDAiIGZvbnQtc2l6ZT0iMjIiIGZpbGw9IiNmZmZmZmYiPlRNQTwvdGV4dD48L3N2Zz4=" alt="TMA" style="height:36px;width:auto;flex-shrink:0"/>
       <div class="topnav-brand-text">
         <span class="topnav-brand-name">AgroMet Portal</span>
         <span class="topnav-brand-sub">Tanzania Meteorological Authority</span>
@@ -1966,10 +1922,9 @@ body{
               </div>
             </div>
             <div class="form-actions">
-              <div id="form601-lock-banner" style="display:none;background:var(--tma-amber-l);border:1px solid var(--tma-amber);border-radius:var(--radius);padding:.6rem .9rem;font-size:12.5px;color:var(--tma-amber);display:none;align-items:center;gap:.75rem;margin-bottom:.5rem"></div>
-              <button class="btn btn-primary" id="form601-submit-btn" onclick="submitObservation()">Submit observation</button>
+              <button class="btn btn-primary" onclick="submitObservation()">Submit observation</button>
               <button class="btn" onclick="saveDraft()">Save draft</button>
-              <button class="btn" id="form601-clear-btn" onclick="clearForm()">Clear form</button>
+              <button class="btn" onclick="clearForm()">Clear form</button>
               <span class="form-note">Submitting notifies admin via SMS &amp; WhatsApp (0755863325)</span>
               <span style="display:inline-block;width:1px;height:20px;background:var(--border-medium);margin:0 4px;vertical-align:middle"></span>
               <span class="form-note" style="margin-right:4px">Share filled data:</span>
@@ -2991,14 +2946,11 @@ const state = {
   returnStationFilter: null,
 };
 
-// ── PERSISTENCE: save & load state — Supabase is the source of truth ──
-// localStorage is kept only as a fast offline cache.
-// All cross-device data comes from Supabase via loadFromSupabase().
-const STORAGE_KEY  = 'tma_agrimet_records_v2';
+// ── PERSISTENCE: save & load records from localStorage ──────────
+const STORAGE_KEY = 'tma_agrimet_records_v2';
 const STORAGE_META = 'tma_agrimet_meta_v2';
 
 function saveState() {
-  // 1. Always keep a local cache for offline resilience
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state.records));
     localStorage.setItem(STORAGE_META, JSON.stringify({
@@ -3013,29 +2965,10 @@ function saveState() {
       pendingApprovals:     state.pendingApprovals,
     }));
     localStorage.setItem('tma_sh_requests_v1', JSON.stringify(state.stakeholderRequests));
-  } catch(e) { console.warn('Local cache save failed:', e); }
-
-  // 2. Sync meta (station/observer) to Supabase so all devices see it
-  _syncMetaToSupabase();
-}
-
-async function _syncMetaToSupabase() {
-  if (!_sbReady()) return;
-  try {
-    await supabaseClient.from('portal_meta').upsert({
-      id: 'singleton',
-      station_name:  state.stationName,
-      observer_name: state.observerName,
-      wmo_index:     state.wmoIndex,
-      current_ym:    state.currentYM,
-      updated_at:    new Date().toISOString(),
-    }, { onConflict: 'id' });
-  } catch(e) { console.warn('Meta sync to Supabase failed:', e); }
+  } catch(e) { console.warn('Save failed:', e); }
 }
 
 function loadState() {
-  // Load the local cache first so the UI is instant, then
-  // loadFromSupabase() (called at login) will override with live data.
   try {
     const recs = localStorage.getItem(STORAGE_KEY);
     if (recs) state.records = JSON.parse(recs);
@@ -3056,7 +2989,7 @@ function loadState() {
     }
     const shReqs = localStorage.getItem('tma_sh_requests_v1');
     if (shReqs) state.stakeholderRequests = JSON.parse(shReqs);
-  } catch(e) { console.warn('Local cache load failed:', e); }
+  } catch(e) { console.warn('Load failed:', e); }
 }
 
 function clearAllData() {
@@ -3075,7 +3008,7 @@ const isoToDisplay = s => { if(!s) return '—'; const p=s.match(/^(\d{4})-(\d{2
 const getMonthLabel = ym => { const [y,m]=ym.split('-'); return `${MONTHS[+m-1]} ${y}`; };
 const daysInMonth = (y,m) => new Date(y,m,0).getDate();
 const currentYM = () => { const {y,m}=getNow(); return `${y}-${pad(m)}`; };
-const inp = id => { const raw=(document.getElementById(id)?.value??'').trim(); if(!raw||raw==='8888')return null; const v=parseFloat(raw); return isNaN(v)?null:v; };
+const inp = id => { const v=parseFloat(document.getElementById(id)?.value); return isNaN(v)?null:v; };
 const inpStr = id => document.getElementById(id)?.value?.trim() || null;
 const fmt = (v,dec=1) => v===null||v===undefined?'—':parseFloat(v).toFixed(dec);
 const fmtCell = (v,dec=1,cls='') => {
@@ -3111,9 +3044,6 @@ const monthRecs = ym => { const [y,m]=ym.split('-').map(Number); return state.re
 
 // ── AUTH ────────────────────────────────────────────────────────
 function switchAuthTab(tab) {
-  // Always restore register tab visibility when manually switching
-  const regTab = document.getElementById('tab-register');
-  if (regTab && tab === 'login') regTab.style.display = '';
   document.getElementById('loginForm').style.display    = tab==='login'?'':'none';
   document.getElementById('registerForm').style.display = tab==='register'?'':'none';
   ['login','register'].forEach(t => {
@@ -3159,11 +3089,9 @@ function loginAs(role, user) {
   loadState();
   loadPhenoState();
   loadFromSupabase().then(() => {
-    if (role === 'admin') refreshAdminDash();
-    else if (role === 'observer') refreshObsDash();
-    else if (role === 'stakeholder') refreshStakeholderDash();
-    // Start real-time cross-device sync after initial data is loaded
-    initRealtimeSync();
+    if (role === 'admin') { refreshAdminDash(); refreshApprovals(); refreshObservers(); refreshManageStakeholders(); refreshAllRecords(); }
+    else if (role === 'observer') { refreshObsDash(); refreshMyRecords(); refreshAllReturns(); }
+    else if (role === 'stakeholder') { refreshStakeholderDash(); refreshProductsPage(); }
   });
   setTimeout(initAccordionDelegation, 100);
   if (!state.currentYM) state.currentYM = currentYM();
@@ -3171,75 +3099,15 @@ function loginAs(role, user) {
   refreshReturnStatus(state.currentYM);
 }
 
-async function tryLogin() {
+function tryLogin() {
+  loadState(); // ensure latest user data
   const id=(document.getElementById('login-identifier')?.value||'').trim();
   const pw=(document.getElementById('login-password')?.value||'');
   const errEl=document.getElementById('login-error');
   const showErr=m=>{errEl.textContent=m;errEl.style.display=''};
   const hideErr=()=>{errEl.style.display='none'};
   if(!id||!pw){showErr('Please enter your phone / email and password.');return;}
-
-  // Admin check (hardcoded — no DB lookup needed)
   if((id===ADMIN_CREDENTIALS.phone||id===ADMIN_CREDENTIALS.email)&&pw===ADMIN_CREDENTIALS.password){hideErr();loginAs('admin',null);return;}
-
-  // ── FIX 3: Query Supabase directly so login works on any device, even if
-  // this browser's localStorage has never seen the approved account.
-  // We query by email OR phone, then verify password client-side.
-  if (_sbReady()) {
-    // Disable button silently while checking — no visible "checking" message
-    const loginBtn = document.querySelector('#loginForm .btn-primary');
-    const origText = loginBtn?.textContent;
-    if (loginBtn) { loginBtn.disabled = true; loginBtn.textContent = 'Signing in…'; }
-    try {
-      const isEmail = id.includes('@');
-      const field   = isEmail ? 'email' : 'phone';
-
-      const [obsRes, shRes, pendRes] = await Promise.all([
-        supabaseClient.from('observers').select('*').eq(field, id).maybeSingle(),
-        supabaseClient.from('stakeholders').select('*').eq(field, id).maybeSingle(),
-        supabaseClient.from('pending_approvals').select('email,phone,type').eq(field, id).maybeSingle(),
-      ]);
-
-      if (obsRes.data && obsRes.data.password === pw) {
-        const o = obsRes.data;
-        const obsObj = { name:o.name, title:o.title, station:o.station,
-          phone:o.phone, email:o.email, password:o.password,
-          approvedDate:o.approved_date };
-        // Sync into local state so the rest of the session works
-        if (!state.approvedObservers.find(x=>x.email===obsObj.email))
-          state.approvedObservers.unshift(obsObj);
-        if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = origText; }
-        hideErr(); loginAs('observer', obsObj); return;
-      }
-
-      if (shRes.data && shRes.data.password === pw) {
-        const s = shRes.data;
-        const shObj = { name:s.name, org:s.org, position:s.position,
-          phone:s.phone, email:s.email, password:s.password,
-          approvedDate:s.approved_date };
-        if (!state.approvedStakeholders.find(x=>x.email===shObj.email))
-          state.approvedStakeholders.unshift(shObj);
-        if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = origText; }
-        hideErr(); loginAs('stakeholder', shObj); return;
-      }
-
-      if (pendRes.data) {
-        if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = origText; }
-        showErr('Your account is pending administrator approval.'); return;
-      }
-
-      // Wrong credentials confirmed by DB
-      if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = origText; }
-      showErr('Incorrect phone/email or password.'); return;
-
-    } catch(e) {
-      if (loginBtn) { loginBtn.disabled = false; loginBtn.textContent = origText; }
-      console.warn('Supabase login check failed, falling back to local state:', e);
-    }
-  }
-
-  // ── Offline fallback: use local state (same behaviour as before)
-  loadState();
   const obs=state.approvedObservers.find(o=>(o.phone===id||o.email===id)&&o.password===pw);
   if(obs){hideErr();loginAs('observer',obs);return;}
   const sh=state.approvedStakeholders.find(s=>(s.phone===id||s.email===id)&&s.password===pw);
@@ -3286,43 +3154,16 @@ function enterPublicView() {
   document.getElementById('sessionBadge').style.display='none';
   const logoutBtn=document.getElementById('topnavLogoutBtn'); if(logoutBtn) logoutBtn.style.display='none';
   const loginBtn=document.getElementById('staffLoginBtn'); if(loginBtn) loginBtn.style.display='';
-  loadState(); loadPhenoState(); loadFromSupabase().then(() => initRealtimeSync());
+  loadState(); loadPhenoState(); loadFromSupabase();
   showPage('stakeholderDash',null);
   setTimeout(()=>{refreshStakeholderDash();},80);
   setTodayDate(); updateClock();
 }
 
 function openStaffLogin() {
-  // Observer / general staff — show all tabs including Register
-  _openAuth(false);
-}
-
-function openAdminLogin() {
-  // Admin — show only the Sign in card, hide observer register tab
-  _openAuth(true);
-}
-
-function _openAuth(adminOnly) {
   switchAuthTab('login');
-  const ls = document.getElementById('landingScreen'); if(ls) ls.style.display='none';
-  document.getElementById('authScreen').style.display = 'flex';
-  // Show/hide the Register tab based on who is logging in
-  const regTab = document.getElementById('tab-register');
-  const regForm = document.getElementById('registerForm');
-  const regShForm = document.getElementById('registerShForm');
-  if (adminOnly) {
-    // Admin sees ONLY the sign-in card — no registration tabs
-    if (regTab) regTab.style.display = 'none';
-    if (regForm) regForm.style.display = 'none';
-    if (regShForm) regShForm.style.display = 'none';
-    // Update card subtitle
-    const subtitle = document.querySelector('.auth-card .auth-logo div div:last-child');
-    if (subtitle) subtitle.textContent = 'Administrator Access';
-  } else {
-    // Observer/stakeholder — restore full tabs
-    if (regTab) regTab.style.display = '';
-    switchAuthTab('login');
-  }
+  const ls=document.getElementById('landingScreen'); if(ls) ls.style.display='none';
+  document.getElementById('authScreen').style.display='flex';
 }
 
 function backToPortal() {
@@ -3344,7 +3185,7 @@ function closeSidebar(){
   document.body.style.overflow='';
 }
 
-async function submitRegister() {
+function submitRegister() {
   const fname=document.getElementById('reg-fname')?.value?.trim();
   const lname=document.getElementById('reg-lname')?.value?.trim();
   const title=document.getElementById('reg-title')?.value;
@@ -3355,73 +3196,39 @@ async function submitRegister() {
     showToast('Invalid email address','Only official TMA email addresses are accepted (e.g. juma.ally@meteo.go.tz)','error');
     return;
   }
-
-  // ── FIX 1: Check Supabase directly for duplicates so we catch records
-  // that exist in the DB but aren't yet in this browser's local state.
-  // This prevents duplicate pending rows when the same person registers
-  // from a different device or after clearing localStorage.
-  if (_sbReady()) {
-    const [obsCheck, pendCheck] = await Promise.all([
-      supabaseClient.from('observers').select('email').eq('email', email).maybeSingle(),
-      supabaseClient.from('pending_approvals').select('email').eq('email', email).maybeSingle(),
-    ]);
-    if (obsCheck.data || pendCheck.data) {
-      showToast('Email already registered','This email address is already linked to an existing account','error');
-      return;
-    }
-  } else {
-    // Offline fallback: check local state only
-    const allAccounts=[...state.approvedObservers,...state.pendingApprovals];
-    if(allAccounts.some(u=>u.email&&u.email.toLowerCase()===email)){
-      showToast('Email already registered','This email address is already linked to an existing account','error');
-      return;
-    }
+  const allAccounts=[...state.approvedObservers,...state.pendingApprovals];
+  if(allAccounts.some(u=>u.email&&u.email.toLowerCase()===email)){
+    showToast('Email already registered','This email address is already linked to an existing account','error');
+    return;
   }
-
   const name=[fname,document.getElementById('reg-mname')?.value?.trim(),lname].filter(Boolean).join(' ');
   const _obsReg={type:'observer',name,title,station,
     phone:document.getElementById('reg-phone')?.value?.trim(),
     email,
     password:document.getElementById('reg-password')?.value||'',
     submittedDate:getTodayStr()};
-
-  // ── Push ONLY to Supabase; real-time will update state.pendingApprovals
-  // on all open devices automatically. Pushing to local state AND Supabase
-  // was the root cause of duplicate entries.
-  await pushPendingToSupabase(_obsReg);
+  state.pendingApprovals.push(_obsReg);
+  saveState();
+  pushPendingToSupabase(_obsReg);
   updateApprovalBadge();
   showToast('Registration submitted','Your request has been sent to the administrator.','success');
   switchAuthTab('login');
 }
 
-async function submitStakeholderRegister() {
+function submitStakeholderRegister() {
   const fname=document.getElementById('sh-fname')?.value?.trim();
   const lname=document.getElementById('sh-lname')?.value?.trim();
   const org=document.getElementById('sh-org')?.value?.trim();
   if(!fname||!lname||!org){showToast('Missing fields','Please fill in name and organization','warning');return;}
-  const email=(document.getElementById('sh-email')?.value?.trim()||'').toLowerCase();
-
-  // ── FIX 1b: Same duplicate-check against Supabase for stakeholders
-  if (_sbReady() && email) {
-    const [shCheck, pendCheck] = await Promise.all([
-      supabaseClient.from('stakeholders').select('email').eq('email', email).maybeSingle(),
-      supabaseClient.from('pending_approvals').select('email').eq('email', email).maybeSingle(),
-    ]);
-    if (shCheck.data || pendCheck.data) {
-      showToast('Email already registered','This email address is already linked to an existing account','error');
-      return;
-    }
-  }
-
   const _shReg={type:'stakeholder',name:`${fname} ${lname}`,org,
     position:document.getElementById('sh-position')?.value?.trim(),
     phone:document.getElementById('sh-phone')?.value?.trim(),
-    email,
+    email:document.getElementById('sh-email')?.value?.trim(),
     password:document.getElementById('sh-password')?.value||'',
     submittedDate:getTodayStr()};
-
-  // ── Push ONLY to Supabase; real-time brings it to all devices
-  await pushPendingToSupabase(_shReg);
+  state.pendingApprovals.push(_shReg);
+  saveState();
+  pushPendingToSupabase(_shReg);
   updateApprovalBadge();
   showToast('Registration submitted','Your stakeholder request has been sent.','success');
   switchAuthTab('login');
@@ -3952,8 +3759,6 @@ function switchReturn(retId) { showPage('returns',null); setTimeout(()=>toggleRe
 
 // ── SESSION SELECTOR ───────────────────────────────────────────
 let currentSession='0600';
-let _editingKey = null;   // null = new entry, string = editing existing record
-
 function selectSession(s) {
   currentSession=s;
   ['aneTime','tempTime','rainTime','sunTime','cloudTime','soilTempTime','soilMoistTime'].forEach(id=>{
@@ -3966,8 +3771,6 @@ function selectSession(s) {
   // Show/hide fields that are exclusive to the 0600z observation
   const is0600 = s === '0600';
   document.querySelectorAll('.col-0600').forEach(el => { el.style.display = is0600 ? '' : 'none'; });
-  // Check if this session was already submitted today (and not in edit mode)
-  _checkSessionLock(s);
   ['section-rain-evap','section-rad-sun','section-soil-moist'].forEach(id => {
     const el = document.getElementById(id); if(el) el.style.display = is0600 ? '' : 'none';
   });
@@ -4402,14 +4205,11 @@ function clearPhenoForm() {
 }
 
 // ── Persist phenological records ──
-// Supabase is the source of truth; localStorage is an offline cache.
 const PHENO_STORAGE_KEY = 'tma_pheno_records_v1';
 function savePhenoState() {
-  // Keep local cache; per-record Supabase sync happens in pushPhenoToSupabase() at submit time.
   try { localStorage.setItem(PHENO_STORAGE_KEY, JSON.stringify(state.phenoRecords || [])); } catch(e) {}
 }
 function loadPhenoState() {
-  // Load local cache first; Supabase will override via loadFromSupabase() at login.
   try {
     const d = localStorage.getItem(PHENO_STORAGE_KEY);
     if (d) state.phenoRecords = JSON.parse(d);
@@ -4445,76 +4245,27 @@ function proceedAfterTempWarn() {
 }
 
 // ── FORM 601 VALIDATION ────────────────────────────────────────
-// ── FIX 4a: '////' is the official WMO missing-data symbol.
-// Every required field must contain either a valid number OR exactly '////'.
-// An empty field is NOT accepted — observer must consciously mark missing data.
-const MISSING_MARKER = '8888';
-
 function validateForm601() {
   const missing = [];
-
   const has = id => {
     const el = document.getElementById(id);
-    if (!el || el.closest('[style*="display: none"]') || el.closest('[style*="display:none"]')) return true;
-    const v = (el.value ?? '').trim();
-    if (v === '') return false;        // truly empty — not OK
-    if (v === '8888') return true;     // 8888 = observer-marked missing data — OK
-    return !isNaN(parseFloat(v));      // must be a valid number
+    if (!el) return true; // element absent — skip
+    const v = el.value?.trim();
+    return v !== '' && v !== null && v !== undefined;
   };
-
-  // Fields required for BOTH sessions
-  const common = [
-    ['t_dry',   'Dry bulb temperature'],
-    ['t_wet',   'Wet bulb temperature'],
-    ['t_max',   'Maximum temperature'],
-    ['t_min',   'Minimum temperature'],
-    ['ane_speed','Wind speed'],
-    ['t_rh',    'Relative humidity'],
-  ];
-
-  // Fields required for 0600 only
-  const only0600 = [
-    ['t_maxr',      'Maximum temperature reset'],
-    ['t_minr',      'Minimum temperature reset'],
-    ['ane_present', 'Anemometer present reading'],
-    ['ane_prev',    'Anemometer previous reading'],
-    ['rain_std',    'Rainfall (standard gauge)'],
-    ['evap_std',    'Evaporation (standard)'],
-    ['sun_hrs',     'Sunshine hours'],
-    ['ane_diff',    'Wind run'],
-    ['rad_mjm',     'Radiation (MJ/m²)'],
-    ['st_surf',     'Soil temperature (surface)'],
-    ['st_5',        'Soil temperature (5 cm)'],
-    ['st_10',       'Soil temperature (10 cm)'],
-    ['st_20',       'Soil temperature (20 cm)'],
-    ['st_30',       'Soil temperature (30 cm)'],
-    ['st_50',       'Soil temperature (50 cm)'],
-    ['st_100',      'Soil temperature (100 cm)'],
-  ];
-
-  // Fields required for 1200 only
-  const only1200 = [
-    ['st_surf',  'Soil temperature (surface)'],
-    ['st_5',     'Soil temperature (5 cm)'],
-    ['st_10',    'Soil temperature (10 cm)'],
-    ['st_20',    'Soil temperature (20 cm)'],
-    ['st_30',    'Soil temperature (30 cm)'],
-    ['st_50',    'Soil temperature (50 cm)'],
-    ['st_100',   'Soil temperature (100 cm)'],
-  ];
-
-  common.forEach(([id,lbl]) => { if (!has(id)) missing.push(lbl); });
-
-  // Wind direction — select must not be on blank placeholder
+  // Core fields required for every session
+  [['t_dry','Dry bulb temperature'],['t_wet','Wet bulb temperature'],
+   ['t_max','Maximum temperature'],['t_min','Minimum temperature'],
+   ['ane_speed','Wind speed']].forEach(([id,lbl])=>{ if(!has(id)) missing.push(lbl); });
+  // Wind direction — select must not be on the blank placeholder
   const wdEl = document.getElementById('ane_dir');
   if (!wdEl || !wdEl.value) missing.push('Wind direction');
-
+  // 0600z extra fields
   if (currentSession === '0600') {
-    only0600.forEach(([id,lbl]) => { if (!has(id)) missing.push(lbl); });
-  } else {
-    only1200.forEach(([id,lbl]) => { if (!has(id)) missing.push(lbl); });
+    [['t_maxr','Maximum reset'],['t_minr','Minimum reset'],
+     ['ane_present','Anemometer present reading'],['ane_prev','Anemometer previous reading'],
+     ['rain_std','Rainfall (standard gauge)']].forEach(([id,lbl])=>{ if(!has(id)) missing.push(lbl); });
   }
-
   return missing;
 }
 
@@ -4525,8 +4276,7 @@ function checkTempThresholds() {
     : [['t_dry','Dry bulb'],['t_wet','Wet bulb'],['t_max','Maximum'],['t_min','Minimum']];
   tempFields.forEach(([id,lbl])=>{
     const v = inp(id);
-    if (v===null) return; // blank — skip
-    if (v === 8888) return; // 8888 = observer-marked missing data — skip range check
+    if (v===null||v===9999) return; // blank or missing-data code — skip
     if (v < 0 || v > 40) issues.push(`${lbl}: ${v}°C is outside normal range (0–40°C)`);
   });
   return issues;
@@ -4537,7 +4287,7 @@ function submitObservation() {
   const missing = validateForm601();
   if (missing.length > 0) {
     const listed = missing.slice(0,4).join(', ') + (missing.length>4 ? ` and ${missing.length-4} more` : '');
-    showToast('Incomplete form', `All fields must be filled. Use 8888 for any missing parameters. Empty: ${listed}`, 'error');
+    showToast('Incomplete form', `Please fill all fields or enter 9999 for missing data. Empty: ${listed}`, 'error');
     return;
   }
   const thresholdIssues = checkTempThresholds();
@@ -4552,7 +4302,7 @@ function submitObservation() {
 }
 
 // Core submit logic — called directly (range OK) or after user confirms via modal
-function _doSubmit601() {
+async function _doSubmit601() {
   const {y,m,day}=getNow();
   const rec={
     key:`${y}${pad(m)}${pad(day)}-${currentSession}`,
@@ -4575,80 +4325,17 @@ function _doSubmit601() {
   state.records=state.records.filter(r=>r.key!==rec.key);
   state.records.push(rec);
   saveState();
-  pushObsToSupabase(rec);
+  // Push to Supabase (primary cloud store — makes data visible across all browsers/devices)
+  const sbOk = await pushObsToSupabase(rec);
   state.sessionSubmitted[currentSession]=true;
   state.currentYM=`${y}-${pad(m)}`;
   const ms=document.getElementById('returns-month-select'); if(ms) ms.value=state.currentYM;
   const ref=`OBS-${y}${pad(m)}${pad(day)}-${currentSession}`;
-  // ── FIX 4b: Session-specific parameter summaries ──────────────
-  // 0600 UTC: full parameters  |  1200 UTC: psychrometric + soil only
-  const fmt = v => (v===null||v===undefined) ? '—' : v;
-  const soilSummary = () => {
-    const st = rec.soilTemp || {};
-    const vals = [
-      st.surf!=null?`Surf:${st.surf}°C`:'',
-      st.d5!=null?`5cm:${st.d5}°C`:'',
-      st.d10!=null?`10cm:${st.d10}°C`:'',
-      st.d20!=null?`20cm:${st.d20}°C`:'',
-      st.d30!=null?`30cm:${st.d30}°C`:'',
-      st.d50!=null?`50cm:${st.d50}°C`:'',
-      st.d100!=null?`100cm:${st.d100}°C`:'',
-    ].filter(Boolean);
-    return vals.length ? vals.join(' | ') : '—';
-  };
-
-  let obsDesc, adminDesc, autoMsg;
-  if (currentSession === '0600') {
-    obsDesc = `TMA: Obs ${rec.date} 0600UTC submitted. Pending admin approval.`
-      +` Rain:${fmt(rec.rain)}mm Tmax:${fmt(rec.tmax)}°C Tmin:${fmt(rec.tmin)}°C`
-      +` Dry:${fmt(rec.dry)}°C Wet:${fmt(rec.wet)}°C RH:${fmt(rec.rh)}%`
-      +` Evap:${fmt(rec.evapStd)}mm Sun:${fmt(rec.sunshine)}h WindRun:${fmt(rec.windRun)}km Rad:${fmt(rec.radiation)}MJ/m²`;
-    adminDesc = `Rain:${fmt(rec.rain)}mm | Tmax:${fmt(rec.tmax)}°C | Tmin:${fmt(rec.tmin)}°C`
-      +` | Dry:${fmt(rec.dry)}°C | Wet:${fmt(rec.wet)}°C | RH:${fmt(rec.rh)}%`
-      +` | Evap:${fmt(rec.evapStd)}mm | Sun:${fmt(rec.sunshine)}h | WindRun:${fmt(rec.windRun)}km`
-      +` | Rad:${fmt(rec.radiation)}MJ/m² | Soil → ${soilSummary()}`;
-    autoMsg = `*TMA AgroMet — 0600 UTC Observation*\n`
-      +`Station: ${rec.stationName} | Observer: ${rec.observerName}\n`
-      +`Date: ${rec.date} | Ref: OBS-${rec.key}\n`
-      +'\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n'
-      +`Rainfall:     ${fmt(rec.rain)} mm\n`
-      +`Max Temp:     ${fmt(rec.tmax)} \u00b0C\n`
-      +`Min Temp:     ${fmt(rec.tmin)} \u00b0C\n`
-      +`Dry Bulb:     ${fmt(rec.dry)} \u00b0C\n`
-      +`Wet Bulb:     ${fmt(rec.wet)} \u00b0C\n`
-      +`Rel. Humidity:${fmt(rec.rh)} %\n`
-      +`Evaporation:  ${fmt(rec.evapStd)} mm\n`
-      +`Sunshine:     ${fmt(rec.sunshine)} hrs\n`
-      +`Wind Run:     ${fmt(rec.windRun)} km\n`
-      +`Radiation:    ${fmt(rec.radiation)} MJ/m\u00b2\n`
-      +'Soil Temps:   '+soilSummary()+'\n'
-      +'Status: Pending approval';
-  } else {
-    obsDesc = `TMA: Obs ${rec.date} 1200UTC submitted. Pending admin approval.`
-      +` Dry:${fmt(rec.dry)}°C Wet:${fmt(rec.wet)}°C RH:${fmt(rec.rh)}%`;
-    adminDesc = `Dry:${fmt(rec.dry)}°C | Wet:${fmt(rec.wet)}°C | RH:${fmt(rec.rh)}%`
-      +` | Soil → ${soilSummary()}`;
-    autoMsg = `*TMA AgroMet — 1200 UTC Observation*\n`
-      +`Station: ${rec.stationName} | Observer: ${rec.observerName}\n`
-      +`Date: ${rec.date} | Ref: OBS-${rec.key}\n`
-      +'\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\u2500\n'
-      +`Dry Bulb:     ${fmt(rec.dry)} \u00b0C\n`
-      +`Wet Bulb:     ${fmt(rec.wet)} \u00b0C\n`
-      +`Rel. Humidity:${fmt(rec.rh)} %\n`
-      +'Soil Temps:   '+soilSummary()+'\n'
-      +'Status: Pending approval';
-  }
-
-  state.notifications.unshift({type:'sms', title:'Observation sent for approval', desc:obsDesc, time:'Just now'});
-  state.adminNotifications.unshift({title:`⏳ Pending — ${currentSession} UTC · ${rec.date}`, desc:adminDesc, time:'Just now · Awaiting approval'});
-
-  // After submission — open the message modal so observer can send via WA or SMS
-  setTimeout(() => {
-    openMsgModal('Admin TMA (' + ADMIN_PHONE + ')', ADMIN_PHONE, autoMsg, 'both');
-  }, 1200);
+  state.notifications.unshift({type:'sms',title:'Observation sent for approval',desc:`TMA: Obs ${rec.date} ${currentSession}UTC submitted. Pending admin approval. Rain:${rec.rain??'—'}mm MaxT:${rec.tmax??'—'}°C MinT:${rec.tmin??'—'}°C RH:${rec.rh??'—'}%`,time:'Just now'});
+  state.adminNotifications.unshift({title:`⏳ Pending approval — ${currentSession} UTC · ${rec.date}`,desc:`Rain:${rec.rain??'—'}mm | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | RH:${rec.rh??'—'}% | Dry:${rec.dry??'—'}°C | Wind:${rec.windRun??'—'}km | Sun:${rec.sunshine??'—'}h`,time:`Just now · Awaiting approval`});
   saveState();
-  showToast('Observation submitted','Sent for admin approval. Status: Pending. Ref: '+ref,'info');
-  _editingKey = null;
+  const syncMsg = sbOk ? 'Synced to cloud ✓' : 'Saved locally (cloud sync failed — check connection)';
+  showToast('Observation submitted',`Sent for admin approval. ${syncMsg}. Ref: `+ref,'info');
   setTimeout(()=>{clearForm();showPage('myRecords',document.querySelector('.nav-item[onclick*="myRecords"]'));},1600);
 }
 
@@ -6002,8 +5689,6 @@ function refreshMyRecords() {
 function editObservation(key) {
   const r = state.records.find(rec => rec.key === key);
   if (!r) { showToast('Not found','Observation record not found','error'); return; }
-  // Mark we are editing this record so the lock won't re-trigger
-  _editingKey = key;
   // Navigate to form and set session
   showPage('obsForms', document.querySelector('.nav-item[onclick*="obsForms"]'));
   selectSession(r.session);
@@ -6198,67 +5883,10 @@ function refreshApprovals(){
   }
 }
 
-// ── FIX 2: After approving/rejecting, DELETE the row from Supabase
-// pending_approvals so it never comes back on next login.
-async function deletePendingFromSupabase(email, type) {
-  if (!_sbReady() || !email) return;
-  const { error } = await supabaseClient
-    .from('pending_approvals')
-    .delete()
-    .eq('email', email)
-    .eq('type', type);
-  if (error) console.error('Delete pending error:', error.message);
-}
-
-async function approveObserver(i){
-  const o=state.pendingApprovals[i];if(!o)return;
-  o.approvedDate=getTodayStr();
-  state.approvedObservers.unshift(o);
-  state.pendingApprovals.splice(i,1);
-  saveState();
-  // Insert into observers table using upsert to avoid duplicate if already exists
-  await supabaseClient.from('observers').upsert({
-    name:o.name,title:o.title||null,station:o.station||null,
-    phone:o.phone||null,email:o.email||null,password:o.password||null,
-    approved_date:o.approvedDate?o.approvedDate.split('/').reverse().join('-'):null
-  }, { onConflict: 'email' });
-  // Remove from pending_approvals in Supabase so it never resurfaces
-  await deletePendingFromSupabase(o.email, 'observer');
-  updateApprovalBadge();refreshApprovals();refreshObservers();
-  showToast('Observer approved',`${o.name} can now log in.`,'success');
-}
-
-async function approveStakeholder(i){
-  const s=state.pendingApprovals[i];if(!s)return;
-  s.approvedDate=getTodayStr();
-  state.approvedStakeholders.unshift(s);
-  state.pendingApprovals.splice(i,1);
-  saveState();
-  await supabaseClient.from('stakeholders').upsert({
-    name:s.name,org:s.org||null,position:s.position||null,
-    phone:s.phone||null,email:s.email||null,password:s.password||null,
-    approved_date:s.approvedDate?s.approvedDate.split('/').reverse().join('-'):null
-  }, { onConflict: 'email' });
-  await deletePendingFromSupabase(s.email, 'stakeholder');
-  updateApprovalBadge();refreshApprovals();refreshManageStakeholders();
-  showToast('Stakeholder approved',`${s.name} can now log in.`,'success');
-}
-
-async function rejectObserver(i){
-  const o=state.pendingApprovals[i];if(!o)return;
-  state.pendingApprovals.splice(i,1);
-  await deletePendingFromSupabase(o.email, o.type);
-  updateApprovalBadge();refreshApprovals();
-  showToast('Rejected','Registration has been rejected.');
-}
-
-async function rejectApproval(i){
-  const o=state.pendingApprovals[i];if(!o)return;
-  state.pendingApprovals.splice(i,1);
-  await deletePendingFromSupabase(o.email, o.type);
-  updateApprovalBadge();refreshApprovals();
-  showToast('Rejected','Registration has been rejected.');
-}
+function approveObserver(i){const o=state.pendingApprovals[i];if(!o)return;o.approvedDate=getTodayStr();state.approvedObservers.unshift(o);state.pendingApprovals.splice(i,1);saveState();pushUserToSupabase('observers',{name:o.name,title:o.title||null,station:o.station||null,phone:o.phone||null,email:o.email||null,password:o.password||null,approved_date:o.approvedDate?o.approvedDate.split('/').reverse().join('-'):null});updateApprovalBadge();refreshApprovals();refreshObservers();showToast('Observer approved',`${o.name} can now log in.`,'success');}
+function approveStakeholder(i){const s=state.pendingApprovals[i];if(!s)return;s.approvedDate=getTodayStr();state.approvedStakeholders.unshift(s);state.pendingApprovals.splice(i,1);saveState();pushUserToSupabase('stakeholders',{name:s.name,org:s.org||null,position:s.position||null,phone:s.phone||null,email:s.email||null,password:s.password||null,approved_date:s.approvedDate?s.approvedDate.split('/').reverse().join('-'):null});updateApprovalBadge();refreshApprovals();refreshManageStakeholders();showToast('Stakeholder approved',`${s.name} can now log in.`,'success');}
+function rejectObserver(i){state.pendingApprovals.splice(i,1);updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
+function rejectApproval(i){state.pendingApprovals.splice(i,1);updateApprovalBadge();refreshApprovals();showToast('Rejected','Registration has been rejected.');}
 
 function updateApprovalBadge(){
   const b=document.getElementById('approvalBadge'),c=state.pendingApprovals.length;
@@ -6442,18 +6070,7 @@ function refreshObservers(){
   else{e.style.display='none';t.style.display='';r.innerHTML=state.approvedObservers.map((o,i)=>`<tr><td>${o.name}</td><td>${o.title||'—'}</td><td>${o.station||'—'}</td><td>${o.phone||'—'}</td><td>${o.email||'—'}</td><td>${o.approvedDate||'—'}</td><td><span class="badge badge-teal">Active</span></td><td style="white-space:nowrap"><button class="btn btn-sm btn-wa" title="WhatsApp" onclick="contactMemberWA('obs',${i})">📱 WA</button> <button class="btn btn-sm btn-sms" title="Send SMS" onclick="contactMemberSMS('obs',${i})">✉ SMS</button></td><td><button class="btn btn-sm btn-danger" onclick="deleteObserver(${i})">Remove</button></td></tr>`).join('');}
 }
 
-async function deleteObserver(i){
-  const o=state.approvedObservers[i];if(!o)return;
-  if(!confirm(`Remove observer "${o.name}"? They will immediately lose login access.`))return;
-  // Remove from Supabase FIRST so the account is gone on all devices instantly
-  if(_sbReady()&&o.email){
-    const {error}=await supabaseClient.from('observers').delete().eq('email',o.email);
-    if(error){showToast('Error','Could not remove from database: '+error.message,'error');return;}
-  }
-  state.approvedObservers.splice(i,1);
-  saveState();refreshObservers();
-  showToast('Observer removed',`${o.name} has been removed and can no longer log in.`,'success');
-}
+function deleteObserver(i){const o=state.approvedObservers[i];if(!o)return;if(!confirm(`Remove observer "${o.name}"?`))return;state.approvedObservers.splice(i,1);saveState();refreshObservers();showToast('Observer removed',`${o.name} removed.`);}
 
 function refreshManageStakeholders(){
   const e=document.getElementById('stakeholders-empty'),t=document.getElementById('stakeholders-table'),r=document.getElementById('stakeholders-rows');
@@ -6478,17 +6095,7 @@ function refreshManageStakeholders(){
   }
 }
 
-async function deleteStakeholder(i){
-  const s=state.approvedStakeholders[i];if(!s)return;
-  if(!confirm(`Remove stakeholder "${s.name}"? They will immediately lose login access.`))return;
-  if(_sbReady()&&s.email){
-    const {error}=await supabaseClient.from('stakeholders').delete().eq('email',s.email);
-    if(error){showToast('Error','Could not remove from database: '+error.message,'error');return;}
-  }
-  state.approvedStakeholders.splice(i,1);
-  saveState();refreshManageStakeholders();
-  showToast('Stakeholder removed',`${s.name} has been removed and can no longer log in.`,'success');
-}
+function deleteStakeholder(i){const s=state.approvedStakeholders[i];if(!s)return;if(!confirm(`Remove stakeholder "${s.name}"?`))return;state.approvedStakeholders.splice(i,1);saveState();refreshManageStakeholders();showToast('Stakeholder removed',`${s.name} removed.`);}
 
 function adminRegisterStakeholder(){
   const fname=(document.getElementById('sh-reg-fname')?.value||'').trim();
@@ -6721,7 +6328,6 @@ function updateWmoIndex(val){
 // ═══════════════════════════════════════════════════════════════
 
 // ── Beem Africa SMS Gateway ─────────────────────────────────────
-const BEEM_API_URL = 'https://apisms.beem.africa/v1/send';
 
 function loadBeemConfig() {
   try { return JSON.parse(localStorage.getItem('beem_config') || '{}'); } catch(e) { return {}; }
@@ -6759,7 +6365,7 @@ function openWhatsApp(phone, message) {
   window.open('https://wa.me/'+p+'?text='+encodeURIComponent(message), '_blank');
 }
 
-// ── Beem Africa SMS (async) ─────────────────────────────────────
+// ── Beem Africa SMS — routed via Supabase Edge Function (avoids CORS) ──
 async function sendBeemSms(phones, message) {
   const cfg = loadBeemConfig();
   if (!cfg.apiKey||!cfg.secretKey||!cfg.senderId) {
@@ -6768,25 +6374,33 @@ async function sendBeemSms(phones, message) {
   }
   const valid = phones.map(formatPhoneIntl).filter(p=>p && p.length>=11);
   if (!valid.length) { showToast('No valid numbers','No valid phone numbers for selected recipients','warning'); return false; }
-  const payload = {
-    source_addr: cfg.senderId, schedule_time: '', encoding: '0', message,
-    recipients: valid.map((p,i)=>({recipient_id: i+1, dest_addr: p}))
-  };
   try {
-    const res = await fetch(BEEM_API_URL, {
-      method: 'POST',
-      headers: { 'Content-Type':'application/json', 'Authorization':'Basic '+btoa(cfg.apiKey+':'+cfg.secretKey) },
-      body: JSON.stringify(payload)
-    });
-    if (res.ok) {
-      showToast('SMS Sent','Message sent to '+valid.length+' recipient(s) via Beem Africa','success');
+    const res = await fetch(
+      SUPABASE_URL + '/functions/v1/beem-sms',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
+        },
+        body: JSON.stringify({
+          api_key:    cfg.apiKey,
+          secret_key: cfg.secretKey,
+          sender_id:  cfg.senderId,
+          message,
+          recipients: valid.map(p => ({ phone: p })),
+        }),
+      }
+    );
+    const data = await res.json().catch(()=>({}));
+    if (res.ok && data.success) {
+      showToast('SMS Sent ✓', 'Message sent to ' + (data.sent||valid.length) + ' recipient(s) via Beem Africa — Sender: ' + cfg.senderId, 'success');
       return true;
     }
-    const err = await res.json().catch(()=>({}));
-    showToast('SMS Failed', err.message||'Beem Africa returned an error — check credentials', 'warning');
+    showToast('SMS Failed', data.message || 'Beem Africa returned an error — check your API key and secret', 'warning');
     return false;
   } catch(e) {
-    showToast('SMS Error','Network error — check your Beem Africa credentials and connection','warning');
+    showToast('SMS Error', 'Could not reach SMS gateway — check your internet connection', 'warning');
     return false;
   }
 }
@@ -6795,13 +6409,12 @@ async function sendBeemSms(phones, message) {
 let _msgCtx = {};
 function openMsgModal(toLabel, phone, defaultMsg, channel) {
   _msgCtx = {toLabel, phone, defaultMsg, channel};
-  // Always show Send Message title — both WA and SMS always available
-  document.getElementById('msgModalTitle').textContent = 'Send Message';
+  const title = channel==='sms' ? '✉ Send SMS' : channel==='wa' ? '📱 Send via WhatsApp' : 'Send Message';
+  document.getElementById('msgModalTitle').textContent = title;
   document.getElementById('msgModalTo').value = toLabel;
   document.getElementById('msgModalText').value = defaultMsg || '';
-  // Always show BOTH buttons — user chooses their preferred channel
-  document.getElementById('msgModalWaBtn').style.display = '';
-  document.getElementById('msgModalSmsBtn').style.display = '';
+  document.getElementById('msgModalWaBtn').style.display = channel==='sms' ? 'none' : '';
+  document.getElementById('msgModalSmsBtn').style.display = channel==='wa' ? 'none' : '';
   document.getElementById('msgModalOverlay').classList.add('open');
 }
 function closeMsgModal() { document.getElementById('msgModalOverlay').classList.remove('open'); }
@@ -6809,21 +6422,8 @@ function sendFromModal(channel) {
   const msg = (document.getElementById('msgModalText')?.value||'').trim();
   if (!msg) { showToast('Empty message','Please type a message before sending','warning'); return; }
   closeMsgModal();
-  if (channel === 'wa') {
-    openWhatsApp(_msgCtx.phone, msg);
-  } else {
-    // Native SMS — opens the device's built-in SMS app pre-filled
-    openNativeSMS(_msgCtx.phone, msg);
-  }
-}
-
-// Native SMS using sms: URI scheme (works on Android, iOS, desktop with SMS app)
-function openNativeSMS(phone, message) {
-  if (!phone) { showToast('No number', 'No phone number for this contact', 'warning'); return; }
-  const p = formatPhoneIntl(phone) || phone.replace(/\s/g,'');
-  // iOS uses & as separator, Android uses ?; we use & which works on both
-  const uri = 'sms:' + p + '?body=' + encodeURIComponent(message);
-  window.open(uri, '_self');
+  if (channel==='wa') openWhatsApp(_msgCtx.phone, msg);
+  else sendBeemSms([_msgCtx.phone], msg);
 }
 
 // ── Admin → Member (per-member direct contact) ──────────────────
@@ -6836,8 +6436,8 @@ function contactMemberWA(type, idx) {
 function contactMemberSMS(type, idx) {
   const m = type==='obs' ? state.approvedObservers[idx] : state.approvedStakeholders[idx];
   if (!m) return;
-  openMsgModal(m.name+' ('+(m.phone||'—')+')', m.phone,
-    'Dear '+m.name+', this is a message from TMA AgroMet portal. ', 'both');
+  openMsgModal(m.name+' (SMS · '+(m.phone||'—')+')', m.phone,
+    'Dear '+m.name+', this is a message from TMA AgroMet portal. ', 'sms');
 }
 
 // ── Admin Broadcast ─────────────────────────────────────────────
@@ -6899,15 +6499,13 @@ async function sendBroadcast() {
 function shareObsWithAdmin(recKey, channel) {
   const rec = state.records.find(r=>r.key===recKey);
   if (!rec) return;
-  const fmt = v => v??'—';
   const msg = 'TMA Observation Report\n'
-    +'Date: '+rec.date+' | Session: '+rec.session+' UTC\n'
-    +'Station: '+state.stationName+' | Observer: '+state.observerName+'\n'
-    +'Rainfall: '+fmt(rec.rain)+'mm | Tmax: '+fmt(rec.tmax)+'°C | Tmin: '+fmt(rec.tmin)+'°C\n'
-    +'Dry: '+fmt(rec.dry)+'°C | Wet: '+fmt(rec.wet)+'°C | RH: '+fmt(rec.rh)+'%\n'
-    +'Sunshine: '+fmt(rec.sunshine)+'h | WindRun: '+fmt(rec.windRun)+'km | Rad: '+fmt(rec.radiation)+'MJ/m²';
-  // Always open modal so user can choose WA or SMS
-  openMsgModal('Admin TMA ('+ADMIN_PHONE+')', ADMIN_PHONE, msg, 'both');
+    +'Date: '+rec.date+' | Session: '+rec.session+'UTC\n'
+    +'Station: '+state.stationName+'\nObserver: '+state.observerName+'\n'
+    +'Rainfall: '+(rec.rain??'—')+'mm | Tmax: '+(rec.tmax??'—')+'°C | Tmin: '+(rec.tmin??'—')+'°C\n'
+    +'RH: '+(rec.rh??'—')+'% | Sunshine: '+(rec.sunshine??'—')+'h | Wind run: '+(rec.windRun??'—')+'km';
+  if (channel==='wa') openWhatsApp(ADMIN_PHONE, msg);
+  else openMsgModal('Admin TMA ('+ADMIN_PHONE+')', ADMIN_PHONE, msg, 'sms');
 }
 
 // ── Observer → Admin: share phenological observation ────────────
@@ -6943,12 +6541,12 @@ function shareReturnSMS(retId) {
 
 // ── Observer → Admin: direct contact ───────────────────────────
 function contactAdminWA(preMsg) {
-  openMsgModal('Admin TMA ('+ADMIN_PHONE+')', ADMIN_PHONE,
-    preMsg || 'Dear Admin, this is '+state.observerName+' from '+state.stationName+'. ', 'both');
+  openWhatsApp(ADMIN_PHONE,
+    preMsg || 'Dear Admin, this is '+state.observerName+' from '+state.stationName+'. ');
 }
 function contactAdminSMS(preMsg) {
   openMsgModal('Admin TMA ('+ADMIN_PHONE+')', ADMIN_PHONE,
-    preMsg || 'Dear Admin, this is '+state.observerName+' from '+state.stationName+'. ', 'both');
+    preMsg || 'Dear Admin, this is '+state.observerName+' from '+state.stationName+'. ', 'sms');
 }
 
 // ── Stakeholder → Admin: direct contact ────────────────────────
@@ -7116,7 +6714,7 @@ function initReturnWASMSButtons() {
 function _sbReady() { return typeof supabaseClient !== 'undefined'; }
 
 async function pushObsToSupabase(rec) {
-  if (!_sbReady()) return;
+  if (!_sbReady()) return false;
   const { error } = await supabaseClient.from('observations').upsert({
     ref_key:           rec.key,
     obs_date:          rec.date.split('/').reverse().join('-'),
@@ -7158,7 +6756,8 @@ async function pushObsToSupabase(rec) {
     soil_temp:         rec.soilTemp || null,
     soil_moisture:     rec.sm || null,
   }, { onConflict: 'ref_key' });
-  if (error) console.error('Supabase obs upsert error:', error.message);
+  if (error) { console.error('Supabase obs upsert error:', error.message); return false; }
+  return true;
 }
 
 async function updateObsStatusInSupabase(key, status) {
@@ -7273,172 +6872,119 @@ async function pushSHRequestToSupabase(req) {
 async function loadFromSupabase() {
   if (!_sbReady()) return;
   try {
-    // ── Supabase is the source of truth: clear in-memory state first
-    // so data changed/deleted on another device is correctly reflected.
-    state.records              = [];
-    state.phenoRecords         = [];
-    state.approvedObservers    = [];
-    state.approvedStakeholders = [];
-    state.pendingApprovals     = [];
-    state.products             = [];
-    state.stakeholderRequests  = [];
-
-    const [obsRes, phenoRes, obsvrRes, shRes, pendRes, prodRes, reqRes, metaRes] = await Promise.all([
-      supabaseClient.from('observations').select('*'),
-      supabaseClient.from('phenological_observations').select('*'),
+    const [obsRes, phenoRes, obsvrRes, shRes, pendRes, prodRes, reqRes] = await Promise.all([
+      supabaseClient.from('observations').select('*').order('obs_date', { ascending: false }),
+      supabaseClient.from('phenological_observations').select('*').order('obs_date', { ascending: false }),
       supabaseClient.from('observers').select('*'),
       supabaseClient.from('stakeholders').select('*'),
-      supabaseClient.from('pending_approvals').select('*'),
+      supabaseClient.from('pending_approvals').select('*').eq('status','pending'),
       supabaseClient.from('products').select('*'),
-      supabaseClient.from('stakeholder_requests').select('*'),
-      supabaseClient.from('portal_meta').select('*').eq('id','singleton').maybeSingle(),
+      supabaseClient.from('stakeholder_requests').select('*').order('request_time', { ascending: false }),
     ]);
 
+    // Supabase is the authoritative source — replace local records entirely
     if (obsRes.data) {
-      obsRes.data.forEach(row => {
-        const rec = {
-          key: row.ref_key, date: isoToDisplay(row.obs_date), day: row.obs_day,
-          month: row.obs_month, year: row.obs_year, session: row.session,
-          status: row.status, stationName: row.station_name,
-          observerName: row.observer_name,
-          dry: row.dry_bulb, wet: row.wet_bulb, depn: row.depression,
-          dew: row.dew_point, rh: row.relative_humidity, vap: row.vapour_pressure,
-          tmax: row.temp_max, tmaxReset: row.temp_max_reset,
-          tmin: row.temp_min, tminReset: row.temp_min_reset,
-          windAct: row.wind_act_km, windPrev: row.wind_prev_km,
-          windRun: row.wind_run_km, windDir: row.wind_direction,
-          windSpeed: row.wind_speed_kmh, rain: row.rainfall_std_mm,
-          evap446Rain: row.evap_rain_mm, evapCupsOut: row.evap_cups_out,
-          evapCupsIn: row.evap_cups_in, evapStd: row.evap_std_mm,
-          evapAnemReset: row.evap_anem_reset, radNo: row.rad_number,
-          radRead: row.rad_reading, radReset: row.rad_reset,
-          radDistill: row.rad_distillate, radiation: row.radiation_mjm2,
-          sunshine: row.sunshine_hours, sunMins: row.sunshine_mins,
-          soilTemp: row.soil_temp, sm: row.soil_moisture,
-        };
-        if (!state.records.find(r => r.key === rec.key)) state.records.push(rec);
-      });
+      // Keep any local-only records not yet synced (no matching key in Supabase)
+      const sbKeys = new Set(obsRes.data.map(r => r.ref_key));
+      const localOnly = state.records.filter(r => !sbKeys.has(r.key));
+      // Re-push any unsynced local records to Supabase
+      localOnly.forEach(rec => pushObsToSupabase(rec));
+      // Build fresh records from Supabase
+      state.records = obsRes.data.map(row => ({
+        key: row.ref_key, date: isoToDisplay(row.obs_date), day: row.obs_day,
+        month: row.obs_month, year: row.obs_year, session: row.session,
+        status: row.status, stationName: row.station_name,
+        observerName: row.observer_name,
+        dry: row.dry_bulb, wet: row.wet_bulb, depn: row.depression,
+        dew: row.dew_point, rh: row.relative_humidity, vap: row.vapour_pressure,
+        tmax: row.temp_max, tmaxReset: row.temp_max_reset,
+        tmin: row.temp_min, tminReset: row.temp_min_reset,
+        windAct: row.wind_act_km, windPrev: row.wind_prev_km,
+        windRun: row.wind_run_km, windDir: row.wind_direction,
+        windSpeed: row.wind_speed_kmh, rain: row.rainfall_std_mm,
+        evap446Rain: row.evap_rain_mm, evapCupsOut: row.evap_cups_out,
+        evapCupsIn: row.evap_cups_in, evapStd: row.evap_std_mm,
+        evapAnemReset: row.evap_anem_reset, radNo: row.rad_number,
+        radRead: row.rad_reading, radReset: row.rad_reset,
+        radDistill: row.rad_distillate, radiation: row.radiation_mjm2,
+        sunshine: row.sunshine_hours, sunMins: row.sunshine_mins,
+        soilTemp: row.soil_temp, sm: row.soil_moisture,
+      }));
+      // Append local-only (unsynced) records
+      localOnly.forEach(r => { if (!state.records.find(x => x.key === r.key)) state.records.push(r); });
+      // Sync merged result back to localStorage
+      saveState();
     }
 
     if (phenoRes.data) {
-      phenoRes.data.forEach(row => {
-        const rec = {
-          type: 'phenological', key: row.ref_key, date: row.obs_date,
-          day: row.obs_day, month: row.obs_month, year: row.obs_year,
-          station: row.station, observer: row.observer,
-          crop: row.crop, cropName: row.crop_name, variety: row.variety,
-          plot: row.plot, area: row.area_ha, plantDate: row.plant_date,
-          dap: row.dap, phaseCode: row.phase_code, phaseName: row.phase_name,
-          height: row.height_cm, plantsHa: row.plants_ha,
-          stemsM2: row.stems_m2, tillers: row.tillers,
-          pest: row.pest, pestSev: row.pest_severity, pestPct: row.pest_pct,
-          stress: row.stress, lodging: row.lodging,
-          yieldExp: row.yield_expected, yieldAct: row.yield_actual,
-          harvestDate: row.harvest_date,
-          rep1: row.rep1, rep2: row.rep2, rep3: row.rep3, rep4: row.rep4,
-          repTotal: row.rep_total, repPct: row.rep_pct,
-          plantNo: row.plant_no, yearPlanted: row.year_planted,
-          nPlants: row.n_plants, dekadal: row.dekadal, remarks: row.remarks,
-        };
-        if (!state.phenoRecords.find(r => r.key === rec.key)) state.phenoRecords.push(rec);
-      });
+      const sbPhKeys = new Set(phenoRes.data.map(r => r.ref_key));
+      const localOnlyPheno = (state.phenoRecords||[]).filter(r => !sbPhKeys.has(r.key));
+      localOnlyPheno.forEach(rec => pushPhenoToSupabase(rec));
+      state.phenoRecords = phenoRes.data.map(row => ({
+        type: 'phenological', key: row.ref_key, date: isoToDisplay(row.obs_date),
+        day: row.obs_day, month: row.obs_month, year: row.obs_year,
+        station: row.station, observer: row.observer,
+        crop: row.crop, cropName: row.crop_name, variety: row.variety,
+        plot: row.plot, area: row.area_ha, plantDate: row.plant_date,
+        dap: row.dap, phaseCode: row.phase_code, phaseName: row.phase_name,
+        height: row.height_cm, plantsHa: row.plants_ha,
+        stemsM2: row.stems_m2, tillers: row.tillers,
+        pest: row.pest, pestSev: row.pest_severity, pestPct: row.pest_pct,
+        stress: row.stress, lodging: row.lodging,
+        yieldExp: row.yield_expected, yieldAct: row.yield_actual,
+        harvestDate: row.harvest_date,
+        rep1: row.rep1, rep2: row.rep2, rep3: row.rep3, rep4: row.rep4,
+        repTotal: row.rep_total, repPct: row.rep_pct,
+        plantNo: row.plant_no, yearPlanted: row.year_planted,
+        nPlants: row.n_plants, dekadal: row.dekadal, remarks: row.remarks,
+      }));
+      localOnlyPheno.forEach(r => { if (!state.phenoRecords.find(x => x.key === r.key)) state.phenoRecords.push(r); });
     }
 
-    // Arrays were cleared above — push every row without dedup guards.
-    // Dedup in the DB is enforced by UNIQUE(email) on observers/stakeholders.
     if (obsvrRes.data) {
-      obsvrRes.data.forEach(row => {
-        state.approvedObservers.push({ name: row.name, title: row.title,
-          station: row.station, phone: row.phone, email: row.email,
-          password: row.password, approvedDate: row.approved_date });
-      });
+      state.approvedObservers = obsvrRes.data.map(row => ({
+        name: row.name, title: row.title, station: row.station,
+        phone: row.phone, email: row.email, password: row.password,
+        approvedDate: row.approved_date
+      }));
     }
 
     if (shRes.data) {
-      shRes.data.forEach(row => {
-        state.approvedStakeholders.push({ name: row.name, org: row.org,
-          position: row.position, phone: row.phone, email: row.email,
-          password: row.password, approvedDate: row.approved_date });
-      });
+      state.approvedStakeholders = shRes.data.map(row => ({
+        name: row.name, org: row.org, position: row.position,
+        phone: row.phone, email: row.email, password: row.password,
+        approvedDate: row.approved_date
+      }));
     }
 
     if (pendRes.data) {
-      pendRes.data.forEach(row => {
-        state.pendingApprovals.push({ type: row.type, name: row.name,
-          title: row.title, station: row.station, org: row.org,
-          position: row.position, phone: row.phone, email: row.email,
-          password: row.password, submittedDate: row.submitted_date });
-      });
+      state.pendingApprovals = pendRes.data.map(row => ({
+        type: row.type, name: row.name, title: row.title,
+        station: row.station, org: row.org, position: row.position,
+        phone: row.phone, email: row.email, password: row.password,
+        submittedDate: row.submitted_date
+      }));
     }
 
     if (prodRes.data) {
-      prodRes.data.forEach(row => {
-        const pr = { title: row.title, cat: row.category, access: row.access_level,
-          icon: row.icon, date: row.upload_date, downloads: row.downloads || 0 };
-        if (!state.products.find(x => x.title === pr.title)) state.products.push(pr);
-      });
+      state.products = prodRes.data.map(row => ({
+        title: row.title, cat: row.category, access: row.access_level,
+        icon: row.icon, date: row.upload_date, downloads: row.downloads || 0
+      }));
     }
 
     if (reqRes.data) {
-      reqRes.data.forEach(row => {
-        const r = { type: row.type, period: row.period, purpose: row.purpose,
-          delivery: row.delivery, name: row.stakeholder_name,
-          org: row.stakeholder_org, location: row.stakeholder_location||'',
-          phone: row.stakeholder_phone||'', email: row.stakeholder_email||'',
-          userId: row.stakeholder_name, time: isoToDisplay(row.request_time),
-          responded: false, respondedAt: null };
-        const exists = state.stakeholderRequests.find(x =>
-          x.name === r.name && x.type === r.type && x.time === r.time);
-        if (!exists) state.stakeholderRequests.push(r);
-      });
-    }
-
-    // ── Load portal meta (station name, observer name etc.) from Supabase
-    if (metaRes && metaRes.data) {
-      const m = metaRes.data;
-      if (m.station_name)  state.stationName  = m.station_name;
-      if (m.observer_name) state.observerName = m.observer_name;
-      if (m.wmo_index)     state.wmoIndex     = m.wmo_index;
-      if (m.current_ym)    state.currentYM    = m.current_ym;
-    }
-
-    // ── After Supabase load, refresh the local cache so offline use is consistent
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state.records));
-      localStorage.setItem(PHENO_STORAGE_KEY, JSON.stringify(state.phenoRecords));
-      localStorage.setItem('tma_users_v2', JSON.stringify({
-        approvedObservers:    state.approvedObservers,
-        approvedStakeholders: state.approvedStakeholders,
-        pendingApprovals:     state.pendingApprovals,
+      state.stakeholderRequests = reqRes.data.map(row => ({
+        type: row.type, period: row.period, purpose: row.purpose,
+        delivery: row.delivery, name: row.stakeholder_name,
+        org: row.stakeholder_org, location: row.stakeholder_location||'',
+        phone: row.stakeholder_phone||'', email: row.stakeholder_email||'',
+        userId: row.stakeholder_name, time: isoToDisplay(row.request_time),
+        responded: false, respondedAt: null
       }));
-      localStorage.setItem('tma_sh_requests_v1', JSON.stringify(state.stakeholderRequests));
-    } catch(e) {}
+    }
 
   } catch(e) { console.error('loadFromSupabase error:', e); }
-}
-
-// ── REAL-TIME CROSS-DEVICE SYNC ────────────────────────────────
-// When any device writes to Supabase, all other open devices refresh
-// automatically — no page reload needed.
-function initRealtimeSync() {
-  if (!_sbReady()) return;
-  supabaseClient
-    .channel('tma-agrimet-realtime')
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'observations' },
-      () => loadFromSupabase().then(() => { refreshAllReturns(); renderRecords(); }))
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'phenological_observations' },
-      () => loadFromSupabase().then(() => renderPhenoRecords && renderPhenoRecords()))
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'observers' },
-      () => loadFromSupabase().then(() => { refreshObservers && refreshObservers(); refreshApprovals && refreshApprovals(); }))
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'stakeholders' },
-      () => loadFromSupabase().then(() => { refreshManageStakeholders && refreshManageStakeholders(); }))
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'pending_approvals' },
-      () => loadFromSupabase().then(() => { updateApprovalBadge && updateApprovalBadge(); refreshApprovals && refreshApprovals(); }))
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'stakeholder_requests' },
-      () => loadFromSupabase().then(() => { refreshSHRequests && refreshSHRequests(); }))
-    .on('postgres_changes', { event: '*', schema: 'public', table: 'products' },
-      () => loadFromSupabase().then(() => { refreshProducts && refreshProducts(); }))
-    .subscribe();
 }
 
 // ── INIT ───────────────────────────────────────────────────────
