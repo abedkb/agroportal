@@ -4260,14 +4260,22 @@ function validateForm601() {
   [['t_dry','Dry bulb temperature'],['t_wet','Wet bulb temperature'],
    ['t_max','Maximum temperature'],['t_min','Minimum temperature'],
    ['ane_speed','Wind speed']].forEach(([id,lbl])=>{ if(!has(id)) missing.push(lbl); });
-  // Wind direction — select must not be on the blank placeholder
+  // Wind direction — text input must not be empty
   const wdEl = document.getElementById('ane_dir');
-  if (!wdEl || !wdEl.value) missing.push('Wind direction');
-  // 0600z extra fields
+  if (!wdEl || !wdEl.value?.trim()) missing.push('Wind direction');
+  // Soil temperature — required for both sessions
+  [['st_surf','Soil temperature — Surface'],['st_5','Soil temperature — 5 cm'],
+   ['st_10','Soil temperature — 10 cm'],['st_20','Soil temperature — 20 cm'],
+   ['st_30','Soil temperature — 30 cm'],['st_50','Soil temperature — 50 cm'],
+   ['st_100','Soil temperature — 100 cm']].forEach(([id,lbl])=>{ if(!has(id)) missing.push(lbl); });
+  // 0600Z-only fields
   if (currentSession === '0600') {
-    [['t_maxr','Maximum reset'],['t_minr','Minimum reset'],
+    [['t_maxr','Maximum temperature reset'],['t_minr','Minimum temperature reset'],
      ['ane_present','Anemometer present reading'],['ane_prev','Anemometer previous reading'],
-     ['rain_std','Rainfall (standard gauge)']].forEach(([id,lbl])=>{ if(!has(id)) missing.push(lbl); });
+     ['rain_std','Rainfall — standard 5″ gauge'],
+     ['evap_cups_out','Evaporation — cups taken out'],['evap_cups_in','Evaporation — cups added'],
+     ['rad_read','Radiation — instrument reading'],['rad_reset','Radiation — reset reading'],
+     ['sun_mins','Sunshine — duration (minutes)']].forEach(([id,lbl])=>{ if(!has(id)) missing.push(lbl); });
   }
   return missing;
 }
@@ -4279,7 +4287,7 @@ function checkTempThresholds() {
     : [['t_dry','Dry bulb'],['t_wet','Wet bulb'],['t_max','Maximum'],['t_min','Minimum']];
   tempFields.forEach(([id,lbl])=>{
     const v = inp(id);
-    if (v===null||v===9999) return; // blank or missing-data code — skip
+    if (v===null||v===8888) return; // blank or missing-data code — skip
     if (v < 0 || v > 40) issues.push(`${lbl}: ${v}°C is outside normal range (0–40°C)`);
   });
   return issues;
@@ -4289,19 +4297,25 @@ function checkTempThresholds() {
 function submitObservation() {
   const missing = validateForm601();
   if (missing.length > 0) {
-    const listed = missing.slice(0,4).join(', ') + (missing.length>4 ? ` and ${missing.length-4} more` : '');
-    showToast('Incomplete form', `Please fill all fields or enter 9999 for missing data. Empty: ${listed}`, 'error');
+    const list = document.getElementById('validWarnList');
+    const sessLabel = document.getElementById('validWarnSession');
+    if (sessLabel) sessLabel.textContent = currentSession + ' UTC';
+    if (list) list.innerHTML = missing.map(f => `<li>${f}</li>`).join('');
+    document.getElementById('validWarnOverlay').classList.add('open');
     return;
   }
   const thresholdIssues = checkTempThresholds();
   if (thresholdIssues.length > 0) {
-    // Show centred warning modal — do NOT block submission outright
     const list = document.getElementById('tempWarnList');
     list.innerHTML = thresholdIssues.map(i => `<li>${i}</li>`).join('');
     document.getElementById('tempWarnOverlay').classList.add('open');
     return;
   }
   _doSubmit601();
+}
+
+function closeValidWarnModal() {
+  document.getElementById('validWarnOverlay').classList.remove('open');
 }
 
 // Core submit logic — called directly (range OK) or after user confirms via modal
@@ -7065,6 +7079,24 @@ showLanding();
 </script>
 
 <!-- ===== TEMPERATURE WARNING CONFIRMATION MODAL ===== -->
+<div class="temp-warn-overlay" id="validWarnOverlay" onclick="if(event.target===this)closeValidWarnModal()">
+  <div class="temp-warn-modal" style="border-top:4px solid #c0392b;max-width:520px">
+    <div class="temp-warn-icon">🚫</div>
+    <div class="temp-warn-title" style="color:#c0392b">Submission Rejected — Incomplete Observation</div>
+    <div class="temp-warn-body">
+      Your <strong id="validWarnSession">0600 UTC</strong> observation cannot be submitted because the following required fields are still empty.<br><br>
+      Please <strong>fill every field before submitting.</strong> If a reading is genuinely unavailable (equipment fault, instrument absent), enter <strong style="font-family:'IBM Plex Mono',monospace;font-size:14px;color:#c0392b">8888</strong> in that field to indicate missing data.
+    </div>
+    <div class="temp-warn-values" style="border-color:#e57373;background:#fff5f5">
+      <strong style="color:#c0392b">&#8709; Empty / missing fields:</strong>
+      <ul id="validWarnList"></ul>
+    </div>
+    <div class="temp-warn-footer">
+      <button class="btn btn-danger" onclick="closeValidWarnModal()" style="min-width:220px;font-size:13px">&#8592; Go Back &amp; Complete the Form</button>
+    </div>
+  </div>
+</div>
+
 <div class="temp-warn-overlay" id="tempWarnOverlay" onclick="if(event.target===this)closeTempWarnModal()">
   <div class="temp-warn-modal">
     <div class="temp-warn-icon">&#9888;&#65039;</div>
