@@ -5903,7 +5903,7 @@ function refreshAllRecords(){
   const empty=document.getElementById('allrecords-empty'),table=document.getElementById('allrecords-table'),rows=document.getElementById('allrecords-rows');
   if(!empty||!table||!rows) return;
   if(state.records.length===0){empty.style.display='';table.style.display='none';}
-  else{empty.style.display='none';table.style.display='';rows.innerHTML=[...state.records].reverse().map(r=>`<tr><td>${r.date}</td><td class="mono">${r.session}</td><td>${state.stationName}</td><td>${state.observerName}</td><td>${r.rain??'—'}</td><td>${r.tmax??'—'}</td><td>${r.tmin??'—'}</td><td>${r.rh??'—'}</td><td>${r.sunshine??'—'}</td><td><span class="badge badge-green">Approved</span></td></tr>`).join('');}
+  else{empty.style.display='none';table.style.display='';rows.innerHTML=[...state.records].reverse().map(r=>`<tr><td>${r.date}</td><td class="mono">${r.session}</td><td>${r.stationName||state.stationName}</td><td>${r.observerName||state.observerName}</td><td>${r.rain??'—'}</td><td>${r.tmax??'—'}</td><td>${r.tmin??'—'}</td><td>${r.rh??'—'}</td><td>${r.sunshine??'—'}</td><td>${r.status==='approved'?'<span class="badge badge-green">Approved</span>':'<span class="badge badge-amber">Pending</span> <button onclick="approveObsRecord(\''+r.key+'\')" style="background:var(--tma-green);color:#fff;border:none;border-radius:4px;font-size:10px;padding:2px 7px;cursor:pointer;margin-left:4px">✓ Approve</button> <button onclick="rejectObsRecord(\''+r.key+'\')" style="background:var(--tma-red,#c0392b);color:#fff;border:none;border-radius:4px;font-size:10px;padding:2px 7px;cursor:pointer">✕ Reject</button>'}</td></tr>`).join('');}
 }
 
 function refreshAdminProducts(){
