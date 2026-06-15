@@ -3092,6 +3092,7 @@ function loginAs(role, user) {
     if (role === 'admin') { refreshAdminDash(); refreshApprovals(); refreshObservers(); refreshManageStakeholders(); refreshAllRecords(); }
     else if (role === 'observer') { refreshObsDash(); refreshMyRecords(); refreshAllReturns(); }
     else if (role === 'stakeholder') { refreshStakeholderDash(); refreshProductsPage(); }
+    startAutoSync();
   });
   setTimeout(initAccordionDelegation, 100);
   if (!state.currentYM) state.currentYM = currentYM();
@@ -3121,6 +3122,7 @@ function logout() {
 }
 
 function _doLogout(dest) {
+  stopAutoSync();
   state.role=null; state.currentUser=null;
   state.observerName='Observer'; state.stationName='Station';
   state.sessionSubmitted={'0600':false,'1200':false};
@@ -5773,6 +5775,7 @@ function rejectObsRecord(key) {
   if (!rec) return;
   state.records = state.records.filter(r => r.key !== key);
   saveState();
+  deleteObsFromSupabase(key);
   showToast('Observation rejected', `${rec.session} UTC observation from ${rec.date} has been removed.`, 'info');
   refreshPendingObs();
   filterDashObs('today');
@@ -6768,6 +6771,12 @@ async function updateObsStatusInSupabase(key, status) {
   if (error) console.error('Supabase status update error:', error.message);
 }
 
+async function deleteObsFromSupabase(key) {
+  if (!_sbReady()) return;
+  const { error } = await supabaseClient.from('observations').delete().eq('ref_key', key);
+  if (error) console.error('Supabase obs delete error:', error.message);
+}
+
 async function pushPhenoToSupabase(rec) {
   if (!_sbReady()) return;
   const dateIso = rec.date.split('/').reverse().join('-');
@@ -6992,6 +7001,25 @@ async function loadFromSupabase() {
     }
 
   } catch(e) { console.error('loadFromSupabase error:', e); }
+}
+
+// ── AUTO-SYNC ──────────────────────────────────────────────────
+let _syncTimer = null;
+function startAutoSync() {
+  stopAutoSync();
+  _syncTimer = setInterval(async () => {
+    await loadFromSupabase();
+    if (state.role === 'admin') {
+      refreshAdminDash(); refreshApprovals(); refreshAllRecords();
+    } else if (state.role === 'observer') {
+      refreshObsDash(); refreshMyRecords();
+    } else if (state.role === 'stakeholder') {
+      refreshStakeholderDash();
+    }
+  }, 30000);
+}
+function stopAutoSync() {
+  if (_syncTimer) { clearInterval(_syncTimer); _syncTimer = null; }
 }
 
 // ── INIT ───────────────────────────────────────────────────────
