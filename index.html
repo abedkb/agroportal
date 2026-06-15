@@ -1151,7 +1151,7 @@ body{
 <body>
 
 <!-- ======================== LANDING PAGE ======================== -->
-<div id="landingScreen" class="landing-screen">
+<div id="landingScreen" class="landing-screen" style="display:none">
 
   <!-- HERO -->
   <div class="lp-hero">
@@ -1675,8 +1675,8 @@ body{
         </div>
       </div>
       <div style="display:flex;gap:.5rem;align-items:center">
-        <span class="badge badge-green" id="sessionBadge">0600 UTC</span>
-        <span class="badge badge-teal mono" id="utcClock">—</span>
+        <span class="badge badge-green" id="sessionBadge_old">0600 UTC</span>
+        <span class="badge badge-teal mono" id="utcClock_old">—</span>
         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMTAgMTA1Ij48ZGVmcz48c3R5bGU+LnRse2ZvbnQtZmFtaWx5OkFyaWFsIEJsYWNrLEFyaWFsLHNhbnMtc2VyaWY7Zm9udC13ZWlnaHQ6OTAwO2ZpbGw6IzE1NjVDMH0udHN7Zm9udC1mYW1pbHk6QXJpYWwsc2Fucy1zZXJpZjtmb250LXdlaWdodDo3MDA7ZmlsbDojMTU2NUMwfTwvc3R5bGU+PC9kZWZzPjxwYXRoIGQ9Ik0gNSA5NSBDIDUgNTUgNDggMjggNjAgNiIgc3Ryb2tlPSIjMUVCNTNBIiBzdHJva2Utd2lkdGg9IjguNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjAsNikgcm90YXRlKC02MCkiPjxwb2x5Z29uIHBvaW50cz0iMTMsMCAtOSwtNiAtOSw2IiBmaWxsPSIjMUVCNTNBIi8+PC9nPjxwYXRoIGQ9Ik0gMTYgOTUgQyAxNiA2MCA1MSAzNSA2MiAxOCIgc3Ryb2tlPSIjRkNEMTE2IiBzdHJva2Utd2lkdGg9IjYuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+PGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNjIsMTgpIHJvdGF0ZSgtNTcpIj48cG9seWdvbiBwb2ludHM9IjExLDAgLTgsLTUgLTgsNSIgZmlsbD0iI0ZDRDExNiIvPjwvZz48cGF0aCBkPSJNIDYyIDE0IEMgNjggMjggNjAgNDggMzIgNTgiIHN0cm9rZT0iIzE1NjVDMCIgc3Ryb2tlLXdpZHRoPSI1IiBmaWxsPSJub25lIiBzdHJva2UtbGluZWNhcD0icm91bmQiLz48ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgzMiw1OCkgcm90YXRlKDE3NSkiPjxwb2x5Z29uIHBvaW50cz0iMTAsMCAtOCwtNC41IC04LDQuNSIgZmlsbD0iIzE1NjVDMCIvPjwvZz48dGV4dCB4PSI4OCIgeT0iODEiIGNsYXNzPSJ0bCIgZm9udC1zaXplPSI2OCI+VE1BPC90ZXh0Pjx0ZXh0IHg9Ijg4IiB5PSI5NyIgY2xhc3M9InRzIiBmb250LXNpemU9IjkiIGxldHRlci1zcGFjaW5nPSIwLjUiPlRBTlpBTklBIE1FVEVPUk9MT0dJQ0FMIEFVVEhPUklUWTwvdGV4dD48L3N2Zz4=" alt="TMA" style="width:28px;height:auto;opacity:0.85;margin-left:6px" title="Tanzania Meteorological Authority"/>
       </div>
     </div>
@@ -1817,7 +1817,7 @@ body{
                     <thead><tr><th>Obs. Time</th><th>Standard 5″ gauge (mm)</th><th>Auto chart replaced</th></tr></thead>
                     <tbody><tr>
                       <td><div class="time-cell" id="rainTime">0600</div></td>
-                      <td><input type="number" id="rain_std" step="0.1" min="0"/></td>
+                      <td><input type="number" id="rain_std" step="0.1" min="0" oninput="syncRainfallToEvap()"/></td>
                       <td><select><option>No</option><option>Yes</option></select></td>
                     </tr></tbody>
                   </table></div>
@@ -1827,7 +1827,7 @@ body{
                   <div class="obs-table-wrap"><table class="obs-table">
                     <thead><tr><th>Rainfall (mm)</th><th>Cups taken out</th><th>Cups added</th><th>Evaporation (mm)</th><th>Cup anemom. reset</th></tr></thead>
                     <tbody><tr>
-                      <td><input type="number" id="evap_rain" step="0.1"/></td>
+                      <td><input type="number" id="evap_rain" step="0.1" oninput="this.dataset.manuallyEdited='true';this.dataset.autofilled='false';calcEvap446()"/></td>
                       <td><input type="number" id="evap_cups_out" step="1" oninput="calcEvap446()"/></td>
                       <td><input type="number" id="evap_cups_in" step="1" oninput="calcEvap446()"/></td>
                       <td><input type="number" id="evap_std" class="auto-calc" readonly step="0.1"/></td>
@@ -2886,7 +2886,7 @@ const SUPABASE_URL      = 'https://rdnozraqruiyqlkyhcsc.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJkbm96cmFxcnVpeXFsa3loY3NjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQxODE3NTgsImV4cCI6MjA4OTc1Nzc1OH0.KL8x2QNkTGwdwpMdtKabTqvMr7TKu8vzKMP2DMRwzeI';
 //                         ↑ long string from Project Settings → API → anon/public
 
-const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) ?? null;
 
 // ─────────────────────────────────────────────────────────────
 //  EXAMPLE: how to insert an observation into Supabase
@@ -3109,13 +3109,38 @@ function tryLogin() {
   const showErr=m=>{errEl.textContent=m;errEl.style.display=''};
   const hideErr=()=>{errEl.style.display='none'};
   if(!id||!pw){showErr('Please enter your phone / email and password.');return;}
+  // Check admin first (no Supabase needed)
   if((id===ADMIN_CREDENTIALS.phone||id===ADMIN_CREDENTIALS.email)&&pw===ADMIN_CREDENTIALS.password){hideErr();loginAs('admin',null);return;}
-  const obs=state.approvedObservers.find(o=>(o.phone===id||o.email===id)&&o.password===pw);
-  if(obs){hideErr();loginAs('observer',obs);return;}
-  const sh=state.approvedStakeholders.find(s=>(s.phone===id||s.email===id)&&s.password===pw);
-  if(sh){hideErr();loginAs('stakeholder',sh);return;}
-  const pending=state.pendingApprovals.find(a=>a.phone===id||a.email===id);
-  if(pending){showErr('Your account is pending administrator approval.');}else{showErr('Incorrect phone/email or password.');}
+
+  // Helper that attempts to match against current state
+  function attemptMatch() {
+    const obs=state.approvedObservers.find(o=>(o.phone===id||o.email===id)&&o.password===pw);
+    if(obs){hideErr();loginAs('observer',obs);return true;}
+    const sh=state.approvedStakeholders.find(s=>(s.phone===id||s.email===id)&&s.password===pw);
+    if(sh){hideErr();loginAs('stakeholder',sh);return true;}
+    const pending=state.pendingApprovals.find(a=>a.phone===id||a.email===id);
+    if(pending){showErr('Your account is pending administrator approval.');}else{showErr('Incorrect phone/email or password.');}
+    return false;
+  }
+
+  // If we already have users loaded, try immediately
+  if(state.approvedObservers.length>0||state.approvedStakeholders.length>0){
+    attemptMatch();
+    return;
+  }
+
+  // Otherwise fetch from Supabase first, then match
+  const loginBtn = document.querySelector('#loginForm .btn-primary');
+  if(loginBtn){loginBtn.textContent='Signing in…';loginBtn.disabled=true;}
+  loadFromSupabase().then(()=>{
+    if(loginBtn){loginBtn.textContent='Sign In';loginBtn.disabled=false;}
+    if(!attemptMatch()){
+      // If still not found, it's genuinely wrong credentials
+    }
+  }).catch(()=>{
+    if(loginBtn){loginBtn.textContent='Sign In';loginBtn.disabled=false;}
+    attemptMatch(); // fall back to local state
+  });
 }
 
 function logout() {
@@ -4273,11 +4298,37 @@ function validateForm601() {
     [['t_maxr','Maximum temperature reset'],['t_minr','Minimum temperature reset'],
      ['ane_present','Anemometer present reading'],['ane_prev','Anemometer previous reading'],
      ['rain_std','Rainfall — standard 5″ gauge'],
-     ['evap_cups_out','Evaporation — cups taken out'],['evap_cups_in','Evaporation — cups added'],
      ['rad_read','Radiation — instrument reading'],['rad_reset','Radiation — reset reading'],
      ['sun_mins','Sunshine — duration (minutes)']].forEach(([id,lbl])=>{ if(!has(id)) missing.push(lbl); });
+    // Evaporation cups: either "cups taken out" OR "cups added" must be filled — not both required
+    // (cups are either removed or added depending on pan level, never both on the same day)
+    const cupsOut = has('evap_cups_out');
+    const cupsIn  = has('evap_cups_in');
+    if (!cupsOut && !cupsIn) {
+      missing.push('Evaporation — cups taken out OR cups added (fill whichever applies)');
+    }
+    // NOTE: Soil moisture (sm_5 … sm_100) is intentionally excluded from validation.
+    // Soil moisture is not measured during standard 0600/1200 UTC observation sessions
+    // and is not conducted daily — it is optional and may be left blank.
   }
   return missing;
+}
+
+// ── AUTO-FILL evap_rain FROM rain_std ─────────────────────────
+// Called whenever the standard rainfall gauge value changes.
+// Mirrors the value into the evaporation section's rainfall field
+// so the observer doesn't have to enter it twice.
+function syncRainfallToEvap() {
+  const rainEl = document.getElementById('rain_std');
+  const evapRainEl = document.getElementById('evap_rain');
+  if (!rainEl || !evapRainEl) return;
+  // Only auto-fill if the evap rainfall field is empty or was previously auto-filled
+  // (indicated by the data-autofilled attribute), so manual overrides are respected.
+  if (evapRainEl.dataset.manuallyEdited !== 'true') {
+    evapRainEl.value = rainEl.value;
+    evapRainEl.dataset.autofilled = 'true';
+    calcEvap446(); // recalculate evaporation with the new rainfall value
+  }
 }
 
 function checkTempThresholds() {
@@ -4369,6 +4420,9 @@ function clearForm(){
   document.querySelectorAll('#form601 input[type="number"],#form601 input[type="text"]').forEach(i=>{
     if(!i.classList.contains('auto-calc')){i.value='';i.classList.remove('temp-out-range');}
   });
+  // Reset evap_rain auto-fill tracking so next rainfall entry will sync again
+  const evapRainEl = document.getElementById('evap_rain');
+  if (evapRainEl) { evapRainEl.dataset.manuallyEdited = 'false'; evapRainEl.dataset.autofilled = 'false'; }
 }
 
 // ── RETURN MONTH SELECTOR ──────────────────────────────────────
@@ -6760,7 +6814,12 @@ function initReturnWASMSButtons() {
 //  SUPABASE SYNC HELPERS
 // ═══════════════════════════════════════════════════════════════
 
-function _sbReady() { return typeof supabaseClient !== 'undefined'; }
+function _sbReady() {
+  if (supabaseClient == null && window.supabase) {
+    try { supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch(e) {}
+  }
+  return supabaseClient != null;
+}
 
 async function pushObsToSupabase(rec) {
   if (!_sbReady()) return false;
