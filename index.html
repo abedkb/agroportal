@@ -2628,6 +2628,7 @@ body{
                   <th>Rain(mm)</th><th>Tmax(°C)</th><th>Tmin(°C)</th>
                   <th>Dry(°C)</th><th>Wet(°C)</th><th>Dew(°C)</th><th>RH%</th><th>Vap(hPa)</th>
                   <th>Wind run(km)</th><th>Dir</th><th>Sunshine(h)</th><th>Rad(MJ/m²)</th><th>Evap(mm)</th>
+                  <th>ST Surf(°C)</th><th>ST 5cm</th><th>ST 10cm</th><th>ST 20cm</th><th>ST 30cm</th><th>ST 50cm</th><th>ST 100cm</th>
                   <th>Status</th>
                 </tr></thead>
                 <tbody id="dash-obs-rows"></tbody>
@@ -2648,7 +2649,7 @@ body{
           </div>
           <div class="table-wrap" id="admin-pending-obs-table" style="display:none">
             <table class="data-table">
-              <thead><tr><th>Date</th><th>Session</th><th>Station</th><th>Observer</th><th>Rain(mm)</th><th>Tmax(°C)</th><th>Tmin(°C)</th><th>RH%</th><th>Sunshine(h)</th><th>Action</th></tr></thead>
+              <thead><tr><th>Date</th><th>Session</th><th>Station</th><th>Observer</th><th>Rain(mm)</th><th>Tmax(°C)</th><th>Tmin(°C)</th><th>Dry(°C)</th><th>Wet(°C)</th><th>RH%</th><th>Sunshine(h)</th><th>Evap(mm)</th><th>Rad(MJ/m²)</th><th>ST Surf</th><th>ST 5cm</th><th>ST 10cm</th><th>ST 20cm</th><th>ST 30cm</th><th>ST 50cm</th><th>ST 100cm</th><th>Action</th></tr></thead>
               <tbody id="admin-pending-obs-rows"></tbody>
             </table>
           </div>
@@ -4333,8 +4334,16 @@ async function _doSubmit601() {
   state.currentYM=`${y}-${pad(m)}`;
   const ms=document.getElementById('returns-month-select'); if(ms) ms.value=state.currentYM;
   const ref=`OBS-${y}${pad(m)}${pad(day)}-${currentSession}`;
-  state.notifications.unshift({type:'sms',title:'Observation sent for approval',desc:`TMA: Obs ${rec.date} ${currentSession}UTC submitted. Pending admin approval. Rain:${rec.rain??'—'}mm MaxT:${rec.tmax??'—'}°C MinT:${rec.tmin??'—'}°C RH:${rec.rh??'—'}%`,time:'Just now'});
-  state.adminNotifications.unshift({title:`⏳ Pending approval — ${currentSession} UTC · ${rec.date}`,desc:`Rain:${rec.rain??'—'}mm | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | RH:${rec.rh??'—'}% | Dry:${rec.dry??'—'}°C | Wind:${rec.windRun??'—'}km | Sun:${rec.sunshine??'—'}h`,time:`Just now · Awaiting approval`});
+  const _st = rec.soilTemp || {};
+  const _soilStr = `ST:${_st.surf??'—'}/${_st.d5??'—'}/${_st.d10??'—'}/${_st.d20??'—'}/${_st.d30??'—'}/${_st.d50??'—'}/${_st.d100??'—'}°C (S/5/10/20/30/50/100cm)`;
+  const _obsDesc = currentSession==='0600'
+    ? `TMA: Obs ${rec.date} ${currentSession}UTC submitted. Dry:${rec.dry??'—'}°C Wet:${rec.wet??'—'}°C MaxT:${rec.tmax??'—'}°C MinT:${rec.tmin??'—'}°C Rain:${rec.rain??'—'}mm Evap:${rec.evapStd??'—'}mm Sun:${rec.sunshine??'—'}h Rad:${rec.radiation??'—'}MJ/m² RH:${rec.rh??'—'}%`
+    : `TMA: Obs ${rec.date} ${currentSession}UTC submitted. Dry:${rec.dry??'—'}°C Wet:${rec.wet??'—'}°C MaxT:${rec.tmax??'—'}°C MinT:${rec.tmin??'—'}°C RH:${rec.rh??'—'}%`;
+  const _adminDesc = currentSession==='0600'
+    ? `Dry:${rec.dry??'—'}°C | Wet:${rec.wet??'—'}°C | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | Rain:${rec.rain??'—'}mm | Evap:${rec.evapStd??'—'}mm | Sun:${rec.sunshine??'—'}h | Rad:${rec.radiation??'—'}MJ/m² | RH:${rec.rh??'—'}% | ${_soilStr}`
+    : `Dry:${rec.dry??'—'}°C | Wet:${rec.wet??'—'}°C | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | RH:${rec.rh??'—'}% | ${_soilStr}`;
+  state.notifications.unshift({type:'sms',title:'Observation sent for approval',desc:_obsDesc,time:'Just now'});
+  state.adminNotifications.unshift({title:`⏳ Pending approval — ${currentSession} UTC · ${rec.date}`,desc:_adminDesc,time:`Just now · Awaiting approval`});
   saveState();
   const syncMsg = sbOk ? 'Synced to cloud ✓' : 'Saved locally (cloud sync failed — check connection)';
   showToast('Observation submitted',`Sent for admin approval. ${syncMsg}. Ref: `+ref,'info');
@@ -5791,16 +5800,23 @@ function refreshPendingObs() {
   if (badge) { badge.textContent = pending.length; badge.style.display = pending.length ? '' : 'none'; }
   if (pending.length === 0) { empty.style.display=''; table.style.display='none'; return; }
   empty.style.display = 'none'; table.style.display = '';
-  rows.innerHTML = [...pending].reverse().map(r => `<tr>
+  rows.innerHTML = [...pending].reverse().map(r => {
+    const st = r.soilTemp || {};
+    const is0600 = String(r.session) === '0600';
+    return `<tr>
     <td>${r.date}</td><td class="mono">${r.session}</td>
     <td>${r.stationName||state.stationName}</td><td>${r.observerName||state.observerName}</td>
-    <td>${r.rain??'—'}</td><td>${r.tmax??'—'}</td><td>${r.tmin??'—'}</td>
-    <td>${r.rh??'—'}</td><td>${r.sunshine??'—'}</td>
+    <td>${is0600 ? (r.rain??'—') : '—'}</td><td>${r.tmax??'—'}</td><td>${r.tmin??'—'}</td>
+    <td>${r.dry??'—'}</td><td>${r.wet??'—'}</td>
+    <td>${r.rh??'—'}</td><td>${is0600 ? (r.sunshine??'—') : '—'}</td>
+    <td>${is0600 ? (r.evapStd??'—') : '—'}</td><td>${is0600 ? (r.radiation??'—') : '—'}</td>
+    <td>${st.surf??'—'}</td><td>${st.d5??'—'}</td><td>${st.d10??'—'}</td><td>${st.d20??'—'}</td><td>${st.d30??'—'}</td><td>${st.d50??'—'}</td><td>${st.d100??'—'}</td>
     <td style="white-space:nowrap">
       <button class="btn btn-sm" style="background:var(--tma-green);color:#fff;border:none" onclick="approveObsRecord('${r.key}')">✓ Approve</button>
       <button class="btn btn-sm" style="background:var(--tma-red);color:#fff;border:none;margin-left:4px" onclick="rejectObsRecord('${r.key}')">✕ Reject</button>
     </td>
-  </tr>`).join('');
+  </tr>`;
+  }).join('');
 }
 
 function refreshAdminDash(){
@@ -6571,22 +6587,33 @@ function shareForm601AsText(channel) {
     const n = parseFloat(el?.value);
     return (el?.value?.trim() && !isNaN(n)) ? n : (el?.value?.trim() || '—');
   };
+  const soilLine =
+    'SOIL TEMP: Surf:'+v('st_surf')+'°C | 5cm:'+v('st_5')+'°C | 10cm:'+v('st_10')+'°C'
+    +' | 20cm:'+v('st_20')+'°C | 30cm:'+v('st_30')+'°C | 50cm:'+v('st_50')+'°C | 100cm:'+v('st_100')+'°C';
+  let body;
+  if (sess === '0600') {
+    body =
+      'DRY BULB:  '+v('t_dry')+'°C | WET BULB: '+v('t_wet')+'°C\n'
+      +'MAX TEMP: '+v('t_max')+'°C | MIN TEMP: '+v('t_min')+'°C\n'
+      +'RAINFALL (std): '+v('rain_std')+' mm\n'
+      +'EVAPORATION (std): '+v('evap_std')+' mm\n'
+      +'SUNSHINE: '+v('sun_hrs')+' hrs '+v('sun_mins')+' min\n'
+      +'RADIATION: '+v('rad_mjm')+' MJ/m²\n'
+      +'RELATIVE HUMIDITY: '+v('t_rh')+'%\n'
+      +soilLine;
+  } else {
+    body =
+      'DRY BULB:  '+v('t_dry')+'°C | WET BULB: '+v('t_wet')+'°C\n'
+      +'MAX TEMP: '+v('t_max')+'°C | MIN TEMP: '+v('t_min')+'°C\n'
+      +'RELATIVE HUMIDITY: '+v('t_rh')+'%\n'
+      +soilLine;
+  }
   const msg =
     'TMA AgroMet — Meteorological Observation\n'
     +'Station: '+state.stationName+' | Observer: '+state.observerName+'\n'
     +'Date: '+pad(day)+'/'+pad(m)+'/'+y+' | Session: '+sess+' UTC\n'
     +'─────────────────────────────────────\n'
-    +'DRY BULB:  '+v('t_dry')+'°C | WET BULB: '+v('t_wet')+'°C\n'
-    +'DEW POINT: '+v('t_dew')+'°C | RH: '+v('t_rh')+'%\n'
-    +'VAPOUR PRESSURE: '+v('t_vap')+' hPa\n'
-    +'MAX TEMP: '+v('t_max')+'°C | MIN TEMP: '+v('t_min')+'°C\n'
-    +'RAINFALL (std): '+v('rain_std')+' mm\n'
-    +'WIND RUN: '+v('ane_diff')+' km | DIRECTION: '+(document.getElementById('ane_dir')?.value||'—')+'\n'
-    +'WIND SPEED: '+v('ane_speed')+' kts\n'
-    +'SUNSHINE: '+v('sun_hrs')+' hrs '+v('sun_mins')+' min\n'
-    +'RADIATION: '+v('rad_mjm')+' MJ/m²\n'
-    +'EVAPORATION (std): '+v('evap_std')+' mm\n'
-    +'SOIL TEMP (surface): '+v('st_surf')+'°C | 5cm: '+v('st_5')+'°C';
+    +body;
   if (channel === 'wa') openWhatsApp(ADMIN_PHONE, msg);
   else openMsgModal('Admin TMA ('+ADMIN_PHONE+')', ADMIN_PHONE, msg, 'sms');
 }
@@ -6666,21 +6693,26 @@ function filterDashObs(mode) {
 
   empty.style.display = 'none'; wrap.style.display = '';
   if (countEl) countEl.textContent = filtered.length + ' record(s)';
-  rows.innerHTML = filtered.map(r => `<tr>
+  rows.innerHTML = filtered.map(r => {
+    const st = r.soilTemp || {};
+    const is0600 = String(r.session) === '0600';
+    return `<tr>
     <td>${r.date}</td>
     <td class="mono">${r.session}</td>
-    <td>${state.stationName}</td>
-    <td>${state.observerName}</td>
-    <td>${r.rain??'—'}</td><td>${r.tmax??'—'}</td><td>${r.tmin??'—'}</td>
+    <td>${r.stationName||state.stationName}</td>
+    <td>${r.observerName||state.observerName}</td>
+    <td>${is0600 ? (r.rain??'—') : '—'}</td><td>${r.tmax??'—'}</td><td>${r.tmin??'—'}</td>
     <td>${r.dry??'—'}</td><td>${r.wet??'—'}</td><td>${r.dew??'—'}</td>
     <td>${r.rh??'—'}</td><td>${r.vap??'—'}</td>
     <td>${r.windRun??'—'}</td><td>${r.windDir||'—'}</td>
-    <td>${r.sunshine??'—'}</td><td>${r.radiation??'—'}</td><td>${r.evapStd??'—'}</td>
+    <td>${is0600 ? (r.sunshine??'—') : '—'}</td><td>${is0600 ? (r.radiation??'—') : '—'}</td><td>${is0600 ? (r.evapStd??'—') : '—'}</td>
+    <td>${st.surf??'—'}</td><td>${st.d5??'—'}</td><td>${st.d10??'—'}</td><td>${st.d20??'—'}</td><td>${st.d30??'—'}</td><td>${st.d50??'—'}</td><td>${st.d100??'—'}</td>
     <td>${r.status==='approved'
       ?'<span class="badge badge-teal">Approved</span>'
       :`<span class="badge badge-amber">Pending</span> <button class="btn btn-sm" style="background:var(--tma-green);color:#fff;border:none;font-size:10px;padding:2px 6px" onclick="approveObsRecord('${r.key}')">✓ Approve</button> <button class="btn btn-sm" style="background:var(--tma-red);color:#fff;border:none;font-size:10px;padding:2px 6px" onclick="rejectObsRecord('${r.key}')">✕ Reject</button>`}
     </td>
-  </tr>`).join('');
+  </tr>`;
+  }).join('');
 }
 
 // ── Inject WA/SMS buttons into return form accordion headers ────
