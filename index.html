@@ -2956,6 +2956,13 @@ let supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_K
 //  Official form styles matching physical TMA documents
 // ═══════════════════════════════════════════════════════════════
 
+// ── Beem Africa SMS — hardcoded credentials (shared across all devices) ──
+// These are set once here so every observer's submission auto-sends without
+// needing to configure credentials per device.
+const BEEM_API_KEY    = '';   // ← paste your Beem API key here
+const BEEM_SECRET_KEY = '';   // ← paste your Beem Secret key here
+const BEEM_SENDER_ID  = '';   // ← paste your registered Sender ID (e.g. TMAAGRIMET)
+
 const ADMIN_PHONE = '0755863325';
 const ADMIN_CREDENTIALS = { phone: '0755863325', email: 'admin@tma.go.tz', password: 'admin2024' };
 const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
@@ -4446,28 +4453,22 @@ async function _doSubmit601() {
   const syncMsg = sbOk ? 'Synced to cloud ✓' : 'Saved locally (cloud sync failed — check connection)';
 
   // ── Auto-SMS to Admin via Beem Africa ──────────────────────────
-  // Fires automatically on every successful submission if Beem credentials
-  // are configured (Admin → Communications → Beem Africa). No second click needed.
-  const _beemCfg = loadBeemConfig();
-  if (_beemCfg.apiKey && _beemCfg.secretKey && _beemCfg.senderId) {
-    const _smsBody = `TMA AGRIMET\nStation: ${rec.stationName} | Ref: ${ref}\nObs: ${rec.date} ${currentSession}UTC\n`
-      + (currentSession === '0600'
-        ? `Dry:${rec.dry??'\u2014'}\u00b0C Wet:${rec.wet??'\u2014'}\u00b0C Tmax:${rec.tmax??'\u2014'}\u00b0C Tmin:${rec.tmin??'\u2014'}\u00b0C Rain:${rec.rain??'\u2014'}mm Evap:${rec.evapStd??'\u2014'}mm Sun:${rec.sunshine??'\u2014'}h Rad:${rec.radiation??'\u2014'}MJ/m\u00b2 RH:${rec.rh??'\u2014'}%`
-        : `Dry:${rec.dry??'\u2014'}\u00b0C Wet:${rec.wet??'\u2014'}\u00b0C Tmax:${rec.tmax??'\u2014'}\u00b0C Tmin:${rec.tmin??'\u2014'}\u00b0C RH:${rec.rh??'\u2014'}%`)
-      + `\nBy: ${rec.observerName}`;
-    // Show interim toast immediately so the observer gets instant feedback
-    showToast('Observation submitted', `${syncMsg} · Sending SMS to admin\u2026 · Ref: ${ref}`, 'info');
-    sendBeemSms([ADMIN_PHONE], _smsBody).then(smsOk => {
-      const label = smsOk ? '\u2713 Submitted & SMS sent' : '\u2713 Submitted \u2014 SMS failed';
-      const detail = smsOk
-        ? `${syncMsg} · SMS to admin sent \u2713 · Ref: ${ref}`
-        : `${syncMsg} · SMS delivery failed \u2014 check Beem credentials · Ref: ${ref}`;
-      showToast(label, detail, smsOk ? 'success' : 'warning');
-    });
-  } else {
-    // Beem not configured — normal submit toast + one-time hint
-    showToast('Observation submitted', `${syncMsg} · Ref: ${ref}`, 'info');
-  }
+  // Always fires on every successful submission. sendBeemSms() resolves
+  // credentials from hardcoded constants (BEEM_*) so no per-device config needed.
+  const _smsBody = `TMA AGRIMET\nStation: ${rec.stationName} | Ref: ${ref}\nObs: ${rec.date} ${currentSession}UTC\n`
+    + (currentSession === '0600'
+      ? `Dry:${rec.dry??'\u2014'}\u00b0C Wet:${rec.wet??'\u2014'}\u00b0C Tmax:${rec.tmax??'\u2014'}\u00b0C Tmin:${rec.tmin??'\u2014'}\u00b0C Rain:${rec.rain??'\u2014'}mm Evap:${rec.evapStd??'\u2014'}mm Sun:${rec.sunshine??'\u2014'}h Rad:${rec.radiation??'\u2014'}MJ/m\u00b2 RH:${rec.rh??'\u2014'}%`
+      : `Dry:${rec.dry??'\u2014'}\u00b0C Wet:${rec.wet??'\u2014'}\u00b0C Tmax:${rec.tmax??'\u2014'}\u00b0C Tmin:${rec.tmin??'\u2014'}\u00b0C RH:${rec.rh??'\u2014'}%`)
+    + `\nBy: ${rec.observerName}`;
+  // Interim toast — instant feedback before the async Beem call resolves
+  showToast('Observation submitted', `${syncMsg} · Sending SMS to admin\u2026 · Ref: ${ref}`, 'info');
+  sendBeemSms([ADMIN_PHONE], _smsBody).then(smsOk => {
+    const label  = smsOk ? '\u2713 Submitted & SMS sent' : '\u2713 Submitted \u2014 SMS not sent';
+    const detail = smsOk
+      ? `${syncMsg} · SMS delivered to admin \u2713 · Ref: ${ref}`
+      : `${syncMsg} · SMS failed \u2014 fill BEEM_API_KEY / BEEM_SECRET_KEY / BEEM_SENDER_ID in the portal · Ref: ${ref}`;
+    showToast(label, detail, smsOk ? 'success' : 'warning');
+  });
 
   setTimeout(()=>{clearForm();showPage('myRecords',document.querySelector('.nav-item[onclick*="myRecords"]'));},1600);
 }
@@ -6510,14 +6511,25 @@ function openWhatsApp(phone, message) {
 }
 
 // ── Beem Africa SMS — routed via Supabase Edge Function (avoids CORS) ──
+// Credential priority: hardcoded constants → localStorage (admin UI fallback)
 async function sendBeemSms(phones, message) {
-  const cfg = loadBeemConfig();
-  if (!cfg.apiKey||!cfg.secretKey||!cfg.senderId) {
-    showToast('SMS not configured','Configure Beem Africa credentials in Admin → Communications','warning');
+  // Resolve credentials: hardcoded constants take priority over localStorage
+  const _lsCfg   = loadBeemConfig();
+  const apiKey    = (BEEM_API_KEY    || '').trim() || (_lsCfg.apiKey    || '').trim();
+  const secretKey = (BEEM_SECRET_KEY || '').trim() || (_lsCfg.secretKey || '').trim();
+  const senderId  = (BEEM_SENDER_ID  || '').trim() || (_lsCfg.senderId  || '').trim();
+
+  if (!apiKey || !secretKey || !senderId) {
+    showToast('SMS not configured',
+      'Add Beem Africa credentials: set BEEM_API_KEY, BEEM_SECRET_KEY, BEEM_SENDER_ID in the portal code, or fill them in Admin → Communications.',
+      'warning');
     return false;
   }
-  const valid = phones.map(formatPhoneIntl).filter(p=>p && p.length>=11);
-  if (!valid.length) { showToast('No valid numbers','No valid phone numbers for selected recipients','warning'); return false; }
+  const valid = phones.map(formatPhoneIntl).filter(p => p && p.length >= 11);
+  if (!valid.length) {
+    showToast('No valid numbers', 'No valid phone numbers for selected recipients', 'warning');
+    return false;
+  }
   try {
     const res = await fetch(
       SUPABASE_URL + '/functions/v1/beem-sms',
@@ -6528,20 +6540,24 @@ async function sendBeemSms(phones, message) {
           'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
         },
         body: JSON.stringify({
-          api_key:    cfg.apiKey,
-          secret_key: cfg.secretKey,
-          sender_id:  cfg.senderId,
+          api_key:    apiKey,
+          secret_key: secretKey,
+          sender_id:  senderId,
           message,
           recipients: valid.map(p => ({ phone: p })),
         }),
       }
     );
-    const data = await res.json().catch(()=>({}));
+    const data = await res.json().catch(() => ({}));
     if (res.ok && data.success) {
-      showToast('SMS Sent ✓', 'Message sent to ' + (data.sent||valid.length) + ' recipient(s) via Beem Africa — Sender: ' + cfg.senderId, 'success');
+      showToast('SMS Sent ✓',
+        'Message sent to ' + (data.sent || valid.length) + ' recipient(s) via Beem Africa — Sender: ' + senderId,
+        'success');
       return true;
     }
-    showToast('SMS Failed', data.message || 'Beem Africa returned an error — check your API key and secret', 'warning');
+    showToast('SMS Failed',
+      data.message || 'Beem Africa returned an error — check your API key and secret',
+      'warning');
     return false;
   } catch(e) {
     showToast('SMS Error', 'Could not reach SMS gateway — check your internet connection', 'warning');
