@@ -41,7 +41,7 @@
   --border-light:rgba(0,0,0,0.1);--border-medium:rgba(0,0,0,0.18);
   --radius:8px;--radius-lg:12px;
 }
-html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;background:var(--bg-tertiary);color:var(--text-primary)}
+html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;background:var(--bg-tertiary);color:var(--text-primary);overflow-x:hidden}
 
 /* AUTH */
 .auth-screen{
@@ -116,7 +116,7 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;back
 .contact-admin-label{font-size:12px;font-weight:500;color:var(--tma-blue-dk);flex:1;min-width:120px}
 
 /* LAYOUT */
-.layout{display:flex;min-height:100vh;flex-direction:column}
+.layout{display:flex;min-height:100vh;flex-direction:column;overflow-x:hidden}
 .sidebar{width:232px;min-width:232px;background:var(--bg-primary);border-right:0.5px solid var(--border-light);display:flex;flex-direction:column;padding:1rem 0;position:sticky;top:0;height:100vh;overflow-y:auto}
 .sidebar-logo{
   padding:.75rem 1rem 1rem;border-bottom:0.5px solid var(--border-light);margin-bottom:.5rem;
@@ -141,7 +141,7 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;back
 .logout-btn{font-size:11px;color:var(--text-secondary);cursor:pointer;padding:4px 8px;border-radius:4px;border:0.5px solid var(--border-light);background:var(--bg-secondary);font-family:'IBM Plex Sans',sans-serif;white-space:nowrap}
 .logout-btn:hover{color:var(--tma-red);background:var(--tma-red-l);border-color:var(--tma-red)}
 
-.main{flex:1;overflow:auto;display:flex;flex-direction:column;min-width:0}
+.main{flex:1;overflow-x:hidden;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
 .topbar{padding:.75rem 1.5rem;border-bottom:0.5px solid var(--border-light);display:flex;align-items:center;justify-content:space-between;background:var(--bg-primary);position:sticky;top:0;z-index:10}
 .topbar-title{font-size:15px;font-weight:500}
 .topbar-meta{font-size:12px;color:var(--text-tertiary);margin-top:1px}
@@ -789,11 +789,13 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
   position: fixed; inset: 0; background: rgba(0,0,0,0.55);
   display: flex; align-items: center; justify-content: center;
   z-index: 9999; animation: fadeIn .15s ease;
+  padding: 1rem;
 }
 .share-modal {
   background: #fff; border-radius: 14px; width: 100%; max-width: 480px;
   box-shadow: 0 24px 64px rgba(0,0,0,0.3);
   overflow: hidden; animation: slideUp .2s ease;
+  max-height: 90vh; overflow-y: auto;
 }
 .share-modal-header {
   background: linear-gradient(135deg,#0C447C,#185FA5);
@@ -820,6 +822,7 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
 .share-modal-footer {
   padding: .75rem 1.25rem; border-top: 1px solid #eee;
   display: flex; gap: .5rem; justify-content: flex-end; background: #fafafa;
+  flex-wrap: wrap;
 }
 
 /* Download progress toast */
@@ -939,15 +942,15 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
 
   /* Observation form: allow horizontal scroll */
   .obs-body{padding:.875rem .75rem}
-  .obs-table-wrap{-webkit-overflow-scrolling:touch}
+  .obs-table-wrap{-webkit-overflow-scrolling:touch;overflow-x:auto}
   .obs-table input[type="number"],.obs-table input[type="text"]{min-width:52px}
 
-  /* Data tables */
-  .table-wrap{-webkit-overflow-scrolling:touch}
+  /* Data tables — always scroll horizontally, never overflow page */
+  .table-wrap{-webkit-overflow-scrolling:touch;overflow-x:auto;max-width:100%}
 
   /* Official forms */
   .official-form-logo-row{flex-wrap:wrap}
-  .official-table-wrap{-webkit-overflow-scrolling:touch}
+  .official-table-wrap{-webkit-overflow-scrolling:touch;overflow-x:auto}
 
   /* Form actions — stack buttons */
   .form-actions{flex-direction:column;align-items:stretch}
@@ -976,6 +979,20 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
   /* Topnav: hide user info text to save horizontal space */
   .topnav-userinfo{display:none}
   .topnav-brand-sub{display:none}
+
+  /* Prevent topnav from overflowing */
+  .topnav{flex-wrap:wrap;gap:.5rem}
+  .topnav-right{flex-shrink:1;min-width:0;overflow:hidden}
+
+  /* Share modal: full width on mobile */
+  .share-modal{border-radius:10px}
+  .share-modal-footer{flex-direction:column}
+  .share-modal-footer .btn{width:100%;text-align:center}
+
+  /* Msg modal */
+  .msg-modal{border-radius:10px;padding:1rem}
+  .msg-modal-footer{flex-direction:column}
+  .msg-modal-footer .btn{width:100%;text-align:center}
 }
 
 @media(max-width:480px){
@@ -986,6 +1003,19 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
   .stats-grid{grid-template-columns:1fr 1fr}
   .topnav{padding:.5rem .75rem}
   .topnav-clock{display:none}
+
+  /* Keep tabnav horizontally scrollable — no wrapping */
+  .tabnav{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tabnav-inner{min-width:max-content}
+
+  /* Prevent any fixed-width element from breaking page layout */
+  .card,.obs-form,.obs-section{max-width:100%;overflow:hidden}
+
+  /* Auth card full width */
+  .auth-card{padding:1.25rem 1rem;border-radius:12px}
+
+  /* Collapse contact admin bar */
+  .contact-admin-bar{flex-direction:column;align-items:flex-start}
 }
 
 /* ── Beautiful background — TMA brand colours ── */
@@ -3011,9 +3041,11 @@ const daysInMonth = (y,m) => new Date(y,m,0).getDate();
 const currentYM = () => { const {y,m}=getNow(); return `${y}-${pad(m)}`; };
 const inp = id => { const v=parseFloat(document.getElementById(id)?.value); return isNaN(v)?null:v; };
 const inpStr = id => document.getElementById(id)?.value?.trim() || null;
-const fmt = (v,dec=1) => v===null||v===undefined?'—':parseFloat(v).toFixed(dec);
+const MISSING_CODE = 8888;
+const isMissing = v => v === MISSING_CODE;
+const fmt = (v,dec=1) => (v===null||v===undefined||isMissing(v))?'—':parseFloat(v).toFixed(dec);
 const fmtCell = (v,dec=1,cls='') => {
-  if (v===null||v===undefined) return `<td class="data-empty">—</td>`;
+  if (v===null||v===undefined||isMissing(v)) return `<td class="data-empty">—</td>`;
   return `<td class="data-filled ${cls}">${fmt(v,dec)}</td>`;
 };
 const fmtCellStr = v => (!v) ? `<td class="data-empty">—</td>` : `<td class="data-filled">${v}</td>`;
@@ -3368,7 +3400,7 @@ function buildSpreadsheetML626(ym){
   const monthLabel=getMonthLabel(ym);
   if(recs.length===0) return null;
   const dg=(val,n,dec)=>{
-    if(val===null||val===undefined) return Array(n).fill(null);
+    if(val===null||val===undefined||val===MISSING_CODE) return Array(n).fill(null);
     const v=Math.round(Math.abs(Number(val))*Math.pow(10,dec));
     return v.toString().padStart(n,'0').slice(-n).split('');
   };
@@ -3410,15 +3442,15 @@ function buildSpreadsheetML626(ym){
     const am=getRec(recs,d,'0600'), pm=getRec(recs,d,'1200');
     const dayStr=String(d).padStart(2,'0').split('');
     if(am){
-      if(am.dry!=null){sumDry+=am.dry;cDry++;}
-      if(am.wet!=null){sumWet+=am.wet;cWet++;}
-      if(am.rain!=null)sumRain+=am.rain;
-      if(am.sunshine!=null)sumSun+=am.sunshine;
-      if(am.windRun!=null)sumWind+=am.windRun;
-      if(am.radiation!=null)sumRad+=am.radiation;
-      if(am.evapStd!=null)sumEvap+=am.evapStd;
-      if(am.tmax!=null&&(maxTmax===null||am.tmax>maxTmax))maxTmax=am.tmax;
-      if(am.tmin!=null&&(minTmin===null||am.tmin<minTmin))minTmin=am.tmin;
+      if(am.dry!=null&&am.dry!==MISSING_CODE){sumDry+=am.dry;cDry++;}
+      if(am.wet!=null&&am.wet!==MISSING_CODE){sumWet+=am.wet;cWet++;}
+      if(am.rain!=null&&am.rain!==MISSING_CODE)sumRain+=am.rain;
+      if(am.sunshine!=null&&am.sunshine!==MISSING_CODE)sumSun+=am.sunshine;
+      if(am.windRun!=null&&am.windRun!==MISSING_CODE)sumWind+=am.windRun;
+      if(am.radiation!=null&&am.radiation!==MISSING_CODE)sumRad+=am.radiation;
+      if(am.evapStd!=null&&am.evapStd!==MISSING_CODE)sumEvap+=am.evapStd;
+      if(am.tmax!=null&&am.tmax!==MISSING_CODE&&(maxTmax===null||am.tmax>maxTmax))maxTmax=am.tmax;
+      if(am.tmin!=null&&am.tmin!==MISSING_CODE&&(minTmin===null||am.tmin<minTmin))minTmin=am.tmin;
     }
     let r=`<Row ss:Height="16">`;
     stnStr.forEach(c=>{r+=SC(c);});
@@ -3432,14 +3464,14 @@ function buildSpreadsheetML626(ym){
     dg(am?.tmax,3,1).forEach(c=>{r+=DC(c);});
     dg(am?.tmin,3,1).forEach(c=>{r+=DC(c);});
     dg(am?.soilTemp?.grassMin,3,1).forEach(c=>{r+=DC(c);});
-    r+=(am&&am.windRun!=null)?SC('1'):DC(null);
+    r+=(am&&am.windRun!=null&&am.windRun!==MISSING_CODE)?SC('1'):DC(null);
     dg(am?.windRun,4,1).forEach(c=>{r+=DC(c);});
     dg(am?.rain,4,1).forEach(c=>{r+=DC(c);});
     r+=DC(null)+DC(null)+DC(null);
     dg(am?.sunshine,3,1).forEach(c=>{r+=DC(c);});
-    r+=(am&&am.radiation!=null)?SC('A'):DC(null);
+    r+=(am&&am.radiation!=null&&am.radiation!==MISSING_CODE)?SC('A'):DC(null);
     dg(am?.radiation,4,2).forEach(c=>{r+=DC(c);});
-    r+=(am&&am.evapStd!=null)?SC('A'):DC(null);
+    r+=(am&&am.evapStd!=null&&am.evapStd!==MISSING_CODE)?SC('A'):DC(null);
     dg(am?.evapStd,3,1).forEach(c=>{r+=DC(c);});
     r+=SHD(4);
     r+= pm ? SC('1')+SC('2') : DC(null)+DC(null);
@@ -3592,8 +3624,8 @@ function buildStandaloneHTML(retId, ym) {
       .download-header { border-radius: 0; }
       .no-print { display: none !important; }
     }
-  </style>
-</head>
+  ${'</'}style>
+${'</'}head>
 <body>
   <div class="download-wrapper">
     <div class="download-header">
@@ -3617,8 +3649,8 @@ function buildStandaloneHTML(retId, ym) {
   <div class="download-footer">
     Generated by TMA AgroMet Portal · Tanzania Meteorological Authority · ${new Date().getFullYear()}
   </div>
-</body>
-</html>`;
+${'</'}body>
+${'</'}html>`;
 }
 
 /* ── DOWNLOAD — triggers browser file save ── */
@@ -3805,8 +3837,8 @@ function selectSession(s) {
 }
 
 // ── FORM 601 AUTO-CALCS ────────────────────────────────────────
-function calcWindRun(){const p=inp('ane_present'),v=inp('ane_prev'),el=document.getElementById('ane_diff');if(el)el.value=(p!==null&&v!==null)?(p-v).toFixed(2):'';}
-function calcSunshineHours(){const m=inp('sun_mins'),el=document.getElementById('sun_hrs');if(el)el.value=(m!==null)?(m/60).toFixed(1):'';};
+function calcWindRun(){const p=inp('ane_present'),v=inp('ane_prev'),el=document.getElementById('ane_diff');if(el)el.value=(p!==null&&!isMissing(p)&&v!==null&&!isMissing(v))?(p-v).toFixed(2):'';}
+function calcSunshineHours(){const m=inp('sun_mins'),el=document.getElementById('sun_hrs');if(el)el.value=(m!==null&&!isMissing(m))?(m/60).toFixed(1):'';};
 /* ════════════════════════════════════════════════════════════════
    PSYCHROMETRIC CALCULATOR
    Based on WMO No.8 Guide to Meteorological Instruments & Methods
@@ -3823,7 +3855,7 @@ function saturationVP(T) {
 function calcPsychrometric() {
   const Td = inp('t_dry');   // dry-bulb temperature °C
   const Tw = inp('t_wet');   // wet-bulb temperature °C
-  if (Td === null || Tw === null) {
+  if (Td === null || Tw === null || isMissing(Td) || isMissing(Tw)) {
     // Clear all derived fields
     ['t_depn','t_dew','t_vap','t_rh'].forEach(id=>{
       const el=document.getElementById(id); if(el) el.value='';
@@ -3887,8 +3919,8 @@ function calcPsychrometric() {
 function calcEvap446(){
   const rain=inp('evap_rain'),out=inp('evap_cups_out'),inc=inp('evap_cups_in'),el=document.getElementById('evap_std');
   if(!el) return;
-  if(rain!==null&&out!==null) el.value=(rain-out*0.5).toFixed(1);
-  else if(rain!==null&&inc!==null) el.value=(rain+inc*0.5).toFixed(1);
+  if(rain!==null&&!isMissing(rain)&&out!==null&&!isMissing(out)) el.value=(rain-out*0.5).toFixed(1);
+  else if(rain!==null&&!isMissing(rain)&&inc!==null&&!isMissing(inc)) el.value=(rain+inc*0.5).toFixed(1);
   else el.value='';
 }
 // Form 616 Radiation: Calibration R = Ad + B (A=24.6, B=32.4), MJm = R*4.18*102*10 simplified
@@ -3896,7 +3928,7 @@ function calcRadiation(){
   const read=inp('rad_read'),reset=inp('rad_reset');
   const distEl=document.getElementById('rad_distill'), mjmEl=document.getElementById('rad_mjm');
   if(!distEl||!mjmEl) return;
-  if(read!==null&&reset!==null){
+  if(read!==null&&!isMissing(read)&&reset!==null&&!isMissing(reset)){
     const d=read-reset; distEl.value=d.toFixed(1);
     const R=24.6*d+32.4; mjmEl.value=(R*4.18*0.001).toFixed(2); // MJ/m²
   }else{distEl.value='';mjmEl.value='';}
@@ -4404,14 +4436,39 @@ async function _doSubmit601() {
   const _obsDesc = currentSession==='0600'
     ? `TMA: Obs ${rec.date} ${currentSession}UTC submitted. Dry:${rec.dry??'—'}°C Wet:${rec.wet??'—'}°C MaxT:${rec.tmax??'—'}°C MinT:${rec.tmin??'—'}°C Rain:${rec.rain??'—'}mm Evap:${rec.evapStd??'—'}mm Sun:${rec.sunshine??'—'}h Rad:${rec.radiation??'—'}MJ/m² RH:${rec.rh??'—'}%`
     : `TMA: Obs ${rec.date} ${currentSession}UTC submitted. Dry:${rec.dry??'—'}°C Wet:${rec.wet??'—'}°C MaxT:${rec.tmax??'—'}°C MinT:${rec.tmin??'—'}°C RH:${rec.rh??'—'}%`;
+  const _senderTag = `${rec.observerName} · ${rec.stationName}`;
   const _adminDesc = currentSession==='0600'
-    ? `Dry:${rec.dry??'—'}°C | Wet:${rec.wet??'—'}°C | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | Rain:${rec.rain??'—'}mm | Evap:${rec.evapStd??'—'}mm | Sun:${rec.sunshine??'—'}h | Rad:${rec.radiation??'—'}MJ/m² | RH:${rec.rh??'—'}% | ${_soilStr}`
-    : `Dry:${rec.dry??'—'}°C | Wet:${rec.wet??'—'}°C | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | RH:${rec.rh??'—'}% | ${_soilStr}`;
+    ? `From: ${_senderTag} | Dry:${rec.dry??'—'}°C | Wet:${rec.wet??'—'}°C | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | Rain:${rec.rain??'—'}mm | Evap:${rec.evapStd??'—'}mm | Sun:${rec.sunshine??'—'}h | Rad:${rec.radiation??'—'}MJ/m² | RH:${rec.rh??'—'}% | ${_soilStr}`
+    : `From: ${_senderTag} | Dry:${rec.dry??'—'}°C | Wet:${rec.wet??'—'}°C | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | RH:${rec.rh??'—'}% | ${_soilStr}`;
   state.notifications.unshift({type:'sms',title:'Observation sent for approval',desc:_obsDesc,time:'Just now'});
-  state.adminNotifications.unshift({title:`⏳ Pending approval — ${currentSession} UTC · ${rec.date}`,desc:_adminDesc,time:`Just now · Awaiting approval`});
+  state.adminNotifications.unshift({title:`⏳ Pending approval — ${currentSession} UTC · ${rec.date} · ${_senderTag}`,desc:_adminDesc,time:`Just now · Awaiting approval`});
   saveState();
   const syncMsg = sbOk ? 'Synced to cloud ✓' : 'Saved locally (cloud sync failed — check connection)';
-  showToast('Observation submitted',`Sent for admin approval. ${syncMsg}. Ref: `+ref,'info');
+
+  // ── Auto-SMS to Admin via Beem Africa ──────────────────────────
+  // Fires automatically on every successful submission if Beem credentials
+  // are configured (Admin → Communications → Beem Africa). No second click needed.
+  const _beemCfg = loadBeemConfig();
+  if (_beemCfg.apiKey && _beemCfg.secretKey && _beemCfg.senderId) {
+    const _smsBody = `TMA AGRIMET\nStation: ${rec.stationName} | Ref: ${ref}\nObs: ${rec.date} ${currentSession}UTC\n`
+      + (currentSession === '0600'
+        ? `Dry:${rec.dry??'\u2014'}\u00b0C Wet:${rec.wet??'\u2014'}\u00b0C Tmax:${rec.tmax??'\u2014'}\u00b0C Tmin:${rec.tmin??'\u2014'}\u00b0C Rain:${rec.rain??'\u2014'}mm Evap:${rec.evapStd??'\u2014'}mm Sun:${rec.sunshine??'\u2014'}h Rad:${rec.radiation??'\u2014'}MJ/m\u00b2 RH:${rec.rh??'\u2014'}%`
+        : `Dry:${rec.dry??'\u2014'}\u00b0C Wet:${rec.wet??'\u2014'}\u00b0C Tmax:${rec.tmax??'\u2014'}\u00b0C Tmin:${rec.tmin??'\u2014'}\u00b0C RH:${rec.rh??'\u2014'}%`)
+      + `\nBy: ${rec.observerName}`;
+    // Show interim toast immediately so the observer gets instant feedback
+    showToast('Observation submitted', `${syncMsg} · Sending SMS to admin\u2026 · Ref: ${ref}`, 'info');
+    sendBeemSms([ADMIN_PHONE], _smsBody).then(smsOk => {
+      const label = smsOk ? '\u2713 Submitted & SMS sent' : '\u2713 Submitted \u2014 SMS failed';
+      const detail = smsOk
+        ? `${syncMsg} · SMS to admin sent \u2713 · Ref: ${ref}`
+        : `${syncMsg} · SMS delivery failed \u2014 check Beem credentials · Ref: ${ref}`;
+      showToast(label, detail, smsOk ? 'success' : 'warning');
+    });
+  } else {
+    // Beem not configured — normal submit toast + one-time hint
+    showToast('Observation submitted', `${syncMsg} · Ref: ${ref}`, 'info');
+  }
+
   setTimeout(()=>{clearForm();showPage('myRecords',document.querySelector('.nav-item[onclick*="myRecords"]'));},1600);
 }
 
@@ -4565,7 +4622,7 @@ function officialFormHtml(formNo, title, subtitle, metaItems, tableHtml, footerL
 // val: raw number value, digits: total boxes, dec: decimal places
 // e.g. digitsOf(26.2, 3) => ['2','6','2']  digitsOf(19.05, 4) => ['1','9','0','5']
 function digitsOf(val, numBoxes, decPlaces) {
-  if (val === null || val === undefined) return Array(numBoxes).fill(null);
+  if (val === null || val === undefined || val === MISSING_CODE) return Array(numBoxes).fill(null);
   // Format to remove decimal point: 26.2 with dec=1 -> "262", 19.05 with dec=2 -> "1905"
   const str = Math.round(val * Math.pow(10, decPlaces)).toString().padStart(numBoxes, '0');
   if (str.length > numBoxes) {
@@ -4631,9 +4688,9 @@ function buildForm626(ym) {
     const maxReset = am ? digitsOf(am.tmaxReset,       3, 1) : null;
     const minReset = am ? digitsOf(am.tminReset,       3, 1) : null;
 
-    const amHt    = (am && am.windRun   != null) ? '1' : null;
-    const radType = (am && am.radiation != null) ? 'A' : null;
-    const evpType = (am && am.evapStd   != null) ? 'A' : null;
+    const amHt    = (am && am.windRun   != null && am.windRun   !== MISSING_CODE) ? '1' : null;
+    const radType = (am && am.radiation != null && am.radiation !== MISSING_CODE) ? 'A' : null;
+    const evpType = (am && am.evapStd   != null && am.evapStd   !== MISSING_CODE) ? 'A' : null;
 
     rows += `<tr>
       ${stnStr.map(c=>`<td class="f626-dig f626-stn">${c}</td>`).join('')}
@@ -4804,15 +4861,15 @@ function buildForm446(ym) {
     const cupsOut=r?.evapCupsOut??null, cupsIn=r?.evapCupsIn??null;
     const evap=r?.evapStd??null;
     const anem=r?.evapAnemReset??null;
-    if(rain!==null) totRain+=rain;
-    if(evap!==null) totEvap+=evap;
+    if(rain!==null&&rain!==MISSING_CODE) totRain+=rain;
+    if(evap!==null&&evap!==MISSING_CODE) totEvap+=evap;
     rows+=`<tr>
       <td class="day-lbl">${d}</td>
-      ${rain!==null?fmtCell(rain,1):slashCell()}
-      ${cupsOut!==null?`<td class="data-filled">${cupsOut}</td>`:slashCell()}
-      ${cupsIn!==null?`<td class="data-filled">${cupsIn}</td>`:slashCell()}
-      ${evap!==null?fmtCell(evap,1):slashCell()}
-      ${anem!==null?fmtCell(anem,1):slashCell()}
+      ${(rain!==null&&rain!==MISSING_CODE)?fmtCell(rain,1):slashCell()}
+      ${(cupsOut!==null&&cupsOut!==MISSING_CODE)?`<td class="data-filled">${cupsOut}</td>`:slashCell()}
+      ${(cupsIn!==null&&cupsIn!==MISSING_CODE)?`<td class="data-filled">${cupsIn}</td>`:slashCell()}
+      ${(evap!==null&&evap!==MISSING_CODE)?fmtCell(evap,1):slashCell()}
+      ${(anem!==null&&anem!==MISSING_CODE)?fmtCell(anem,1):slashCell()}
       <td>—</td>
     </tr>`;
   }
@@ -4835,7 +4892,7 @@ function buildForm446(ym) {
   const sumHtml=makeSummaryTable([
     ['Total Rainfall', `${totRain.toFixed(1)} mm`],
     ['Total Evaporation', `${totEvap.toFixed(1)} mm`],
-    ['Mean Daily Evap.', `${recs.filter(r=>r.session==='0600'&&r.evapStd!==null).length?(totEvap/recs.filter(r=>r.session==='0600'&&r.evapStd!==null).length).toFixed(1):'—'} mm`],
+    ['Mean Daily Evap.', `${recs.filter(r=>r.session==='0600'&&r.evapStd!==null&&r.evapStd!==MISSING_CODE).length?(totEvap/recs.filter(r=>r.session==='0600'&&r.evapStd!==null&&r.evapStd!==MISSING_CODE).length).toFixed(1):'—'} mm`],
   ]);
   el.innerHTML=officialFormHtml('Form No. 446','Evaporation from Standard Evaporation Pan','',
     [['Station name',state.stationName],['WMO Index No.',state.wmoIndex],['Pan No.','1'],['Month/Year',getMonthLabel(ym)]],
@@ -4854,17 +4911,17 @@ function buildForm616(ym) {
     const read=am?.radRead??null, reset=am?.radReset??null;
     const distill=am?.radDistill??null, mjm=am?.radiation??null;
     const sun=am?.sunshine??null, wind=am?.windRun??null;
-    if(distill!==null) totDistill+=distill;
-    if(mjm!==null){totMjm+=mjm;cnt++;}
-    if(sun!==null) totSun+=sun;
+    if(distill!==null&&distill!==MISSING_CODE) totDistill+=distill;
+    if(mjm!==null&&mjm!==MISSING_CODE){totMjm+=mjm;cnt++;}
+    if(sun!==null&&sun!==MISSING_CODE) totSun+=sun;
     rows+=`<tr>
       <td class="day-lbl">${d}</td>
-      ${read!==null?fmtCell(read,1):slashCell()}
-      ${reset!==null?fmtCell(reset,1):slashCell()}
-      ${distill!==null?fmtCell(distill,1):slashCell()}
-      ${mjm!==null?fmtCell(mjm,2):slashCell()}
-      ${sun!==null?fmtCell(sun,1):slashCell()}
-      ${wind!==null?fmtCell(wind,1):slashCell()}
+      ${(read!==null&&read!==MISSING_CODE)?fmtCell(read,1):slashCell()}
+      ${(reset!==null&&reset!==MISSING_CODE)?fmtCell(reset,1):slashCell()}
+      ${(distill!==null&&distill!==MISSING_CODE)?fmtCell(distill,1):slashCell()}
+      ${(mjm!==null&&mjm!==MISSING_CODE)?fmtCell(mjm,2):slashCell()}
+      ${(sun!==null&&sun!==MISSING_CODE)?fmtCell(sun,1):slashCell()}
+      ${(wind!==null&&wind!==MISSING_CODE)?fmtCell(wind,1):slashCell()}
     </tr>`;
   }
   const tblHtml=`<table class="official-tbl">
@@ -5840,7 +5897,7 @@ function approveObsRecord(key) {
   rec.status = 'approved';
   saveState();
   updateObsStatusInSupabase(key, 'approved');
-  state.adminNotifications.unshift({title:`✓ Observation approved — ${rec.session} UTC · ${rec.date}`,desc:`Rain:${rec.rain??'—'}mm | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | RH:${rec.rh??'—'}%`,time:'Just now'});
+  state.adminNotifications.unshift({title:`✓ Observation approved — ${rec.session} UTC · ${rec.date}`,desc:`Observer: ${rec.observerName||'—'} · ${rec.stationName||'—'} | Rain:${rec.rain??'—'}mm | Tmax:${rec.tmax??'—'}°C | Tmin:${rec.tmin??'—'}°C | RH:${rec.rh??'—'}%`,time:'Just now'});
   showToast('Observation approved', `${rec.session} UTC observation from ${rec.date} is now approved.`, 'success');
   refreshPendingObs();
   filterDashObs('today');
