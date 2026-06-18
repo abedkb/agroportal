@@ -2959,9 +2959,9 @@ let supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_K
 // ── Beem Africa SMS — hardcoded credentials (shared across all devices) ──
 // These are set once here so every observer's submission auto-sends without
 // needing to configure credentials per device.
-const BEEM_API_KEY    = '';   // ← paste your Beem API key here
-const BEEM_SECRET_KEY = '';   // ← paste your Beem Secret key here
-const BEEM_SENDER_ID  = '';   // ← paste your registered Sender ID (e.g. TMAAGRIMET)
+const BEEM_API_KEY    = '310cfaebcc385e79';
+const BEEM_SECRET_KEY = 'YjNkYmUyMThhNDg2MWZhYzk0ODc4YzhhNzM3MGEwMGRlNDUzMGEzZmYwNjNkYTE1YjllODFjNTYzMmI1NWI1ZA==';
+const BEEM_SENDER_ID  = 'ABEDCARDS';
 
 const ADMIN_PHONE = '0755863325';
 const ADMIN_CREDENTIALS = { phone: '0755863325', email: 'admin@tma.go.tz', password: 'admin2024' };
@@ -4466,7 +4466,7 @@ async function _doSubmit601() {
     const label  = smsOk ? '\u2713 Submitted & SMS sent' : '\u2713 Submitted \u2014 SMS not sent';
     const detail = smsOk
       ? `${syncMsg} · SMS delivered to admin \u2713 · Ref: ${ref}`
-      : `${syncMsg} · SMS failed \u2014 fill BEEM_API_KEY / BEEM_SECRET_KEY / BEEM_SENDER_ID in the portal · Ref: ${ref}`;
+      : `${syncMsg} · SMS failed \u2014 check Beem Africa credentials in Admin \u2192 Communications · Ref: ${ref}`;
     showToast(label, detail, smsOk ? 'success' : 'warning');
   });
 
