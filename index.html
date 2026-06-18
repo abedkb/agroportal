@@ -4445,11 +4445,13 @@ async function _doSubmit601() {
   // ── Auto-SMS to Admin via Beem Africa ──────────────────────────
   // Always fires on every successful submission. sendBeemSms() resolves
   // credentials from hardcoded constants (BEEM_API_KEY, BEEM_SECRET_KEY, BEEM_SENDER_ID).
-  const _smsBody = `TMA AGRIMET\nStation: ${rec.stationName} | Ref: ${ref}\nObs: ${rec.date} ${currentSession}UTC\n`
-    + (currentSession === '0600'
-      ? `Dry:${rec.dry??'-'}degC Wet:${rec.wet??'-'}degC Tmax:${rec.tmax??'-'}degC Tmin:${rec.tmin??'-'}degC Rain:${rec.rain??'-'}mm Evap:${rec.evapStd??'-'}mm Sun:${rec.sunshine??'-'}h Rad:${rec.radiation??'-'}MJ/m2 RH:${rec.rh??'-'}%`
-      : `Dry:${rec.dry??'-'}degC Wet:${rec.wet??'-'}degC Tmax:${rec.tmax??'-'}degC Tmin:${rec.tmin??'-'}degC RH:${rec.rh??'-'}%`)
-    + `\nBy: ${rec.observerName}`;
+  // Format station name short: first word only, uppercased + "AGRO."
+  const _stShort = (rec.stationName || 'STATION').split(' ')[0].toUpperCase();
+  const _dash = (v) => (v === null || v === undefined || v === '' || v === 8888 || v == 8888) ? '///' : v;
+
+  const _smsBody = currentSession === '0600'
+    ? `TMA ${_stShort} AGRO.\nWX. REPORT.\nDATE:${rec.date}.\nTIME: ${currentSession}Z,\nT.MAX:${_dash(rec.tmax)},\nT.MIN:${_dash(rec.tmin)},\nA/R:${_dash(rec.rain)},\nDry:${_dash(rec.dry)},\nWet:${_dash(rec.wet)},\nEVAP:${_dash(rec.evapStd)},\nS/S:${_dash(rec.sunshine)},\nW/R:${_dash(rec.windRun)},\nRad:${_dash(rec.radiation)},\nRH:${_dash(rec.rh)}\nSoil 5cm:${_dash(rec.soilTemp?.d5)} 10cm:${_dash(rec.soilTemp?.d10)} 20cm:${_dash(rec.soilTemp?.d20)}\nRef:${ref}= By:${rec.observerName}`
+    : `TMA ${_stShort} AGRO.\nWX. REPORT.\nDATE:${rec.date}.\nTIME: ${currentSession}Z,\nT.MAX:${_dash(rec.tmax)},\nT.MIN:${_dash(rec.tmin)},\nDry:${_dash(rec.dry)},\nWet:${_dash(rec.wet)},\nRH:${_dash(rec.rh)}\nRef:${ref}= By:${rec.observerName}`;
   // Interim toast — instant feedback before the async Beem call resolves
   showToast('Observation submitted', `${syncMsg} · Sending SMS to admin\u2026 · Ref: ${ref}`, 'info');
   sendBeemSms([ADMIN_PHONE], _smsBody).then(smsOk => {
