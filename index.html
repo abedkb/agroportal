@@ -4454,7 +4454,7 @@ async function _doSubmit601() {
 
   // ── Auto-SMS to Admin via Beem Africa ──────────────────────────
   // Always fires on every successful submission. sendBeemSms() resolves
-  // credentials from hardcoded constants (BEEM_*) so no per-device config needed.
+  // credentials from localStorage (Admin → Communications) then hardcoded constants.
   const _smsBody = `TMA AGRIMET\nStation: ${rec.stationName} | Ref: ${ref}\nObs: ${rec.date} ${currentSession}UTC\n`
     + (currentSession === '0600'
       ? `Dry:${rec.dry??'\u2014'}\u00b0C Wet:${rec.wet??'\u2014'}\u00b0C Tmax:${rec.tmax??'\u2014'}\u00b0C Tmin:${rec.tmin??'\u2014'}\u00b0C Rain:${rec.rain??'\u2014'}mm Evap:${rec.evapStd??'\u2014'}mm Sun:${rec.sunshine??'\u2014'}h Rad:${rec.radiation??'\u2014'}MJ/m\u00b2 RH:${rec.rh??'\u2014'}%`
@@ -6510,57 +6510,69 @@ function openWhatsApp(phone, message) {
   window.open('https://wa.me/'+p+'?text='+encodeURIComponent(message), '_blank');
 }
 
-// ── Beem Africa SMS — routed via Supabase Edge Function (avoids CORS) ──
-// Credential priority: hardcoded constants → localStorage (admin UI fallback)
+// ── Beem Africa SMS — direct API call with Basic Auth ──────────────
+// Credential priority: localStorage (Admin → Communications UI) → hardcoded constants
 async function sendBeemSms(phones, message) {
-  // Resolve credentials: hardcoded constants take priority over localStorage
-  const _lsCfg   = loadBeemConfig();
-  const apiKey    = (BEEM_API_KEY    || '').trim() || (_lsCfg.apiKey    || '').trim();
-  const secretKey = (BEEM_SECRET_KEY || '').trim() || (_lsCfg.secretKey || '').trim();
-  const senderId  = (BEEM_SENDER_ID  || '').trim() || (_lsCfg.senderId  || '').trim();
+  // Resolve credentials: localStorage (set via Admin UI) takes priority so no
+  // code redeploy is needed — just fill them once in Admin → Communications.
+  const _lsCfg    = loadBeemConfig();
+  const apiKey    = (_lsCfg.apiKey    || '').trim() || (BEEM_API_KEY    || '').trim();
+  const secretKey = (_lsCfg.secretKey || '').trim() || (BEEM_SECRET_KEY || '').trim();
+  const senderId  = (_lsCfg.senderId  || '').trim() || (BEEM_SENDER_ID  || '').trim();
 
   if (!apiKey || !secretKey || !senderId) {
     showToast('SMS not configured',
-      'Add Beem Africa credentials: set BEEM_API_KEY, BEEM_SECRET_KEY, BEEM_SENDER_ID in the portal code, or fill them in Admin → Communications.',
+      'Go to Admin → Communications → Beem Africa and save your API Key, Secret Key, and Sender ID.',
       'warning');
     return false;
   }
-  const valid = phones.map(formatPhoneIntl).filter(p => p && p.length >= 11);
+
+  // Format numbers: Beem expects international format without +, e.g. 255755863325
+  const valid = phones.map(formatPhoneIntl).filter(p => p && p.length >= 10);
   if (!valid.length) {
     showToast('No valid numbers', 'No valid phone numbers for selected recipients', 'warning');
     return false;
   }
+
+  // Beem Africa REST API uses HTTP Basic Auth: base64(api_key:secret_key)
+  const basicToken = btoa(apiKey + ':' + secretKey);
+
+  const payload = {
+    source_addr: senderId,
+    schedule_time: '',
+    encoding: 0,
+    message: message,
+    recipients: valid.map((p, i) => ({ recipient_id: i + 1, dest_addr: p }))
+  };
+
   try {
-    const res = await fetch(
-      SUPABASE_URL + '/functions/v1/beem-sms',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
-        },
-        body: JSON.stringify({
-          api_key:    apiKey,
-          secret_key: secretKey,
-          sender_id:  senderId,
-          message,
-          recipients: valid.map(p => ({ phone: p })),
-        }),
-      }
-    );
+    const res = await fetch('https://apisms.beem.africa/v1/send', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic ' + basicToken,
+      },
+      body: JSON.stringify(payload),
+    });
+
     const data = await res.json().catch(() => ({}));
-    if (res.ok && data.success) {
+
+    // Beem returns successful_count or code 100 on success
+    const beemOk = res.ok && (data.successful_count > 0 || data.code === 100 || data.code === '100');
+    if (beemOk) {
       showToast('SMS Sent ✓',
-        'Message sent to ' + (data.sent || valid.length) + ' recipient(s) via Beem Africa — Sender: ' + senderId,
+        'Message sent to ' + (data.successful_count || valid.length) + ' recipient(s) via Beem Africa — Sender: ' + senderId,
         'success');
       return true;
     }
-    showToast('SMS Failed',
-      data.message || 'Beem Africa returned an error — check your API key and secret',
-      'warning');
+
+    // code 111 = insufficient balance; 112 = invalid credentials; etc.
+    const errMsg = data.message || data.description || ('Beem error code: ' + (data.code || res.status));
+    showToast('SMS Failed', errMsg + ' — check your Beem Africa credentials in Admin → Communications', 'warning');
     return false;
+
   } catch(e) {
-    showToast('SMS Error', 'Could not reach SMS gateway — check your internet connection', 'warning');
+    showToast('SMS Error', 'Could not reach Beem Africa — check your internet connection', 'warning');
     return false;
   }
 }
@@ -7061,7 +7073,6 @@ async function pushSHRequestToSupabase(req) {
   });
   if (error) console.error('Supabase SH request insert error:', error.message);
 }
-
 async function loadFromSupabase() {
   if (!_sbReady()) return;
   try {
