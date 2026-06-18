@@ -6486,12 +6486,10 @@ function openWhatsApp(phone, message) {
 // ── Beem Africa SMS — direct API call with Basic Auth ──────────────
 // Credentials: hardcoded constants (BEEM_API_KEY, BEEM_SECRET_KEY, BEEM_SENDER_ID)
 async function sendBeemSms(phones, message) {
-  // Resolve credentials: localStorage (set via Admin UI) takes priority so no
-  // credentials are hardcoded as constants at the top of the script.
-  const _lsCfg    = loadBeemConfig();
-  const apiKey    = (_lsCfg.apiKey    || '').trim() || (BEEM_API_KEY    || '').trim();
-  const secretKey = (_lsCfg.secretKey || '').trim() || (BEEM_SECRET_KEY || '').trim();
-  const senderId  = (_lsCfg.senderId  || '').trim() || (BEEM_SENDER_ID  || '').trim();
+  // Credentials from hardcoded constants (BEEM_API_KEY, BEEM_SECRET_KEY, BEEM_SENDER_ID)
+  const apiKey    = (BEEM_API_KEY    || '').trim();
+  const secretKey = (BEEM_SECRET_KEY || '').trim();
+  const senderId  = (BEEM_SENDER_ID  || '').trim();
 
   if (!apiKey || !secretKey || !senderId) {
     showToast('SMS not configured',
@@ -6500,38 +6498,34 @@ async function sendBeemSms(phones, message) {
     return false;
   }
 
-  // Format numbers: Beem expects international format without +, e.g. 255755863325
+  // Format numbers to international format, e.g. 255755863325
   const valid = phones.map(formatPhoneIntl).filter(p => p && p.length >= 10);
   if (!valid.length) {
     showToast('No valid numbers', 'No valid phone numbers for selected recipients', 'warning');
     return false;
   }
 
-  // Beem Africa REST API uses HTTP Basic Auth: base64(api_key:secret_key)
-  const basicToken = btoa(apiKey + ':' + secretKey);
-
-  const payload = {
-    source_addr: senderId,
-    schedule_time: '',
-    encoding: 0,
-    message: message,
-    recipients: valid.map((p, i) => ({ recipient_id: i + 1, dest_addr: p }))
-  };
-
+  // Route through Supabase Edge Function to avoid browser CORS restrictions.
+  // The edge function proxies the request server-side to apisms.beem.africa.
   try {
-    const res = await fetch('https://apisms.beem.africa/v1/send', {
+    const res = await fetch(SUPABASE_URL + '/functions/v1/beem-sms', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': 'Basic ' + basicToken,
+        'Authorization': 'Bearer ' + SUPABASE_ANON_KEY,
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({
+        api_key:    apiKey,
+        secret_key: secretKey,
+        sender_id:  senderId,
+        message,
+        recipients: valid.map((p, i) => ({ recipient_id: i + 1, dest_addr: p })),
+      }),
     });
 
     const data = await res.json().catch(() => ({}));
+    const beemOk = res.ok && data.success === true;
 
-    // Beem returns successful_count or code 100 on success
-    const beemOk = res.ok && (data.successful_count > 0 || data.code === 100 || data.code === '100');
     if (beemOk) {
       showToast('SMS Sent ✓',
         'Message sent to ' + (data.successful_count || valid.length) + ' recipient(s) via Beem Africa — Sender: ' + senderId,
@@ -6539,13 +6533,12 @@ async function sendBeemSms(phones, message) {
       return true;
     }
 
-    // code 111 = insufficient balance; 112 = invalid credentials; etc.
-    const errMsg = data.message || data.description || ('Beem error code: ' + (data.code || res.status));
-    showToast('SMS Failed', errMsg + ' — check that BEEM_API_KEY, BEEM_SECRET_KEY & BEEM_SENDER_ID are set correctly in the portal code', 'warning');
+    const errMsg = data.message || data.description || ('Error code: ' + (data.code || res.status));
+    showToast('SMS Failed', errMsg, 'warning');
     return false;
 
   } catch(e) {
-    showToast('SMS Error', 'Could not reach Beem Africa — check your internet connection', 'warning');
+    showToast('SMS Error', 'Could not reach SMS gateway — check your internet connection', 'warning');
     return false;
   }
 }
