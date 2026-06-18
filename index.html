@@ -4447,8 +4447,8 @@ async function _doSubmit601() {
   // credentials from hardcoded constants (BEEM_API_KEY, BEEM_SECRET_KEY, BEEM_SENDER_ID).
   const _smsBody = `TMA AGRIMET\nStation: ${rec.stationName} | Ref: ${ref}\nObs: ${rec.date} ${currentSession}UTC\n`
     + (currentSession === '0600'
-      ? `Dry:${rec.dry??'\u2014'}\u00b0C Wet:${rec.wet??'\u2014'}\u00b0C Tmax:${rec.tmax??'\u2014'}\u00b0C Tmin:${rec.tmin??'\u2014'}\u00b0C Rain:${rec.rain??'\u2014'}mm Evap:${rec.evapStd??'\u2014'}mm Sun:${rec.sunshine??'\u2014'}h Rad:${rec.radiation??'\u2014'}MJ/m\u00b2 RH:${rec.rh??'\u2014'}%`
-      : `Dry:${rec.dry??'\u2014'}\u00b0C Wet:${rec.wet??'\u2014'}\u00b0C Tmax:${rec.tmax??'\u2014'}\u00b0C Tmin:${rec.tmin??'\u2014'}\u00b0C RH:${rec.rh??'\u2014'}%`)
+      ? `Dry:${rec.dry??'-'}degC Wet:${rec.wet??'-'}degC Tmax:${rec.tmax??'-'}degC Tmin:${rec.tmin??'-'}degC Rain:${rec.rain??'-'}mm Evap:${rec.evapStd??'-'}mm Sun:${rec.sunshine??'-'}h Rad:${rec.radiation??'-'}MJ/m2 RH:${rec.rh??'-'}%`
+      : `Dry:${rec.dry??'-'}degC Wet:${rec.wet??'-'}degC Tmax:${rec.tmax??'-'}degC Tmin:${rec.tmin??'-'}degC RH:${rec.rh??'-'}%`)
     + `\nBy: ${rec.observerName}`;
   // Interim toast — instant feedback before the async Beem call resolves
   showToast('Observation submitted', `${syncMsg} · Sending SMS to admin\u2026 · Ref: ${ref}`, 'info');
@@ -6485,6 +6485,21 @@ function openWhatsApp(phone, message) {
 
 // ── Beem Africa SMS — direct API call with Basic Auth ──────────────
 // Credentials: hardcoded constants (BEEM_API_KEY, BEEM_SECRET_KEY, BEEM_SENDER_ID)
+// ── Strip non-GSM characters so Beem accepts encoding:0 (plain SMS) ──
+// Replaces common Unicode symbols used in observation data with ASCII equivalents.
+function sanitizeSms(text) {
+  return text
+    .replace(/°/g, 'deg')   // ° -> deg
+    .replace(/²/g, '2')     // ² -> 2
+    .replace(/—/g, '-')     // — -> -
+    .replace(/–/g, '-')     // – -> -
+    .replace(/…/g, '...')   // … -> ...
+    .replace(/✓/g, 'OK')    // ✓ -> OK
+    .replace(/✗/g, 'X')     // ✗ -> X
+    .replace(/⏳/g, '')      // ⏳ -> (removed)
+    .replace(/[\u0080-\uFFFF]/g, ''); // strip any remaining non-ASCII
+}
+
 async function sendBeemSms(phones, message) {
   // Credentials from hardcoded constants (BEEM_API_KEY, BEEM_SECRET_KEY, BEEM_SENDER_ID)
   const apiKey    = (BEEM_API_KEY    || '').trim();
@@ -6497,6 +6512,9 @@ async function sendBeemSms(phones, message) {
       'warning');
     return false;
   }
+
+  // Sanitize message to plain GSM-7 ASCII (Beem rejects Unicode with encoding:0)
+  message = sanitizeSms(message);
 
   // Format numbers to international format, e.g. 255755863325
   const valid = phones.map(formatPhoneIntl).filter(p => p && p.length >= 10);
