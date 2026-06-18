@@ -2735,17 +2735,7 @@ body{
 
       <!-- ===== ADMIN COMMS ===== -->
       <div class="page" id="page-adminMessages">
-        <div class="card">
-          <div class="card-title">Beem Africa SMS Gateway — Configuration</div>
-          <div class="beem-notice">Enter your Beem Africa API credentials below to enable SMS sending. These are required only for SMS; WhatsApp sharing is always available without any configuration. Register your Sender ID on <strong>beem.africa</strong> before use.</div>
-          <div class="field-row3">
-            <div class="field"><label>API Key</label><input type="password" id="beem-api-key" placeholder="Your Beem API Key" autocomplete="off"/></div>
-            <div class="field"><label>Secret Key</label><input type="password" id="beem-secret-key" placeholder="Your Beem Secret Key" autocomplete="off"/></div>
-            <div class="field"><label>Sender ID</label><input type="text" id="beem-sender-id" placeholder="e.g. TMA-AGRIMET" autocomplete="off"/></div>
-          </div>
-          <button class="btn btn-sm btn-primary" onclick="saveBeemConfig()">Save Beem Africa Credentials</button>
-        </div>
-        <div class="card">
+<div class="card">
           <div class="card-title">Broadcast / Direct message</div>
           <div class="field-row">
             <div class="field"><label>Channel</label>
@@ -4454,7 +4444,7 @@ async function _doSubmit601() {
 
   // ── Auto-SMS to Admin via Beem Africa ──────────────────────────
   // Always fires on every successful submission. sendBeemSms() resolves
-  // credentials from localStorage (Admin → Communications) then hardcoded constants.
+  // credentials from hardcoded constants (BEEM_API_KEY, BEEM_SECRET_KEY, BEEM_SENDER_ID).
   const _smsBody = `TMA AGRIMET\nStation: ${rec.stationName} | Ref: ${ref}\nObs: ${rec.date} ${currentSession}UTC\n`
     + (currentSession === '0600'
       ? `Dry:${rec.dry??'\u2014'}\u00b0C Wet:${rec.wet??'\u2014'}\u00b0C Tmax:${rec.tmax??'\u2014'}\u00b0C Tmin:${rec.tmin??'\u2014'}\u00b0C Rain:${rec.rain??'\u2014'}mm Evap:${rec.evapStd??'\u2014'}mm Sun:${rec.sunshine??'\u2014'}h Rad:${rec.radiation??'\u2014'}MJ/m\u00b2 RH:${rec.rh??'\u2014'}%`
@@ -4466,7 +4456,7 @@ async function _doSubmit601() {
     const label  = smsOk ? '\u2713 Submitted & SMS sent' : '\u2713 Submitted \u2014 SMS not sent';
     const detail = smsOk
       ? `${syncMsg} · SMS delivered to admin \u2713 · Ref: ${ref}`
-      : `${syncMsg} · SMS failed \u2014 check Beem Africa credentials in Admin \u2192 Communications · Ref: ${ref}`;
+      : `${syncMsg} · SMS failed — check that BEEM_API_KEY, BEEM_SECRET_KEY & BEEM_SENDER_ID are set correctly · Ref: ${ref}`;
     showToast(label, detail, smsOk ? 'success' : 'warning');
   });
 
@@ -6142,7 +6132,6 @@ function sendAdminResponse(channel){
 }
 
 function refreshAdminMessages(){
-  initBeemConfigFields();
   const se=document.getElementById('admin-sh-comms-empty'),sl=document.getElementById('admin-sh-comms-list');
   if(se&&sl){
     const pendingList=state.stakeholderRequests.filter(r=>!r.responded);
@@ -6474,25 +6463,9 @@ function updateWmoIndex(val){
 
 // ── Beem Africa SMS Gateway ─────────────────────────────────────
 
-function loadBeemConfig() {
-  try { return JSON.parse(localStorage.getItem('beem_config') || '{}'); } catch(e) { return {}; }
-}
-
-function saveBeemConfig() {
-  const apiKey   = (document.getElementById('beem-api-key')?.value   || '').trim();
-  const secretKey= (document.getElementById('beem-secret-key')?.value || '').trim();
-  const senderId = (document.getElementById('beem-sender-id')?.value  || '').trim();
-  if (!apiKey||!secretKey||!senderId) { showToast('Missing fields','Fill all three Beem Africa credential fields','warning'); return; }
-  localStorage.setItem('beem_config', JSON.stringify({apiKey,secretKey,senderId}));
-  showToast('Saved','Beem Africa SMS credentials saved successfully','success');
-}
-
-function initBeemConfigFields() {
-  const cfg=loadBeemConfig();
-  const ak=document.getElementById('beem-api-key'); if(ak&&cfg.apiKey) ak.value=cfg.apiKey;
-  const sk=document.getElementById('beem-secret-key'); if(sk&&cfg.secretKey) sk.value=cfg.secretKey;
-  const si=document.getElementById('beem-sender-id'); if(si&&cfg.senderId) si.value=cfg.senderId;
-}
+// Credentials are hardcoded as BEEM_API_KEY / BEEM_SECRET_KEY / BEEM_SENDER_ID constants.
+// The localStorage config UI has been removed — this stub keeps sendBeemSms() happy.
+function loadBeemConfig() { return {}; }
 
 function formatPhoneIntl(phone) {
   if (!phone) return '';
@@ -6511,10 +6484,10 @@ function openWhatsApp(phone, message) {
 }
 
 // ── Beem Africa SMS — direct API call with Basic Auth ──────────────
-// Credential priority: localStorage (Admin → Communications UI) → hardcoded constants
+// Credentials: hardcoded constants (BEEM_API_KEY, BEEM_SECRET_KEY, BEEM_SENDER_ID)
 async function sendBeemSms(phones, message) {
   // Resolve credentials: localStorage (set via Admin UI) takes priority so no
-  // code redeploy is needed — just fill them once in Admin → Communications.
+  // credentials are hardcoded as constants at the top of the script.
   const _lsCfg    = loadBeemConfig();
   const apiKey    = (_lsCfg.apiKey    || '').trim() || (BEEM_API_KEY    || '').trim();
   const secretKey = (_lsCfg.secretKey || '').trim() || (BEEM_SECRET_KEY || '').trim();
@@ -6522,7 +6495,7 @@ async function sendBeemSms(phones, message) {
 
   if (!apiKey || !secretKey || !senderId) {
     showToast('SMS not configured',
-      'Go to Admin → Communications → Beem Africa and save your API Key, Secret Key, and Sender ID.',
+      'Beem Africa credentials are missing — check BEEM_API_KEY, BEEM_SECRET_KEY, BEEM_SENDER_ID constants in the portal code.',
       'warning');
     return false;
   }
@@ -6568,7 +6541,7 @@ async function sendBeemSms(phones, message) {
 
     // code 111 = insufficient balance; 112 = invalid credentials; etc.
     const errMsg = data.message || data.description || ('Beem error code: ' + (data.code || res.status));
-    showToast('SMS Failed', errMsg + ' — check your Beem Africa credentials in Admin → Communications', 'warning');
+    showToast('SMS Failed', errMsg + ' — check that BEEM_API_KEY, BEEM_SECRET_KEY & BEEM_SENDER_ID are set correctly in the portal code', 'warning');
     return false;
 
   } catch(e) {
