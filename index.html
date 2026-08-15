@@ -1523,6 +1523,7 @@ body{
   <div class="tabnav">
     <!-- Observer tabs -->
     <div class="tabnav-inner" id="observerTabs" style="display:none">
+      <button class="tab-btn" onclick="goHome()">&#8962; Home</button>
       <button class="tab-btn" data-page="dashboard" onclick="showPage('dashboard',this)">&#8862; Dashboard</button>
       <button class="tab-btn" data-page="obsForms" onclick="showPage('obsForms',this)">&#9998; Fill Observation</button>
       <button class="tab-btn" data-page="myRecords" onclick="showPage('myRecords',this)">&#8801; My Records</button>
@@ -1533,6 +1534,7 @@ body{
     </div>
     <!-- Stakeholder tabs -->
     <div class="tabnav-inner" id="stakeholderTabs" style="display:none">
+      <button class="tab-btn" onclick="goHome()">&#8962; Home</button>
       <button class="tab-btn" data-page="stakeholderDash" onclick="showPage('stakeholderDash',this)">&#8862; Dashboard</button>
       <button class="tab-btn" data-page="stakeholderProducts" onclick="showPage('stakeholderProducts',this)">&#10571; Met Products</button>
       <button class="tab-btn" data-page="stakeholderRequest" onclick="showPage('stakeholderRequest',this)">&#9993; Request Product</button>
@@ -1541,6 +1543,7 @@ body{
     </div>
     <!-- Admin tabs -->
     <div class="tabnav-inner" id="adminTabs" style="display:none">
+      <button class="tab-btn" onclick="goHome()">&#8962; Home</button>
       <button class="tab-btn" data-page="adminDash" onclick="showPage('adminDash',this)">&#8862; Dashboard</button>
       <button class="tab-btn" data-page="approvals" onclick="showPage('approvals',this)">&#10003; Approvals <span class="tab-badge" id="tabApprovalBadge" style="display:none">0</span></button>
       <button class="tab-btn" data-page="allRecords" onclick="showPage('allRecords',this)">&#8801; All Records</button>
@@ -1564,6 +1567,7 @@ body{
       </div>
     </div>
     <div class="nav-section" id="observerNav">
+      <div class="nav-item" onclick="goHome()"><span class="nav-icon">&#8962;</span>Home</div>
       <div class="nav-label">Observer</div>
       <div class="nav-item active" onclick="showPage('dashboard',this)"><span class="nav-icon">⊞</span>Dashboard</div>
       <div class="nav-item" onclick="showPage('obsForms',this)"><span class="nav-icon">✎</span>Fill observation</div>
@@ -1575,6 +1579,7 @@ body{
       <div class="nav-item" onclick="showPage('messages',this)"><span class="nav-icon">◎</span>Notifications</div>
     </div>
     <div class="nav-section" id="stakeholderNav" style="display:none">
+      <div class="nav-item" onclick="goHome()"><span class="nav-icon">&#8962;</span>Home</div>
       <div class="nav-label">Stakeholder</div>
       <div class="nav-item active" onclick="showPage('stakeholderDash',this)"><span class="nav-icon">⊞</span>Dashboard</div>
       <div class="nav-item" onclick="showPage('stakeholderProducts',this)"><span class="nav-icon">⤓</span>Meteorological Products</div>
@@ -1582,6 +1587,7 @@ body{
       <div class="nav-item" onclick="showPage('stakeholderMessages',this)"><span class="nav-icon">◎</span>Notifications</div>
     </div>
     <div class="nav-section" id="adminNav" style="display:none">
+      <div class="nav-item" onclick="goHome()"><span class="nav-icon">&#8962;</span>Home</div>
       <div class="nav-label">Administration</div>
       <div class="nav-item active" onclick="showPage('adminDash',this)"><span class="nav-icon">⊞</span>Dashboard</div>
       <div class="nav-item" onclick="showPage('approvals',this)"><span class="nav-icon">✓</span>Approvals<span class="badge badge-amber" style="margin-left:auto;font-size:10px;display:none" id="approvalBadge">0</span></div>
@@ -2956,11 +2962,13 @@ function loginAs(role, user) {
   document.getElementById('authScreen').style.display='none';
   document.getElementById('mainApp').style.display='flex';
   ['observerTabs','stakeholderTabs','adminTabs'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  ['observerNav','stakeholderNav','adminNav'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
   const tnAvatar=document.getElementById('topnavAvatar');
   const tnName=document.getElementById('topnavName');
   const tnRole=document.getElementById('topnavRole');
   if (role==='admin') {
     const el=document.getElementById('adminTabs'); if(el)el.style.display='';
+    const nv=document.getElementById('adminNav'); if(nv)nv.style.display='';
     if(tnAvatar){tnAvatar.textContent='AD';}
     if(tnName)tnName.textContent='TMA Administrator';
     if(tnRole)tnRole.textContent='Administrator · All stations';
@@ -2970,6 +2978,7 @@ function loginAs(role, user) {
     state.stakeholderName=user.name; state.stakeholderOrg=user.org;
     state.stakeholderPhone=user.phone||''; state.stakeholderEmail=user.email||'';
     const el=document.getElementById('stakeholderTabs'); if(el)el.style.display='';
+    const nv=document.getElementById('stakeholderNav'); if(nv)nv.style.display='';
     if(tnAvatar){tnAvatar.textContent=nameInitials(user.name);}
     if(tnName)tnName.textContent=user.name;
     if(tnRole)tnRole.textContent=`${user.position||'Stakeholder'} · ${user.org}`;
@@ -2978,6 +2987,7 @@ function loginAs(role, user) {
   } else {
     state.observerName=user.name; state.stationName=user.station;
     const el=document.getElementById('observerTabs'); if(el)el.style.display='';
+    const nv=document.getElementById('observerNav'); if(nv)nv.style.display='';
     if(tnAvatar){tnAvatar.textContent=nameInitials(user.name);}
     if(tnName)tnName.textContent=user.name;
     if(tnRole)tnRole.textContent=`${user.title||'Observer'} · ${user.station}`;
@@ -3077,7 +3087,9 @@ function enterPublicView() {
   document.getElementById('authScreen').style.display='none';
   document.getElementById('mainApp').style.display='flex';
   ['observerTabs','stakeholderTabs','adminTabs'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  ['observerNav','stakeholderNav','adminNav'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
   const stTabs=document.getElementById('stakeholderTabs'); if(stTabs) stTabs.style.display='';
+  const stNav=document.getElementById('stakeholderNav'); if(stNav) stNav.style.display='';
   const tnAvatar=document.getElementById('topnavAvatar');
   const tnName=document.getElementById('topnavName');
   const tnRole=document.getElementById('topnavRole');
