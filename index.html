@@ -2631,7 +2631,7 @@ body{
           <div class="card">
             <div class="card-title">Upload new meteorological product</div>
             <div class="field"><label>Product title</label><input type="text" id="prod-title"/></div>
-            <div class="field"><label>Category</label><select id="prod-cat"><option value="">-- Select category --</option><option>Monthly Weather Outlook</option><option>Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Climatological Report</option><option>Early Warning Bulletin</option><option>Other</option></select></div>
+            <div class="field"><label>Category</label><select id="prod-cat"><option value="">-- Select category --</option><option>Monthly Weather Outlook</option><option>Agrometeorological Bulletin</option><option>Decadal Bulletin</option><option>Monthly Bulletin</option><option>Seasonal Weather Outlook</option><option>Climatological Report</option><option>Early Warning Bulletin</option><option>Other</option></select></div>
             <div class="field"><label>Access</label><select id="prod-access"><option>All observers &amp; stakeholders</option><option>Observers only</option><option>Stakeholders only</option></select></div>
             <div class="field"><label>File (PDF / Word / Excel)</label>
               <input type="file" id="prod-file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" style="display:none" onchange="onProdFileChosen(this)"/>
@@ -2640,7 +2640,7 @@ body{
                 ondragleave="this.style.borderColor=''"
                 ondrop="event.preventDefault();this.style.borderColor='';const f=event.dataTransfer.files[0];if(f){const inp=document.getElementById('prod-file');const dt=new DataTransfer();dt.items.add(f);inp.files=dt.files;onProdFileChosen(inp);}">
                 <div id="prod-file-label" style="font-size:13px;color:var(--text-secondary)">&#128194; Click to browse files or drag &amp; drop here</div>
-                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px">PDF, Word, Excel · Max 50 MB</div>
+                <div style="font-size:11px;color:var(--text-tertiary);margin-top:4px">PDF, Word, Excel · Max 15 MB (stored online for in-browser viewing)</div>
               </div>
             </div>
             <div class="field"><label>Notes</label><textarea id="prod-notes" style="min-height:60px"></textarea></div>
@@ -2677,6 +2677,11 @@ body{
           </div>
           <div class="field"><label>Message</label><textarea id="broadcast-message" style="min-height:90px" placeholder="Type your broadcast message here..."></textarea></div>
           <button class="btn btn-primary" onclick="sendBroadcast()">Send message</button>
+        </div>
+        <div class="card">
+          <div class="card-title">Late observation reminders</div>
+          <div class="beem-notice">Runs automatically on the server every day (Supabase scheduled Edge Function) once each session deadline (0600Z/09:00 EAT, 1200Z/15:00 EAT) is more than an hour overdue — no one needs to have this dashboard open. Each station is only reminded once per session per day. Use the button below to trigger a check right now.</div>
+          <button class="btn btn-primary" onclick="sendLateObserverReminders()">&#128276; Check &amp; remind late observers now</button>
         </div>
         <div class="card"><div class="card-title">Stakeholder product requests</div><div class="empty-state" id="admin-sh-comms-empty"><div class="empty-state-icon">✉</div><div class="empty-state-title">No product requests yet</div></div><div id="admin-sh-comms-list"></div></div>
         <div class="card"><div class="card-title">Incoming observation notifications</div><div class="empty-state" id="admin-comms-empty"><div class="empty-state-icon">◎</div><div class="empty-state-title">No data yet</div></div><div id="admin-comms-list"></div></div>
@@ -2794,6 +2799,30 @@ body{
       <button class="btn btn-sm" style="background:#1565c0;color:#fff;border-color:#1565c0" onclick="sendAdminResponse('email')">&#64; Send via Email</button>
       <button class="btn btn-sm btn-wa" onclick="sendAdminResponse('wa')">&#128241; Send via WhatsApp</button>
       <button class="btn btn-sm btn-primary" onclick="sendAdminResponse('both')">Send Both</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PRODUCT VIEW (PREVIEW) MODAL ===== -->
+<div class="msg-modal-overlay" id="productViewOverlay" onclick="if(event.target===this)closeProductView()">
+  <div class="msg-modal" style="max-width:820px;width:95%;max-height:92vh;overflow:auto">
+    <div class="msg-modal-title" style="display:flex;align-items:center;justify-content:space-between;gap:1rem">
+      <div style="min-width:0">
+        <div id="productViewTitle" style="font-weight:600;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Document</div>
+        <div id="productViewMeta" style="font-size:11px;color:var(--text-tertiary);font-weight:400;margin-top:2px"></div>
+      </div>
+      <button class="btn btn-sm" onclick="closeProductView()" style="padding:2px 8px;font-size:12px;flex-shrink:0">&#10005;</button>
+    </div>
+    <div style="background:var(--bg-secondary);border-radius:var(--radius);overflow:hidden;height:min(70vh,640px);position:relative">
+      <iframe id="productViewFrame" title="Document preview" style="width:100%;height:100%;border:0;display:none"></iframe>
+      <div id="productViewUnsupported" style="display:none;position:absolute;inset:0;align-items:center;justify-content:center;flex-direction:column;gap:.5rem;padding:1.5rem;text-align:center;color:var(--text-secondary);font-size:13px">
+        <div style="font-size:32px">📄</div>
+        <div>In-browser preview isn't available for this file type.<br>Please download it to view the document.</div>
+      </div>
+    </div>
+    <div class="msg-modal-footer">
+      <button class="btn btn-sm" onclick="closeProductView()">Close</button>
+      <button class="btn btn-sm btn-primary" id="productViewDownloadBtn">Download</button>
     </div>
   </div>
 </div>
@@ -5838,16 +5867,24 @@ function editObservation(key) {
   showToast('Editing record', `Loaded ${r.session} UTC observation from ${r.date}. Correct and re-submit.`, 'info');
 }
 
+function productAccessAllowed(p, role){
+  const a=p.access||'All observers & stakeholders';
+  if(a==='Observers only') return role==='observer';
+  if(a==='Stakeholders only') return role==='stakeholder';
+  return true;
+}
+
 function refreshProductsPage(){
   const empty=document.getElementById('products-empty'),list=document.getElementById('products-list');
   if(!empty||!list) return;
-  if(state.products.length===0){empty.style.display='';list.innerHTML='';}
+  const obsProds=state.products.filter(p=>productAccessAllowed(p,'observer'));
+  if(obsProds.length===0){empty.style.display='';list.innerHTML='';}
   else{
     empty.style.display='none';
-    list.innerHTML=state.products.map(p=>`<div class="product-card">
+    list.innerHTML=obsProds.map(p=>`<div class="product-card">
       <div class="product-icon" style="background:var(--tma-blue-l)">${p.icon}</div>
       <div class="product-info"><div class="product-name">${p.title}</div><div class="product-meta">${p.cat} · ${p.date}</div></div>
-      <div class="product-actions"><button class="btn btn-sm btn-primary">Download</button></div>
+      <div class="product-actions"><button class="btn btn-sm" onclick="viewProduct('${p.uid}')">View</button><button class="btn btn-sm btn-primary" onclick="downloadProduct('${p.uid}')">Download</button></div>
     </div>`).join('');
   }
 }
@@ -6029,7 +6066,7 @@ function refreshAdminProducts(){
   const e=document.getElementById('admin-products-empty'),l=document.getElementById('admin-products-list');
   if(!e||!l) return;
   if(state.products.length===0){e.style.display='';l.innerHTML='';}
-  else{e.style.display='none';l.innerHTML=state.products.map((p,i)=>`<div class="product-card"><div class="product-icon" style="background:var(--tma-blue-l)">${p.icon}</div><div class="product-info"><div class="product-name">${p.title}</div><div class="product-meta">${p.date} · ${p.cat}</div></div><button class="btn btn-sm btn-danger" onclick="deleteProduct(${i})">Delete</button></div>`).join('');}
+  else{e.style.display='none';l.innerHTML=state.products.map((p,i)=>`<div class="product-card"><div class="product-icon" style="background:var(--tma-blue-l)">${p.icon}</div><div class="product-info"><div class="product-name">${p.title}</div><div class="product-meta">${p.date} · ${p.cat} · ${p.access||'All observers & stakeholders'}</div></div><div class="product-actions"><button class="btn btn-sm" onclick="viewProduct('${p.uid}')">View</button><button class="btn btn-sm btn-danger" onclick="deleteProduct(${i})">Delete</button></div></div>`).join('');}
 }
 
 function deleteProduct(i){state.products.splice(i,1);refreshAdminProducts();showToast('Product removed','Product has been deleted.');}
@@ -6042,21 +6079,61 @@ function onProdFileChosen(input){
   if(zone) zone.style.borderColor=f?'var(--tma-green)':'';
 }
 
-function uploadProduct(){
+const PRODUCT_ICONS={'Monthly Weather Outlook':'🌤️','Agrometeorological Bulletin':'📋','Decadal Bulletin':'📆','Monthly Bulletin':'🗓️','Seasonal Weather Outlook':'🌦️','Climatological Report':'📊','Early Warning Bulletin':'🌡️','Other':'📁'};
+const PRODUCT_MAX_BYTES=15*1024*1024;
+
+function readFileAsDataURL(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onload=()=>resolve(reader.result);
+    reader.onerror=()=>reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadProduct(){
   const title=document.getElementById('prod-title')?.value?.trim();
   const cat=document.getElementById('prod-cat')?.value;
   const fileInput=document.getElementById('prod-file');
   if(!title||!cat){showToast('Missing fields','Enter title and select category','warning');return;}
-  const icons={'Monthly Weather Outlook':'🌤️','Agrometeorological Bulletin':'📋','Seasonal Weather Outlook':'🌦️','Climatological Report':'📊','Early Warning Bulletin':'🌡️','Other':'📁'};
+  const file=fileInput?.files?.[0]||null;
+  if(file && file.size>PRODUCT_MAX_BYTES){showToast('File too large','Please upload a file smaller than 15 MB.','warning');return;}
   const access=document.getElementById('prod-access')?.value||'All observers & stakeholders';
-  const fileName=fileInput?.files?.[0]?.name||null;
-  const _newProd={title,cat,access,icon:icons[cat]||'📁',date:getTodayStr(),downloads:0,fileName};
+  let fileData=null;
+  if(file){
+    try{ fileData=await readFileAsDataURL(file); }
+    catch(e){ showToast('Upload failed','Could not read the selected file.','warning'); return; }
+  }
+  const fileName=file?.name||null;
+  const fileType=file?.type||null;
+  const _newProd={uid:'local-'+Date.now(),title,cat,access,icon:PRODUCT_ICONS[cat]||'📁',date:getTodayStr(),downloads:0,fileName,fileType,fileData};
   state.products.unshift(_newProd);
   pushProductToSupabase(_newProd);
+  notifyProductUploadSms(_newProd);
   if(document.getElementById('prod-title')) document.getElementById('prod-title').value='';
   if(fileInput){fileInput.value='';onProdFileChosen(fileInput);}
   showToast('Product uploaded',`"${title}" is now available`+(fileName?` (${fileName})`:''),'success');
   refreshAdminProducts();
+}
+
+// ── SMS notification broadcast whenever a new product is uploaded ──
+// Fires automatically from uploadProduct(). Recipients are chosen from the
+// product's "Access" setting (All / Observers only / Stakeholders only),
+// mirroring productAccessAllowed()'s categories so recipients match who
+// can actually see the product once they log in.
+async function notifyProductUploadSms(prod){
+  let targets = [];
+  if (prod.access === 'Observers only') {
+    targets = state.approvedObservers;
+  } else if (prod.access === 'Stakeholders only') {
+    targets = state.approvedStakeholders;
+  } else {
+    targets = [...state.approvedObservers, ...state.approvedStakeholders];
+  }
+  const phones = [...new Set(targets.map(t=>t.phone).filter(Boolean))];
+  if (!phones.length) return false;
+  const msg = `TMA AgroMet: New ${prod.cat} uploaded - "${prod.title}" (${prod.date}). Please log in to the AgroMet Service System to view the update.\nTanzania Meteorological Authority`;
+  return await sendBeemSms(phones, msg);
 }
 
 // ── Admin respond to stakeholder request modal ──────────────────
@@ -6277,24 +6354,66 @@ function sendStakeholderBroadcast(mode){
 }
 
 // Stakeholder pages
-const STAKEHOLDER_CATS=new Set(['Monthly Weather Outlook','Agrometeorological Bulletin','Seasonal Weather Outlook']);
 function refreshStakeholderDash(){
-  const shProds=state.products.filter(p=>STAKEHOLDER_CATS.has(p.cat)||(p.access&&(p.access.includes('stakeholder')||p.access.includes('All'))));
+  const shProds=state.products.filter(p=>productAccessAllowed(p,'stakeholder'));
   document.getElementById('sh-stat-products').textContent=shProds.length;
   document.getElementById('sh-stat-requests').textContent=state.stakeholderRequests.length;
   document.getElementById('sh-stat-notifs').textContent=state.stakeholderNotifications.length;
   const pe=document.getElementById('sh-dash-products-empty'),pl=document.getElementById('sh-dash-products-list');
-  if(pe&&pl){if(shProds.length===0){pe.style.display='';pl.innerHTML='';}else{pe.style.display='none';pl.innerHTML=shProds.slice(0,4).map(p=>`<div class="product-card"><div class="product-icon" style="background:var(--tma-teal-l)">${p.icon}</div><div class="product-info"><div class="product-name">${p.title}</div><div class="product-meta">${p.cat} · ${p.date}</div></div><button class="btn btn-sm" style="background:var(--tma-teal);color:#fff;border-color:var(--tma-teal)">Download</button></div>`).join('');}}
+  if(pe&&pl){if(shProds.length===0){pe.style.display='';pl.innerHTML='';}else{pe.style.display='none';pl.innerHTML=shProds.slice(0,4).map(p=>`<div class="product-card"><div class="product-icon" style="background:var(--tma-teal-l)">${p.icon}</div><div class="product-info"><div class="product-name">${p.title}</div><div class="product-meta">${p.cat} · ${p.date}</div></div><div class="product-actions"><button class="btn btn-sm" style="border-color:var(--tma-teal);color:var(--tma-teal)" onclick="viewProduct('${p.uid}')">View</button><button class="btn btn-sm" style="background:var(--tma-teal);color:#fff;border-color:var(--tma-teal)" onclick="downloadProduct('${p.uid}')">Download</button></div></div>`).join('');}}
   const ne=document.getElementById('sh-dash-notif-empty'),nl=document.getElementById('sh-dash-notif-list');
   if(ne&&nl){if(state.stakeholderNotifications.length===0){ne.style.display='';nl.innerHTML='';}else{ne.style.display='none';nl.innerHTML=state.stakeholderNotifications.slice(0,4).map(n=>`<div class="notif notif-dash"><div class="notif-icon" style="background:var(--tma-teal-l);color:var(--tma-teal)">📢</div><div class="notif-body"><div class="notif-title">${n.title}</div><div class="notif-desc">${n.desc}</div><div class="notif-time">${n.time}</div></div></div>`).join('');}}
 }
 
 function refreshStakeholderProducts(){
-  const shProds=state.products.filter(p=>STAKEHOLDER_CATS.has(p.cat)||(p.access&&(p.access.includes('stakeholder')||p.access.includes('All'))));
+  const shProds=state.products.filter(p=>productAccessAllowed(p,'stakeholder'));
   const pe=document.getElementById('sh-products-empty'),pl=document.getElementById('sh-products-list');
   if(!pe||!pl) return;
   if(shProds.length===0){pe.style.display='';pl.innerHTML='';}
-  else{pe.style.display='none';pl.innerHTML=shProds.map(p=>`<div class="product-card"><div class="product-icon" style="background:var(--tma-teal-l)">${p.icon}</div><div class="product-info"><div class="product-name">${p.title}</div><div class="product-meta">${p.cat} · ${p.date}</div></div><button class="btn btn-sm btn-primary" style="background:var(--tma-teal);border-color:var(--tma-teal)">Download</button></div>`).join('');}
+  else{pe.style.display='none';pl.innerHTML=shProds.map(p=>`<div class="product-card"><div class="product-icon" style="background:var(--tma-teal-l)">${p.icon}</div><div class="product-info"><div class="product-name">${p.title}</div><div class="product-meta">${p.cat} · ${p.date}</div></div><div class="product-actions"><button class="btn btn-sm" style="border-color:var(--tma-teal);color:var(--tma-teal)" onclick="viewProduct('${p.uid}')">View</button><button class="btn btn-sm btn-primary" style="background:var(--tma-teal);border-color:var(--tma-teal)" onclick="downloadProduct('${p.uid}')">Download</button></div></div>`).join('');}
+}
+
+// ── Product view / download ──────────────────────────────────────
+function viewProduct(uid){
+  const p=state.products.find(x=>String(x.uid)===String(uid));
+  if(!p){showToast('Not found','This product could not be found.','warning');return;}
+  if(!p.fileData){showToast('No document attached','This product does not have a file attached to preview.','warning');return;}
+  document.getElementById('productViewTitle').textContent=p.title;
+  document.getElementById('productViewMeta').textContent=`${p.cat} · ${p.date}${p.fileName?' · '+p.fileName:''}`;
+  const frame=document.getElementById('productViewFrame');
+  const unsupported=document.getElementById('productViewUnsupported');
+  const isPdf=p.fileType==='application/pdf'||/\.pdf$/i.test(p.fileName||'');
+  const isImg=/^image\//.test(p.fileType||'');
+  if(isPdf||isImg){
+    frame.src=p.fileData;
+    frame.style.display='';
+    unsupported.style.display='none';
+  } else {
+    frame.style.display='none';
+    frame.src='about:blank';
+    unsupported.style.display='flex';
+  }
+  const dl=document.getElementById('productViewDownloadBtn');
+  if(dl) dl.onclick=()=>downloadProduct(uid);
+  document.getElementById('productViewOverlay').classList.add('open');
+}
+
+function closeProductView(){
+  document.getElementById('productViewOverlay').classList.remove('open');
+  const frame=document.getElementById('productViewFrame');
+  if(frame){frame.src='about:blank';}
+}
+
+function downloadProduct(uid){
+  const p=state.products.find(x=>String(x.uid)===String(uid));
+  if(!p){showToast('Not found','This product could not be found.','warning');return;}
+  if(!p.fileData){showToast('No document attached','This product does not have a file attached to download.','warning');return;}
+  const a=document.createElement('a');
+  a.href=p.fileData;
+  a.download=p.fileName||(p.title||'document');
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
 }
 
 function refreshStakeholderRequest(){
@@ -6545,6 +6664,42 @@ async function sendBeemSms(phones, message) {
   } catch(e) {
     showToast('SMS Error', 'Could not reach SMS gateway — check your internet connection', 'warning');
     return false;
+  }
+}
+
+// ── Daily late-observation reminder ─────────────────────────────
+// The actual sending now happens server-side: a Supabase Edge Function
+// ("daily-observer-reminder") runs on a pg_cron schedule (independent of
+// any browser being open) and does the same check-and-SMS logic against
+// the live database, with a Postgres table (late_reminder_log) preventing
+// duplicate sends. See /supabase/functions/daily-observer-reminder for the
+// function code and setup_late_reminder_cron.sql for the cron schedule.
+//
+// This button just lets an admin trigger that same function on demand
+// (e.g. to test it, or nudge a check outside the normal schedule).
+async function sendLateObserverReminders(){
+  if (!_sbReady()){
+    showToast('Not connected', 'Supabase is not configured — cannot reach the reminder function.', 'warning');
+    return;
+  }
+  showToast('Checking…', 'Asking the server to check for late observers and send reminders.', 'info');
+  try{
+    const { data, error } = await supabaseClient.functions.invoke('daily-observer-reminder', { body: {} });
+    if (error){
+      showToast('Reminder check failed', error.message || 'Could not reach the reminder function.', 'warning');
+      return;
+    }
+    const notified = data?.notifiedObservers ?? 0;
+    const dueSessions = (data?.dueSessions || []).join('/');
+    if (!data?.dueSessions?.length){
+      showToast('No reminders due', 'No session deadline (0600Z/1200Z) has passed yet today (EAT).', 'info');
+    } else if (notified === 0){
+      showToast('No new reminders', 'All stations have already reported, or reminders were already sent today.', 'info');
+    } else {
+      showToast('Reminders sent', `${notified} observer(s) notified about missing ${dueSessions} UTC session data.`, 'success');
+    }
+  } catch(e){
+    showToast('Reminder check failed', 'Could not reach the reminder function — check your connection.', 'warning');
   }
 }
 
@@ -7030,6 +7185,9 @@ async function pushProductToSupabase(prod) {
     icon:         prod.icon,
     upload_date:  getTodayStr().split('/').reverse().join('-'),
     downloads:    0,
+    file_name:    prod.fileName || null,
+    file_type:    prod.fileType || null,
+    file_data:    prod.fileData || null,
   });
   if (error) console.error('Supabase product insert error:', error.message);
 }
@@ -7059,7 +7217,7 @@ async function loadFromSupabase() {
       supabaseClient.from('observers').select('*'),
       supabaseClient.from('stakeholders').select('*'),
       supabaseClient.from('pending_approvals').select('*').eq('status','pending'),
-      supabaseClient.from('products').select('*'),
+      supabaseClient.from('products').select('*').order('id', { ascending: false }),
       supabaseClient.from('stakeholder_requests').select('*').order('request_time', { ascending: false }),
     ]);
 
@@ -7152,8 +7310,9 @@ async function loadFromSupabase() {
 
     if (prodRes.data) {
       state.products = prodRes.data.map(row => ({
-        title: row.title, cat: row.category, access: row.access_level,
-        icon: row.icon, date: row.upload_date, downloads: row.downloads || 0
+        uid: row.id, title: row.title, cat: row.category, access: row.access_level,
+        icon: row.icon, date: row.upload_date, downloads: row.downloads || 0,
+        fileName: row.file_name || null, fileType: row.file_type || null, fileData: row.file_data || null
       }));
     }
 
