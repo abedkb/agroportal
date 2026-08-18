@@ -2631,7 +2631,7 @@ body{
           <div class="card">
             <div class="card-title">Upload new meteorological product</div>
             <div class="field"><label>Product title</label><input type="text" id="prod-title"/></div>
-            <div class="field"><label>Category</label><select id="prod-cat"><option value="">-- Select category --</option><option>Monthly Weather Outlook</option><option>Agrometeorological Bulletin</option><option>Decadal Bulletin</option><option>Monthly Bulletin</option><option>Seasonal Weather Outlook</option><option>Climatological Report</option><option>Early Warning Bulletin</option><option>Other</option></select></div>
+            <div class="field"><label>Category</label><select id="prod-cat"><option value="">-- Select category --</option><option>Monthly Weather Outlook</option><option>Decadal Agrometeorological Bulletin</option><option>Monthly Agrometeorological Bulletin</option><option>Seasonal Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Climatological Report</option><option>Early Warning Bulletin</option><option>Other</option></select></div>
             <div class="field"><label>Access</label><select id="prod-access"><option>All observers &amp; stakeholders</option><option>Observers only</option><option>Stakeholders only</option></select></div>
             <div class="field"><label>File (PDF / Word / Excel)</label>
               <input type="file" id="prod-file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx" style="display:none" onchange="onProdFileChosen(this)"/>
@@ -6079,7 +6079,7 @@ function onProdFileChosen(input){
   if(zone) zone.style.borderColor=f?'var(--tma-green)':'';
 }
 
-const PRODUCT_ICONS={'Monthly Weather Outlook':'🌤️','Agrometeorological Bulletin':'📋','Decadal Bulletin':'📆','Monthly Bulletin':'🗓️','Seasonal Weather Outlook':'🌦️','Climatological Report':'📊','Early Warning Bulletin':'🌡️','Other':'📁'};
+const PRODUCT_ICONS={'Monthly Weather Outlook':'🌤️','Decadal Agrometeorological Bulletin':'📆','Monthly Agrometeorological Bulletin':'🗓️','Seasonal Agrometeorological Bulletin':'📋','Seasonal Weather Outlook':'🌦️','Climatological Report':'📊','Early Warning Bulletin':'🌡️','Other':'📁'};
 const PRODUCT_MAX_BYTES=15*1024*1024;
 
 function readFileAsDataURL(file){
