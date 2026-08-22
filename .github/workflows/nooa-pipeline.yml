@@ -49,7 +49,7 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-          pip install xarray matplotlib numpy pandas scipy cartopy supabase
+             pip install xarray netCDF4 h5netcdf matplotlib numpy pandas scipy cartopy supabase
 
       - name: Make pipeline script executable
         run: chmod +x pipeline/noaa_pipeline.sh
