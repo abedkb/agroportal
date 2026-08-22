@@ -1100,6 +1100,12 @@ body{
 .lp-card-list li{font-size:12px;color:#555;display:flex;align-items:flex-start;gap:5px;line-height:1.45}
 .lp-card-list li::before{content:'✓';color:#1EB53A;font-weight:800;flex-shrink:0}
 .lp-noaa-filters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:2rem}
+.lp-noaa-track-wrap{overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
+.lp-noaa-track{display:flex;gap:1.75rem;width:max-content;animation:lp-noaa-scroll linear infinite}
+.lp-noaa-track:hover{animation-play-state:paused}
+.lp-noaa-track .lp-card{flex:0 0 300px;width:300px}
+@keyframes lp-noaa-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@media(prefers-reduced-motion:reduce){.lp-noaa-track{animation:none;flex-wrap:wrap;width:100%}}
 .lp-noaa-filters select{padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.12);background:#fff;color:#0a1e3c;font-size:12.5px;font-family:inherit;cursor:pointer}
 .lp-noaa-status{grid-column:1/-1;text-align:center;color:#666;font-size:13px;padding:2.5rem 0}
 .lp-card-vis-img{height:185px;padding:0;overflow:hidden}
@@ -1196,8 +1202,10 @@ body{
         <select id="noaaAggrFilter" onchange="renderNoaaProducts()"><option value="">All Aggregations</option></select>
         <select id="noaaTypeFilter" onchange="renderNoaaProducts()"><option value="">All Types</option></select>
       </div>
-      <div class="lp-cards" id="lp-noaa-cards">
-        <div class="lp-noaa-status">Loading products&hellip;</div>
+      <div class="lp-noaa-track-wrap">
+        <div class="lp-noaa-track" id="lp-noaa-cards">
+          <div class="lp-noaa-status">Loading products&hellip;</div>
+        </div>
       </div>
     </div>
   </div>
@@ -2728,10 +2736,11 @@ function renderNoaaProducts() {
     (!v || p.var === v) && (!a || p.aggr === a) && (!t || p.plot_type === t)
   );
   if (!filtered.length) {
+    grid.style.animation = 'none';
     grid.innerHTML = '<div class="lp-noaa-status">No products match these filters.</div>';
     return;
   }
-  grid.innerHTML = filtered.map(p => `
+  const cardHtml = (p) => `
     <div class="lp-card">
       <div class="lp-card-vis lp-card-vis-img">
         <img src="${p.public_url}" alt="${(p.var||'').toUpperCase()} ${p.plot_type||''}" loading="lazy">
@@ -2741,8 +2750,14 @@ function renderNoaaProducts() {
         <div class="lp-card-title">${(p.var||'').toUpperCase()} &mdash; ${p.aggr||''}</div>
         <div class="lp-card-desc">${noaaCardMeta(p)}</div>
       </div>
-    </div>
-  `).join('');
+    </div>`;
+  // Duplicate the set so the track can loop seamlessly (scrolls -50% then resets).
+  // A single copy isn't enough width for a smooth infinite marquee, so we render 2x.
+  const once = filtered.map(cardHtml).join('');
+  grid.innerHTML = once + once;
+  // Roughly 4.5s per card keeps a steady, readable scroll speed regardless of count.
+  const duration = Math.max(filtered.length * 4.5, 12);
+  grid.style.animation = `lp-noaa-scroll ${duration}s linear infinite`;
 }
 
 
