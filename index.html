@@ -1099,6 +1099,11 @@ body{
 .lp-card-list{list-style:none;display:flex;flex-direction:column;gap:.28rem}
 .lp-card-list li{font-size:12px;color:#555;display:flex;align-items:flex-start;gap:5px;line-height:1.45}
 .lp-card-list li::before{content:'✓';color:#1EB53A;font-weight:800;flex-shrink:0}
+.lp-noaa-filters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:2rem}
+.lp-noaa-filters select{padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.12);background:#fff;color:#0a1e3c;font-size:12.5px;font-family:inherit;cursor:pointer}
+.lp-noaa-status{grid-column:1/-1;text-align:center;color:#666;font-size:13px;padding:2.5rem 0}
+.lp-card-vis-img{height:185px;padding:0;overflow:hidden}
+.lp-card-vis-img img{width:100%;height:100%;object-fit:cover;display:block}
 .lp-features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1.25rem}
 .lp-feat{background:#fff;border-radius:12px;padding:1.35rem;border:1px solid rgba(0,0,0,0.07);display:flex;gap:.9rem;align-items:flex-start;transition:.2s}
 .lp-feat:hover{border-color:rgba(21,101,192,0.2);box-shadow:0 4px 16px rgba(21,101,192,0.08);transform:translateY(-2px)}
@@ -1186,183 +1191,13 @@ body{
         <h2>Agrometeorological Services &amp; Products</h2>
         <p>From daily field observations to seasonal forecasts &mdash; decision support for Tanzania&rsquo;s agricultural sector</p>
       </div>
-      <div class="lp-cards">
-
-        <!-- Card 1: Daily Observations — Rainfall Bar Chart -->
-        <div class="lp-card">
-          <div class="lp-card-vis lp-card-vis-blue">
-            <svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
-              <line x1="32" y1="12" x2="32" y2="128" stroke="#90CAF9" stroke-width="0.8"/>
-              <line x1="32" y1="128" x2="212" y2="128" stroke="#90CAF9" stroke-width="0.8"/>
-              <line x1="32" y1="45" x2="212" y2="45" stroke="#E3F2FD" stroke-width="0.7" stroke-dasharray="4,3"/>
-              <line x1="32" y1="72" x2="212" y2="72" stroke="#E3F2FD" stroke-width="0.7" stroke-dasharray="4,3"/>
-              <line x1="32" y1="99" x2="212" y2="99" stroke="#E3F2FD" stroke-width="0.7" stroke-dasharray="4,3"/>
-              <rect x="42"  y="48" width="22" height="80" fill="#1565C0" rx="3" opacity="0.85"/>
-              <rect x="70"  y="58" width="22" height="70" fill="#1E88E5" rx="3" opacity="0.85"/>
-              <rect x="98"  y="88" width="22" height="40" fill="#FFA726" rx="3" opacity="0.85"/>
-              <rect x="126" y="32" width="22" height="96" fill="#1565C0" rx="3" opacity="0.85"/>
-              <rect x="154" y="62" width="22" height="66" fill="#43A047" rx="3" opacity="0.85"/>
-              <rect x="182" y="75" width="22" height="53" fill="#FFA726" rx="3" opacity="0.85"/>
-              <text x="53"  y="44"  text-anchor="middle" font-size="8" fill="#1565C0" font-family="sans-serif" font-weight="bold">145</text>
-              <text x="81"  y="54"  text-anchor="middle" font-size="8" fill="#1565C0" font-family="sans-serif" font-weight="bold">118</text>
-              <text x="109" y="84"  text-anchor="middle" font-size="8" fill="#E65100" font-family="sans-serif" font-weight="bold">67</text>
-              <text x="137" y="28"  text-anchor="middle" font-size="8" fill="#1565C0" font-family="sans-serif" font-weight="bold">162</text>
-              <text x="165" y="58"  text-anchor="middle" font-size="8" fill="#2E7D32" font-family="sans-serif" font-weight="bold">111</text>
-              <text x="193" y="71"  text-anchor="middle" font-size="8" fill="#E65100" font-family="sans-serif" font-weight="bold">89</text>
-              <text x="53"  y="142" text-anchor="middle" font-size="7.5" fill="#555" font-family="sans-serif">Ilonga</text>
-              <text x="81"  y="142" text-anchor="middle" font-size="7.5" fill="#555" font-family="sans-serif">Hombolo</text>
-              <text x="109" y="142" text-anchor="middle" font-size="7.5" fill="#555" font-family="sans-serif">Uyole</text>
-              <text x="137" y="142" text-anchor="middle" font-size="7.5" fill="#555" font-family="sans-serif">Kibaha</text>
-              <text x="165" y="142" text-anchor="middle" font-size="7.5" fill="#555" font-family="sans-serif">Igeri</text>
-              <text x="193" y="142" text-anchor="middle" font-size="7.5" fill="#555" font-family="sans-serif">Tumbi</text>
-              <text x="28"  y="131" text-anchor="end" font-size="7" fill="#888" font-family="sans-serif">0</text>
-              <text x="28"  y="104" text-anchor="end" font-size="7" fill="#888" font-family="sans-serif">50</text>
-              <text x="28"  y="77"  text-anchor="end" font-size="7" fill="#888" font-family="sans-serif">100</text>
-              <text x="28"  y="50"  text-anchor="end" font-size="7" fill="#888" font-family="sans-serif">150</text>
-              <text x="28"  y="18"  text-anchor="end" font-size="7" fill="#888" font-family="sans-serif">200</text>
-              <text x="122" y="10"  text-anchor="middle" font-size="9.5" font-weight="700" fill="#0D47A1" font-family="sans-serif">Station Rainfall (mm)</text>
-            </svg>
-          </div>
-          <div class="lp-card-body">
-            <div class="lp-card-tag lp-card-tag-blue">Daily Observations</div>
-            <div class="lp-card-title">Meteorological Observations</div>
-            <div class="lp-card-desc">Structured daily weather data collection at 0600 and 1200 UTC across all agrometeorological stations.</div>
-            <ul class="lp-card-list">
-              <li>Temperature: dry/wet bulb, max, min, dew point</li>
-              <li>Rainfall, wind run, sunshine hours, radiation</li>
-              <li>Soil temperature and evaporation pan data</li>
-              <li>WhatsApp / SMS sharing with one click</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Card 2: Seasonal Forecast — Tanzania Zone Map -->
-        <div class="lp-card">
-          <div class="lp-card-vis lp-card-vis-green">
-            <svg viewBox="0 0 220 175" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <clipPath id="lp-tz-clip">
-                  <path d="M 42,12 L 108,10 L 152,18 L 188,46 L 208,88 L 212,118 L 207,152 L 188,164 L 145,166 L 108,158 L 76,144 L 48,126 L 30,98 L 27,68 L 33,38 Z"/>
-                </clipPath>
-              </defs>
-              <!-- Rainfall zone fills clipped to Tanzania shape -->
-              <rect x="0" y="0"   width="220" height="68"  clip-path="url(#lp-tz-clip)" fill="#1E88E5" opacity="0.72"/>
-              <rect x="0" y="68"  width="220" height="54"  clip-path="url(#lp-tz-clip)" fill="#43A047" opacity="0.72"/>
-              <rect x="0" y="122" width="220" height="60"  clip-path="url(#lp-tz-clip)" fill="#FFC107" opacity="0.78"/>
-              <!-- Tanzania outline -->
-              <path d="M 42,12 L 108,10 L 152,18 L 188,46 L 208,88 L 212,118 L 207,152 L 188,164 L 145,166 L 108,158 L 76,144 L 48,126 L 30,98 L 27,68 L 33,38 Z" fill="none" stroke="#1a3a6e" stroke-width="1.8"/>
-              <!-- Zanzibar -->
-              <ellipse cx="218" cy="108" rx="7" ry="11" fill="#1E88E5" opacity="0.72" stroke="#1a3a6e" stroke-width="1.2"/>
-              <!-- Lakes -->
-              <ellipse cx="38"  cy="28"  rx="14" ry="10" fill="#90CAF9" opacity="0.55"/>
-              <ellipse cx="28"  cy="90"  rx="5"  ry="22" fill="#90CAF9" opacity="0.55"/>
-              <ellipse cx="68"  cy="148" rx="5"  ry="14" fill="#90CAF9" opacity="0.55"/>
-              <!-- Station dots -->
-              <circle cx="148" cy="55"  r="3.5" fill="#fff" stroke="#1a3a6e" stroke-width="1"/>
-              <circle cx="162" cy="120" r="3.5" fill="#fff" stroke="#1a3a6e" stroke-width="1"/>
-              <circle cx="95"  cy="110" r="3.5" fill="#fff" stroke="#1a3a6e" stroke-width="1"/>
-              <circle cx="120" cy="75"  r="3.5" fill="#fff" stroke="#1a3a6e" stroke-width="1"/>
-              <circle cx="88"  cy="144" r="3.5" fill="#fff" stroke="#1a3a6e" stroke-width="1"/>
-              <circle cx="58"  cy="68"  r="3.5" fill="#fff" stroke="#1a3a6e" stroke-width="1"/>
-              <!-- Station labels -->
-              <text x="152" y="51"  font-size="6.5" fill="#1a3a6e" font-family="sans-serif" font-weight="600">Lyamungu</text>
-              <text x="58"  y="108" font-size="6.5" fill="#1a3a6e" font-family="sans-serif" font-weight="600">Hombolo</text>
-              <text x="90"  y="142" font-size="6.5" fill="#1a3a6e" font-family="sans-serif" font-weight="600">Uyole</text>
-              <!-- Legend -->
-              <rect x="6"  y="10" width="9" height="7" fill="#1E88E5" rx="1"/>
-              <text x="18" y="16" font-size="7" fill="#222" font-family="sans-serif" font-weight="600">Above Normal</text>
-              <rect x="6"  y="21" width="9" height="7" fill="#43A047" rx="1"/>
-              <text x="18" y="27" font-size="7" fill="#222" font-family="sans-serif" font-weight="600">Near Normal</text>
-              <rect x="6"  y="32" width="9" height="7" fill="#FFC107" rx="1"/>
-              <text x="18" y="38" font-size="7" fill="#222" font-family="sans-serif" font-weight="600">Below Normal</text>
-            </svg>
-          </div>
-          <div class="lp-card-body">
-            <div class="lp-card-tag lp-card-tag-green">Seasonal Forecast</div>
-            <div class="lp-card-title">Seasonal Weather Forecasts</div>
-            <div class="lp-card-desc">Spatial rainfall outlooks for the OND and MAM seasons &mdash; enabling early planning across Tanzania&rsquo;s agroclimatic zones.</div>
-            <ul class="lp-card-list">
-              <li>Zone-based rainfall probability maps</li>
-              <li>Above / Near / Below normal rainfall outlook</li>
-              <li>Temperature and onset/cessation guidance</li>
-              <li>Regional and district-level advisories</li>
-            </ul>
-          </div>
-        </div>
-
-        <!-- Card 3: Agrometeorological Bulletin — Crops + Weather -->
-        <div class="lp-card">
-          <div class="lp-card-vis lp-card-vis-amber">
-            <svg viewBox="0 0 220 160" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <linearGradient id="lp-sky-grad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stop-color="#B3E5FC" stop-opacity="0.7"/>
-                  <stop offset="100%" stop-color="#E1F5FE" stop-opacity="0.4"/>
-                </linearGradient>
-              </defs>
-              <rect width="220" height="105" rx="6" fill="url(#lp-sky-grad)"/>
-              <rect y="105" width="220" height="55" fill="#8D6E63"/>
-              <rect y="100" width="220" height="14" fill="#558B2F"/>
-              <!-- Sun -->
-              <circle cx="182" cy="30" r="18" fill="#FCD116"/>
-              <circle cx="182" cy="30" r="24" fill="#FCD116" opacity="0.18"/>
-              <line x1="182" y1="7"  x2="182" y2="2"  stroke="#FCD116" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="197" y1="15" x2="201" y2="11" stroke="#FCD116" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="205" y1="30" x2="210" y2="30" stroke="#FCD116" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="197" y1="45" x2="201" y2="49" stroke="#FCD116" stroke-width="2.5" stroke-linecap="round"/>
-              <line x1="167" y1="45" x2="163" y2="49" stroke="#FCD116" stroke-width="2.5" stroke-linecap="round"/>
-              <!-- Cloud -->
-              <ellipse cx="72" cy="38" rx="28" ry="14" fill="#fff" opacity="0.9"/>
-              <ellipse cx="52" cy="44" rx="20" ry="12" fill="#fff" opacity="0.9"/>
-              <ellipse cx="92" cy="43" rx="22" ry="12" fill="#fff" opacity="0.9"/>
-              <!-- Rain drops -->
-              <ellipse cx="46" cy="64" rx="2.5" ry="5.5" fill="#1565C0" opacity="0.7"/>
-              <ellipse cx="60" cy="72" rx="2.5" ry="5.5" fill="#1565C0" opacity="0.7"/>
-              <ellipse cx="75" cy="61" rx="2.5" ry="5.5" fill="#1565C0" opacity="0.7"/>
-              <ellipse cx="90" cy="70" rx="2.5" ry="5.5" fill="#1565C0" opacity="0.7"/>
-              <ellipse cx="55" cy="82" rx="2"   ry="4"   fill="#1565C0" opacity="0.45"/>
-              <ellipse cx="82" cy="79" rx="2"   ry="4"   fill="#1565C0" opacity="0.45"/>
-              <!-- Maize plant 1 -->
-              <rect x="122" y="70" width="6" height="40" fill="#2E7D32" rx="3"/>
-              <path d="M 125,73 Q 148,64 146,78 Q 136,88 125,83 Z" fill="#4CAF50"/>
-              <path d="M 125,81 Q 103,73 105,87 Q 115,95 125,89 Z" fill="#388E3C"/>
-              <ellipse cx="125" cy="71" rx="4" ry="5" fill="#FCD116" opacity="0.85"/>
-              <!-- Maize plant 2 -->
-              <rect x="148" y="74" width="6" height="36" fill="#2E7D32" rx="3"/>
-              <path d="M 151,77 Q 172,68 170,82 Q 161,91 151,86 Z" fill="#4CAF50"/>
-              <path d="M 151,84 Q 130,77 132,90 Q 141,98 151,92 Z" fill="#388E3C"/>
-              <ellipse cx="151" cy="75" rx="4" ry="5" fill="#FCD116" opacity="0.85"/>
-              <!-- Maize plant 3 (taller) -->
-              <rect x="174" y="64" width="6" height="46" fill="#2E7D32" rx="3"/>
-              <path d="M 177,67 Q 198,58 196,72 Q 187,82 177,76 Z" fill="#4CAF50"/>
-              <path d="M 177,75 Q 156,68 158,81 Q 167,90 177,84 Z" fill="#388E3C"/>
-              <ellipse cx="177" cy="65" rx="4" ry="5" fill="#FCD116" opacity="0.85"/>
-              <!-- Bulletin card icon -->
-              <rect x="8"  y="108" width="52" height="42" rx="5" fill="#fff" opacity="0.92" stroke="#ddd" stroke-width="0.8"/>
-              <rect x="8"  y="108" width="52" height="13" rx="5" fill="#1565C0" opacity="0.88"/>
-              <rect x="8"  y="119" width="52" height="2"  fill="#1565C0" opacity="0.88"/>
-              <text x="34" y="119" text-anchor="middle" font-size="7" fill="#fff" font-family="sans-serif" font-weight="700">BULLETIN</text>
-              <line x1="14" y1="130" x2="54" y2="130" stroke="#eee" stroke-width="0.8"/>
-              <line x1="14" y1="138" x2="50" y2="138" stroke="#eee" stroke-width="0.8"/>
-              <line x1="14" y1="146" x2="54" y2="146" stroke="#eee" stroke-width="0.8"/>
-              <rect x="12" y="127" width="4" height="3" rx="0.5" fill="#FCA61F"/>
-              <rect x="12" y="135" width="4" height="3" rx="0.5" fill="#43A047"/>
-              <rect x="12" y="143" width="4" height="3" rx="0.5" fill="#1565C0"/>
-            </svg>
-          </div>
-          <div class="lp-card-body">
-            <div class="lp-card-tag lp-card-tag-amber">Agrometeorological Bulletin</div>
-            <div class="lp-card-title">Crop Weather Advisories</div>
-            <div class="lp-card-desc">Periodic agrometeorological bulletins informing farmers, extension officers and agricultural planners across Tanzania.</div>
-            <ul class="lp-card-list">
-              <li>Crop calendar and planting advisories</li>
-              <li>Plant phenology monitoring and reports</li>
-              <li>Rainfall distribution and crop stress analysis</li>
-              <li>Extreme weather impact assessment</li>
-            </ul>
-          </div>
-        </div>
-
+      <div class="lp-noaa-filters">
+        <select id="noaaVarFilter" onchange="renderNoaaProducts()"><option value="">All Variables</option></select>
+        <select id="noaaAggrFilter" onchange="renderNoaaProducts()"><option value="">All Aggregations</option></select>
+        <select id="noaaTypeFilter" onchange="renderNoaaProducts()"><option value="">All Types</option></select>
+      </div>
+      <div class="lp-cards" id="lp-noaa-cards">
+        <div class="lp-noaa-status">Loading products&hellip;</div>
       </div>
     </div>
   </div>
@@ -2839,6 +2674,77 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 let supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) ?? null;
 
+// ---- NOAA meteorological products (front-page "Our Products" grid) ----
+let noaaProductsCache = null;
+let noaaProductsLoading = false;
+
+async function loadNoaaProducts() {
+  if (noaaProductsCache || noaaProductsLoading || !supabaseClient) return;
+  noaaProductsLoading = true;
+  const { data, error } = await supabaseClient
+    .from('noaa_products')
+    .select('*')
+    .order('created_at', { ascending: false });
+  noaaProductsLoading = false;
+  if (error) {
+    const grid = document.getElementById('lp-noaa-cards');
+    if (grid) grid.innerHTML = '<div class="lp-noaa-status">Unable to load products right now.</div>';
+    return;
+  }
+  noaaProductsCache = data || [];
+  populateNoaaFilters(noaaProductsCache);
+  renderNoaaProducts();
+}
+
+function populateNoaaFilters(products) {
+  const uniq = (key) => [...new Set(products.map(p => p[key]).filter(Boolean))].sort();
+  const fill = (id, values, fmt) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    values.forEach(v => el.add(new Option(fmt ? fmt(v) : v, v)));
+  };
+  fill('noaaVarFilter', uniq('var'), v => v.toUpperCase());
+  fill('noaaAggrFilter', uniq('aggr'), v => v.charAt(0).toUpperCase() + v.slice(1));
+  fill('noaaTypeFilter', uniq('plot_type'), v => v.charAt(0).toUpperCase() + v.slice(1));
+}
+
+function noaaCardMeta(p) {
+  const parts = [];
+  if (p.level_hpa) parts.push(p.level_hpa + ' hPa');
+  if (p.aggr) parts.push(p.aggr);
+  if (p.start_year) parts.push(p.end_year && p.end_year !== p.start_year ? (p.start_year + '\u2013' + p.end_year) : ('' + p.start_year));
+  return parts.join(' &middot; ');
+}
+
+const NOAA_TAG_CLASS = { spatial: 'lp-card-tag-blue', timeseries: 'lp-card-tag-green', hovmoller: 'lp-card-tag-amber' };
+
+function renderNoaaProducts() {
+  const grid = document.getElementById('lp-noaa-cards');
+  if (!grid || !noaaProductsCache) return;
+  const v = document.getElementById('noaaVarFilter')?.value || '';
+  const a = document.getElementById('noaaAggrFilter')?.value || '';
+  const t = document.getElementById('noaaTypeFilter')?.value || '';
+  const filtered = noaaProductsCache.filter(p =>
+    (!v || p.var === v) && (!a || p.aggr === a) && (!t || p.plot_type === t)
+  );
+  if (!filtered.length) {
+    grid.innerHTML = '<div class="lp-noaa-status">No products match these filters.</div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(p => `
+    <div class="lp-card">
+      <div class="lp-card-vis lp-card-vis-img">
+        <img src="${p.public_url}" alt="${(p.var||'').toUpperCase()} ${p.plot_type||''}" loading="lazy">
+      </div>
+      <div class="lp-card-body">
+        <div class="lp-card-tag ${NOAA_TAG_CLASS[p.plot_type] || 'lp-card-tag-blue'}">${(p.plot_type||'').toUpperCase()}</div>
+        <div class="lp-card-title">${(p.var||'').toUpperCase()} &mdash; ${p.aggr||''}</div>
+        <div class="lp-card-desc">${noaaCardMeta(p)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
 
 const BEEM_API_KEY    = '79e90e17ca823a2c';
 const BEEM_SECRET_KEY = 'MDU0ODhhOTBjMGMwNDU3NTZiNDAxMTMyZjExMjQ2MzY1ZTljYmI4MjJiYjcyNmI3YmZmOThhNjdjOGNhNDgwYg==';
@@ -3106,6 +3012,7 @@ function showLanding() {
   document.getElementById('authScreen').style.display='none';
   document.getElementById('mainApp').style.display='none';
   window.scrollTo({top:0,behavior:'smooth'});
+  loadNoaaProducts();
 }
 
 function enterPublicView() {
