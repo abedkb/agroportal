@@ -1,0 +1,81 @@
+name: NOAA Product Pipeline
+
+on:
+  schedule:
+    # Runs every Monday at 03:00 UTC. Change to '0 3 * * *' for daily.
+    - cron: '0 3 * * 1'
+  workflow_dispatch:
+    # Lets you trigger this manually from the Actions tab, with optional overrides.
+    inputs:
+      var:
+        description: 'NOAA variable (shum, uwnd, vwnd, air, omega, hgt)'
+        required: false
+        default: 'shum'
+      level:
+        description: 'Pressure level in hPa'
+        required: false
+        default: '850'
+      start_year:
+        description: 'Start year'
+        required: false
+        default: '2026'
+      end_year:
+        description: 'End year'
+        required: false
+        default: '2026'
+
+jobs:
+  run-pipeline:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system dependencies (cdo, nco, wget)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cdo nco wget
+
+      - name: Install Python dependencies
+        run: |
+          pip install xarray matplotlib numpy pandas scipy cartopy supabase
+
+      - name: Make pipeline script executable
+        run: chmod +x pipeline/noaa_pipeline.sh
+
+      - name: Run NOAA pipeline
+        working-directory: pipeline
+        run: |
+          ./noaa_pipeline.sh \
+            --var "${{ github.event.inputs.var || 'shum' }}" \
+            --level "${{ github.event.inputs.level || '850' }}" \
+            --start "${{ github.event.inputs.start_year || '2026' }}" \
+            --end "${{ github.event.inputs.end_year || '2026' }}" \
+            --aggr daily,monthly,seasonal,annual \
+            --lat -6.8 \
+            --lon 39.28 \
+            --plot-type both \
+            --outdir "$(pwd)/NOAA"
+
+      # Step 7 inside noaa_pipeline.sh already calls upload_to_supabase.py
+      # automatically when SUPABASE_URL / SUPABASE_SERVICE_KEY are set above,
+      # so no separate upload step is needed here.
+
+      - name: Upload run logs as artifact (for debugging)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: noaa-pipeline-logs
+          path: pipeline/NOAA/logs/
+          retention-days: 7
