@@ -49,10 +49,17 @@ jobs:
 
       - name: Install Python dependencies
         run: |
-             pip install xarray netCDF4 h5netcdf matplotlib numpy pandas scipy cartopy supabase
+          pip install xarray netCDF4 h5netcdf matplotlib numpy pandas scipy cartopy supabase
 
       - name: Make pipeline script executable
         run: chmod +x pipeline/noaa_pipeline.sh
+
+      - name: Stage upload script into pipeline output dir
+        # noaa_pipeline.sh looks for upload_to_supabase.py inside its own
+        # $OUTDIR (pipeline/NOAA), not next to itself -- so copy it there first.
+        run: |
+          mkdir -p pipeline/NOAA
+          cp pipeline/upload_to_supabase.py pipeline/NOAA/upload_to_supabase.py
 
       - name: Run NOAA pipeline
         working-directory: pipeline
