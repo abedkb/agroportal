@@ -10,13 +10,13 @@
 #               Options: shum | uwnd | vwnd | air | omega | hgt
 #   --level     Pressure level in hPa (default: 850)
 #               e.g.: 1000 925 850 700 600 500 400 300 250 200 150 100 50 10
-#   --start     Start year (default: 1981)
-#   --end       End year  (default: 2022)
+#   --start     Start year, or "all" for dataset start / 1948 (default: all)
+#   --end       End year, or "all" to auto-detect latest year on the server (default: all)
 #   --aggr      Aggregation(s), comma-separated (default: daily,monthly,seasonal,annual)
 #               Options: daily | monthly | seasonal | annual
 #   --plot      Launch Python plot after processing (default: true)
-#   --lat       Latitude  for time series (default: 20.0)
-#   --lon       Longitude for time series (default: 80.0)
+#   --lat       Latitude  for time series -- any value in the grid (default: 20.0)
+#   --lon       Longitude for time series -- any value in the grid (default: 80.0)
 #   --plot-type Plot type: spatial | timeseries | both (default: both)
 #   --outdir    Output directory (default: current directory ./noaa_data)
 #   --help      Show this help message
@@ -28,9 +28,9 @@
 #   - Python 3 with: xarray, matplotlib, cartopy, numpy, pandas, scipy
 #
 # Examples:
-#   bash noaa_pipeline.sh --var shum --level 850 --start 1981 --end 2022 --lat 20 --lon 80
-#   bash noaa_pipeline.sh --var uwnd --level 500 --aggr monthly,seasonal --plot-type spatial
-#   bash noaa_pipeline.sh --var air  --level 850 --start 2000 --end 2022 --plot-type timeseries
+#   bash noaa_pipeline.sh --var shum --level 850                    # full record, auto-detected
+#   bash noaa_pipeline.sh --var uwnd --level 500 --start 1990 --end 2020
+#   bash noaa_pipeline.sh --var air  --level 850 --lat 12.5 --lon 45.2 --plot-type timeseries
 # =============================================================================
 
 set -euo pipefail
@@ -40,8 +40,8 @@ set -euo pipefail
 # ─────────────────────────────────────────────────────────────────────────────
 VAR="shum"
 LEVEL="850"
-START_YEAR=1981
-END_YEAR=2022
+START_YEAR="all"   # "all" = dataset start (1948), or override with e.g. 1981
+END_YEAR="all"     # "all" = latest year found on the NOAA server
 AGGREGATIONS="daily,monthly,seasonal,annual"
 LAUNCH_PLOT=true
 USER_LAT=20.0
@@ -162,6 +162,58 @@ python3 -c "import xarray, matplotlib, numpy, pandas" 2>/dev/null \
 python3 -c "import cartopy" 2>/dev/null \
     && log_success "cartopy found" \
     || log_warn "cartopy not found -- spatial maps will be skipped. Install: pip install cartopy"
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Resolve "all" for --start/--end into real years by probing the server
+# ─────────────────────────────────────────────────────────────────────────────
+# NCEP Reanalysis I begins in 1948; this is a known constant of the dataset,
+# not something we need to probe for.
+DATASET_START_YEAR=1948
+
+detect_latest_available_year() {
+    # Determine which URL base applies for THIS variable (surface vs pressure)
+    local probe_base
+    if is_surface_var "$VAR"; then
+        probe_base="$BASE_URL_SURFACE"
+    else
+        probe_base="$BASE_URL_DAILY"
+    fi
+
+    local candidate
+    candidate=$(date +%Y)
+    # Walk backwards from the current year until a file actually exists
+    while [[ "$candidate" -ge "$DATASET_START_YEAR" ]]; do
+        if wget -q --spider --timeout=15 --tries=2 \
+                "${probe_base}/${VAR}.${candidate}.nc" 2>/dev/null; then
+            echo "$candidate"
+            return 0
+        fi
+        candidate=$((candidate - 1))
+    done
+    # Fallback if probing fails entirely (e.g. offline) -- caller should
+    # already have a sane default in this case.
+    echo ""
+}
+
+if [[ "$START_YEAR" == "all" || "$END_YEAR" == "all" ]]; then
+    log_section "Resolving 'all' year range for ${VAR}"
+
+    if [[ "$START_YEAR" == "all" ]]; then
+        START_YEAR="$DATASET_START_YEAR"
+        log_info "Start year -> ${START_YEAR} (dataset start)"
+    fi
+
+    if [[ "$END_YEAR" == "all" ]]; then
+        log_info "Probing server for latest available year..."
+        DETECTED_END="$(detect_latest_available_year)"
+        if [[ -z "$DETECTED_END" ]]; then
+            log_error "Could not auto-detect latest year (network issue?). Pass --end explicitly."
+            exit 1
+        fi
+        END_YEAR="$DETECTED_END"
+        log_info "End year   -> ${END_YEAR} (latest file found on server)"
+    fi
+fi
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Step 1: Download Raw Daily Files
@@ -421,6 +473,10 @@ def parse_args():
     p.add_argument("--var",       default="shum", help="Variable name")
     p.add_argument("--lat",       type=float, default=20.0,  help="Latitude for time series")
     p.add_argument("--lon",       type=float, default=80.0,  help="Longitude for time series")
+    p.add_argument("--lat-min",   type=float, default=None, help="Domain crop: min latitude (spatial maps)")
+    p.add_argument("--lat-max",   type=float, default=None, help="Domain crop: max latitude (spatial maps)")
+    p.add_argument("--lon-min",   type=float, default=None, help="Domain crop: min longitude, -180..180 (spatial maps)")
+    p.add_argument("--lon-max",   type=float, default=None, help="Domain crop: max longitude, -180..180 (spatial maps)")
     p.add_argument("--plot-type", default="both", choices=["spatial","timeseries","both"])
     p.add_argument("--aggr",      default="daily", help="Aggregation label")
     p.add_argument("--outdir",    default="./plots", help="Output plot directory")
@@ -437,8 +493,14 @@ def parse_args():
 # Data Loading
 # ─────────────────────────────────────────────────────────────────────────────
 def load_data(nc_path: str, var_name: str, lat: float, lon: float,
-              start: str = None, end: str = None) -> dict:
-    """Load and subset NetCDF data."""
+              start: str = None, end: str = None, domain: dict = None) -> dict:
+    """Load and subset NetCDF data.
+
+    domain, if given, is {"lat_min","lat_max","lon_min","lon_max"} (degrees,
+    lon in -180..180) and crops the grid before the spatial mean is taken --
+    both for correctness (a regional mean, not a global one) and speed
+    (matplotlib/cartopy render far less data for a small region).
+    """
     print(f"[INFO] Loading: {nc_path}")
     ds = xr.open_dataset(nc_path, decode_times=True)
 
@@ -481,6 +543,15 @@ def load_data(nc_path: str, var_name: str, lat: float, lon: float,
     if "lat" in da.coords and da.lat.values[0] > da.lat.values[-1]:
         da = da.sortby("lat")
 
+    # Crop to a bounding box if requested (spatial "any domain" support)
+    if domain:
+        da = da.sel(
+            lat=slice(domain["lat_min"], domain["lat_max"]),
+            lon=slice(domain["lon_min"], domain["lon_max"]),
+        )
+        if da.sizes.get("lat", 0) == 0 or da.sizes.get("lon", 0) == 0:
+            raise ValueError(f"Domain crop produced an empty grid: {domain}")
+
     # Time filter
     if start or end:
         da = da.sel(time=slice(start, end))
@@ -506,14 +577,19 @@ def load_data(nc_path: str, var_name: str, lat: float, lon: float,
         "var_name":   var_name,
         "actual_lat": actual_lat,
         "actual_lon": actual_lon,
+        "domain":     domain,
     }
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Spatial Map
 # ─────────────────────────────────────────────────────────────────────────────
 def plot_spatial(da_spatial, var_name: str, args, meta: dict,
-                 actual_lat: float, actual_lon: float):
-    """Plot global/regional spatial map with optional cartopy."""
+                 actual_lat: float, actual_lon: float, domain: dict = None):
+    """Plot global/regional spatial map with optional cartopy.
+
+    domain, if given, restricts the map extent to a bounding box instead
+    of the whole globe -- {"lat_min","lat_max","lon_min","lon_max"}.
+    """
     try:
         import cartopy.crs as ccrs
         import cartopy.feature as cfeature
@@ -570,13 +646,20 @@ def plot_spatial(da_spatial, var_name: str, args, meta: dict,
                      alpha=0.5, linestyle="--",
                      xlocs=range(-180, 181, 30), ylocs=range(-90, 91, 30))
 
-        # Mark selected coordinate
+        # Mark selected coordinate (only meaningful if it's inside the shown extent)
         ax.plot(actual_lon, actual_lat, marker="*", color="#ff6b6b",
                 markersize=14, transform=proj, zorder=10,
                 label=f"Selected: {actual_lat:.1f}N, {actual_lon:.1f}E")
         ax.legend(loc="lower left", fontsize=9,
                   facecolor="#1a1a2e", edgecolor="#444466", labelcolor="white")
-        ax.set_global()
+
+        if domain:
+            ax.set_extent(
+                [domain["lon_min"], domain["lon_max"], domain["lat_min"], domain["lat_max"]],
+                crs=proj,
+            )
+        else:
+            ax.set_global()
 
     else:
         # Fallback: plain matplotlib
@@ -608,7 +691,12 @@ def plot_spatial(da_spatial, var_name: str, args, meta: dict,
     fig.patch.set_facecolor("#0f0f1a")
 
     os.makedirs(args.outdir, exist_ok=True)
-    fname = f"{var_name}_{args.level}hPa_{args.aggr}_spatial.{args.format}"
+    if domain:
+        fname = (f"{var_name}_{args.level}hPa_{args.aggr}_spatial_"
+                  f"{domain['lat_min']:.1f}_{domain['lat_max']:.1f}_"
+                  f"{domain['lon_min']:.1f}_{domain['lon_max']:.1f}.{args.format}")
+    else:
+        fname = f"{var_name}_{args.level}hPa_{args.aggr}_spatial.{args.format}"
     fpath = os.path.join(args.outdir, fname)
     plt.savefig(fpath, dpi=args.dpi, bbox_inches="tight",
                 facecolor="#0f0f1a", edgecolor="none")
@@ -823,10 +911,19 @@ def main():
         "cmap_anom": "RdBu_r"
     })
 
+    # Optional bounding box for spatial maps
+    domain = None
+    if None not in (args.lat_min, args.lat_max, args.lon_min, args.lon_max):
+        domain = {
+            "lat_min": args.lat_min, "lat_max": args.lat_max,
+            "lon_min": args.lon_min, "lon_max": args.lon_max,
+        }
+
     # Load data
     result = load_data(args.nc, args.var,
                        args.lat, args.lon,
-                       args.start, args.end)
+                       args.start, args.end,
+                       domain=domain)
 
     plots_saved = []
 
@@ -834,7 +931,8 @@ def main():
     if args.plot_type in ("spatial", "both"):
         p = plot_spatial(result["spatial"], result["var_name"],
                          args, meta,
-                         result["actual_lat"], result["actual_lon"])
+                         result["actual_lat"], result["actual_lon"],
+                         domain=result["domain"])
         plots_saved.append(p)
 
     # Time series
@@ -962,4 +1060,3 @@ echo -e "${GREEN}Plots       :${NC} ${PLOT_DIR}"
 echo -e "${GREEN}Log file    :${NC} ${LOG_FILE}"
 echo ""
 log_success "All done!"
-
