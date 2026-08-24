@@ -6,6 +6,12 @@
 <title>TMA AgroMet Service System — Tanzania Meteorological Authority</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+<style>
+  /* Keep OSM attribution present (required by their usage terms) but unobtrusive */
+  .leaflet-control-attribution{font-size:8px!important;opacity:.55;padding:0 4px!important}
+</style>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1183,8 +1189,10 @@ body{
         </div>
       </div>
       <div class="lp-nav-actions">
+        <button class="lp-nav-btn lp-nav-btn-outline" onclick="showLandingProducts()">Products</button>
         <button class="lp-hamburger-btn" onclick="toggleLandingMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
         <div class="lp-hamburger-menu" id="lp-hamburger-menu">
+          <button onclick="closeLandingMenu();showLandingProducts()">Products</button>
           <button onclick="closeLandingMenu();openStaffLogin()">Login</button>
           <button onclick="closeLandingMenu();openStaffRegister()">Register</button>
         </div>
@@ -1200,9 +1208,21 @@ body{
     </div>
   </div>
 
-  <!-- PRODUCTS SECTION -->
-  <div id="lp-products-anchor" class="lp-section lp-section-alt">
+  <!-- LIVE STATION MAP -->
+  <div id="lp-map-section" class="lp-section">
     <div class="lp-container">
+      <div class="lp-section-hd">
+        <h2>Agromet Station Map</h2>
+        <p>Today&rsquo;s latest rainfall and temperature readings across Tanzania&rsquo;s agrometeorological stations</p>
+      </div>
+      <div id="tzStationMap" style="height:640px;max-width:700px;border-radius:12px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,0.1);margin:0 auto"></div>
+    </div>
+  </div>
+
+  <!-- PRODUCTS SECTION (hidden from the default scroll — opened via the "Products" nav link) -->
+  <div id="lp-products-anchor" class="lp-section lp-section-alt" style="display:none">
+    <div class="lp-container">
+      <button class="btn" style="margin-bottom:1.25rem" onclick="hideLandingProducts()">&larr; Back to Home</button>
       <div class="lp-section-hd">
         <span class="lp-pill lp-pill-blue">Our Products</span>
         <h2>Agrometeorological Services &amp; Products</h2>
@@ -1232,7 +1252,7 @@ body{
     </div>
     <div class="lp-footer-links">
       <a href="#" onclick="openStaffLogin();return false">Stakeholder Login</a>
-      <a href="#" onclick="document.getElementById('lp-products-anchor').scrollIntoView({behavior:'smooth'});return false">Browse Products</a>
+      <a href="#" onclick="showLandingProducts();return false">Browse Products</a>
       <a href="#" onclick="openStaffLogin();return false">Staff Login</a>
       <a href="https://www.meteo.go.tz" target="_blank" rel="noopener">TMA Website</a>
     </div>
@@ -3129,6 +3149,8 @@ function showLanding() {
   window.scrollTo({top:0,behavior:'smooth'});
   loadNoaaProducts();
   closeLandingMenu();
+  initTzStationMap();
+  loadTzStationReadings();
 }
 
 function toggleLandingMenu() {
@@ -3147,6 +3169,124 @@ document.addEventListener('click', function(e){
     menu.classList.remove('open');
   }
 });
+
+// ═══════════════════════════════════════════════════════════════
+//  LANDING PAGE — PRODUCTS PANEL (moved behind the top nav link)
+// ═══════════════════════════════════════════════════════════════
+function showLandingProducts() {
+  closeLandingMenu();
+  const el=document.getElementById('lp-products-anchor');
+  if(!el) return;
+  el.style.display='';
+  el.scrollIntoView({behavior:'smooth'});
+}
+function hideLandingProducts() {
+  const el=document.getElementById('lp-products-anchor');
+  if(!el) return;
+  el.style.display='none';
+  const hero=document.querySelector('.lp-hero');
+  if(hero) hero.scrollIntoView({behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  LANDING PAGE — TANZANIA STATION MAP
+//  NOTE: coordinates below are approximate (district/town-level),
+//  sourced from each station's known host institute location.
+//  Ilonga, Mlingano, Ukiriguru, Naliendele, Tumbi, Kibaha, Uyole and
+//  Hombolo are well-confirmed; Igeri, Kizimbani, Matangatuani and
+//  Lyamungu should be double-checked against TMA's own station
+//  registry before this is treated as survey-accurate.
+// ═══════════════════════════════════════════════════════════════
+const TZ_STATIONS = [
+  { name: 'Ilonga Agromet Station',      lat: -6.8500,  lng: 37.0500 },
+  { name: 'Mlingano Station',            lat: -5.1333,  lng: 38.7833 },
+  { name: 'Ukiriguru Station',           lat: -2.7000,  lng: 33.0000 },
+  { name: 'Naliendele Station',          lat: -10.3333, lng: 40.1833 },
+  { name: 'Tumbi Station',               lat: -5.0333,  lng: 32.8500 },
+  { name: 'Kibaha Station',              lat: -6.7667,  lng: 38.9167 },
+  { name: 'Uyole Station',               lat: -8.9167,  lng: 33.3667 },
+  { name: 'Igeri Station',               lat: -9.2667,  lng: 34.7667 },
+  { name: 'Kizimbani Station',           lat: -6.1333,  lng: 39.2333 },
+  { name: 'Matangatuani Station',        lat: -5.0000,  lng: 39.7667 },
+  { name: 'Hombolo Station',             lat: -5.9500,  lng: 35.8500 },
+  { name: 'Lyamungu Station',            lat: -3.3667,  lng: 37.2167 },
+];
+
+let _tzMap = null;
+let _tzMarkers = {};
+
+function initTzStationMap() {
+  const el = document.getElementById('tzStationMap');
+  if (!el || typeof L === 'undefined' || _tzMap) return;
+  // Tanzania's approximate bounding box — keeps the view scoped to the
+  // country instead of showing neighboring countries or the wider region.
+  const TZ_BOUNDS = L.latLngBounds([-11.75, 29.4], [-0.95, 40.5]);
+  _tzMap = L.map('tzStationMap', {
+    scrollWheelZoom: false,
+    maxBounds: TZ_BOUNDS.pad(0.08),
+    maxBoundsViscosity: 0.9,
+    minZoom: 6,
+  });
+  _tzMap.fitBounds(TZ_BOUNDS, { padding: [4, 4] });
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors',
+    maxZoom: 12,
+  }).addTo(_tzMap);
+  // The container's real size isn't always settled at the moment the map
+  // is created, which can leave Leaflet's initial fit too zoomed-out —
+  // re-fit once layout has actually finished.
+  setTimeout(() => { if (_tzMap) { _tzMap.invalidateSize(); _tzMap.fitBounds(TZ_BOUNDS, { padding: [4, 4] }); } }, 250);
+
+  TZ_STATIONS.forEach(st => {
+    const marker = L.circleMarker([st.lat, st.lng], {
+      radius: 8,
+      color: '#9aa5b1',
+      fillColor: '#c7ccd1',
+      fillOpacity: 0.9,
+      weight: 2,
+    }).addTo(_tzMap);
+    marker.bindTooltip(st.name, { direction: 'top', offset: [0, -8], sticky: false });
+    marker.bindPopup(`<b>${st.name}</b><br/>Loading today's reading&hellip;`);
+    _tzMarkers[st.name] = marker;
+  });
+}
+
+async function loadTzStationReadings() {
+  if (!_sbReady() || !_tzMap) return;
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  try {
+    const { data, error } = await supabaseClient
+      .from('observations')
+      .select('station_name, session, rainfall_std_mm, temp_max, temp_min, obs_date')
+      .eq('obs_date', todayStr);
+    if (error) { console.error('Station map fetch error:', error.message); return; }
+
+    const latestByStation = {};
+    (data || []).forEach(r => {
+      const prev = latestByStation[r.station_name];
+      if (!prev || (r.session || '') > (prev.session || '')) latestByStation[r.station_name] = r;
+    });
+
+    Object.entries(_tzMarkers).forEach(([name, marker]) => {
+      const rec = latestByStation[name];
+      if (!rec) {
+        marker.bindPopup(`<b>${name}</b><br/>No observation received yet today.`);
+        return;
+      }
+      marker.setStyle({ color: '#1565C0', fillColor: '#42a5f5' });
+      const rain = (rec.rainfall_std_mm ?? '--');
+      const tmax = (rec.temp_max ?? '--');
+      const tmin = (rec.temp_min ?? '--');
+      marker.bindPopup(
+        `<b>${name}</b><br/>Session ${rec.session} UTC<br/>` +
+        `Rainfall: ${rain} mm<br/>Temp max/min: ${tmax}&deg;C / ${tmin}&deg;C`
+      );
+    });
+  } catch (e) {
+    console.error('Station map load failed:', e);
+  }
+}
 
 function enterPublicView() {
   const ls=document.getElementById('landingScreen'); if(ls) ls.style.display='none';
