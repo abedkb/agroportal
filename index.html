@@ -1320,7 +1320,7 @@ body{
         <select id="reg-title"><option value="">-- Select designation --</option><option>Meteorological Officer</option><option>Meteorologist</option></select>
       </div>
       <div class="field"><label>Station</label>
-        <select id="reg-station"><option value="">-- Select station --</option><option>Ilonga Agromet Station</option><option>Mlingano Station</option><option>Ukiriguru Station</option><option>Naliendele Station</option><option>Tumbi Station</option><option>Kibaha Station</option><option>Uyole Station</option><option>Igeri Station</option><option>Kizimbani Station</option><option>Matangatuani Station</option><option>Hombolo Station</option><option>Lyamungu Station</option></select>
+        <select id="reg-station"><option value="">-- Select station --</option><option>Ilonga Agromet Station</option><option>Mlingano Station</option><option>Ukiriguru Station</option><option>Naliendele Station</option><option>Tumbi Station</option><option>Kibaha Station</option><option>Uyole Station</option><option>Igeri Station</option><option>Kizimbani Station</option><option>Matangatuani Station</option><option>Hombolo Station</option><option>Lyamungu Station</option><option>Agromet Headquarter</option></select>
       </div>
       <div class="field-row">
         <div class="field"><label>Phone number</label><input type="tel" id="reg-phone" placeholder="+255 7XX XXX XXX"/></div>
@@ -3173,6 +3173,12 @@ document.addEventListener('click', function(e){
 // ═══════════════════════════════════════════════════════════════
 //  LANDING PAGE — PRODUCTS PANEL (moved behind the top nav link)
 // ═══════════════════════════════════════════════════════════════
+function _greetByTimeOfDay() {
+  const h = new Date().getHours();
+  if (h < 12) return 'Good morning';
+  if (h < 18) return 'Good afternoon';
+  return 'Good evening';
+}
 function showLandingProducts() {
   closeLandingMenu();
   const el=document.getElementById('lp-products-anchor');
@@ -3373,7 +3379,7 @@ function submitRegister() {
   showToast('Registration submitted','Your request has been sent to the administrator.','success');
   if(ADMIN_CREDENTIALS.phone){
     sendBeemSms([ADMIN_CREDENTIALS.phone],
-      `TMA AgroMet: New observer registration request from ${name} (${station}). Please review and approve in the admin dashboard.`);
+      `${_greetByTimeOfDay()} TMA Agromet administrator, there is a new observer registration request from ${name} from ${station}, Please may you review and approval in the admin dashboard.`);
   }
   switchAuthTab('login');
 }
@@ -3450,7 +3456,7 @@ function submitStakeholderRegister() {
   showToast('Registration submitted','Your stakeholder request has been sent.','success');
   if(ADMIN_CREDENTIALS.phone){
     sendBeemSms([ADMIN_CREDENTIALS.phone],
-      `TMA AgroMet: New stakeholder registration request from ${name}${org?' ('+org+')':''}. Please review and approve in the admin dashboard.`);
+      `${_greetByTimeOfDay()} TMA Agromet administrator, there is a new stakeholder registration request from ${name}${org?' from '+org:''}, Please may you review and approval in the admin dashboard.`);
   }
   switchAuthTab('login');
 }
