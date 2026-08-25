@@ -111,7 +111,7 @@ def list_available_combos() -> list:
         if not os.path.isdir(var_dir):
             continue
         for fname in sorted(os.listdir(var_dir)):
-            m = re.match(rf"^{re.escape(var)}_(\d+)hPa_([a-zA-Z]+)_(\d{{4}})_(\d{{4}})\.nc$", fname)
+            m = re.match(rf"^{re.escape(var)}_([a-zA-Z0-9]+)hPa_([a-zA-Z]+)_(\d{{4}})_(\d{{4}})\.nc$", fname)
             if m:
                 level, aggr, start, end = m.groups()
                 combos.append({
