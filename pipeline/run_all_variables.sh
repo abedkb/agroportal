@@ -69,28 +69,65 @@ while [[ $# -gt 0 ]]; do
 done
 
 # ── Variable:Level combinations to generate ─────────────────────────────────
-# Format "var:level". For surface variables (prate, pr_wtr, slp, skt) the
-# level value is unused by the pipeline but still required as an argument --
-# any placeholder like "sfc" works and shows up as a label only.
+# This is the full catalog NOAA actually serves for this dataset (verified
+# against the live server), not a hand-picked subset. Two things NOT to
+# get wrong here:
 #
-# Every combo listed here becomes selectable in the live explorer's
-# Variable/Level dropdowns (plot_api.py's /api/meta reads this straight off
-# disk, not from this script) -- add or remove entries to control what's
-# offered on the website.
-COMBOS=(
-    "shum:850"
-    "shum:700"
-    "uwnd:850"
-    "uwnd:200"
-    "vwnd:850"
-    "vwnd:200"
-    "air:850"
-    "air:1000"
-    "hgt:500"
-    "omega:500"
-    "rhum:850"
+# 1. Not every pressure variable has all 17 standard levels. NOAA's own docs:
+#    humidity (shum, rhum) only goes up to 300mb; omega only up to 100mb.
+#    Requesting e.g. shum@100 would just 404 -- so levels are generated
+#    per-variable below, not as one flat list crossed with every variable.
+# 2. Surface variables are NOT simply "${var}.${year}.nc" on NOAA's server --
+#    most carry a level suffix baked into the actual filename (e.g.
+#    air.sig995, not air). Using the wrong name silently 404s. The names
+#    below are verified; skt and prate were dropped because they don't
+#    appear in this dataset's surface catalog at all (they live in a
+#    different, Gaussian-grid product) -- add them back only after
+#    confirming their real path, not by guessing.
+#
+# IMPORTANT -- SCALE: this generates 100+ combinations. With --start all
+# --end all (the default), that's 100+ variables x ~78 years of global
+# daily data each. This is genuinely large (realistically many tens of GB
+# and a long runtime) -- trim the arrays below before running unmodified
+# if that's not what you want.
+#
+# ALSO NOTE: NCEP/NCAR Reanalysis 1 stopped production, with its last date
+# March 17, 2026 (per NOAA). "--end all" will keep landing on 2026 --
+# that's expected, not a bug; the dataset simply isn't growing anymore.
+PRESSURE_LEVELS_FULL=(1000 925 850 700 600 500 400 300 250 200 150 100 70 50 30 20 10)
+PRESSURE_LEVELS_HUMIDITY=(1000 925 850 700 600 500 400 300)   # shum, rhum: to 300mb only
+PRESSURE_LEVELS_OMEGA=(1000 925 850 700 600 500 400 300 250 200 150 100)  # omega: to 100mb only
+
+levels_for_var() {
+    case "$1" in
+        shum|rhum) echo "${PRESSURE_LEVELS_HUMIDITY[@]}" ;;
+        omega)     echo "${PRESSURE_LEVELS_OMEGA[@]}" ;;
+        *)         echo "${PRESSURE_LEVELS_FULL[@]}" ;;
+    esac
+}
+
+PRESSURE_VARIABLES=(air hgt omega rhum shum uwnd vwnd)
+
+# Surface variables: verified download names, level is a fixed label (not
+# looped) since each is inherently single-level.
+SURFACE_COMBOS=(
     "slp:sfc"
+    "pres.sfc:sfc"
+    "pr_wtr.eatm:sfc"
+    "air.sig995:sfc"
+    "uwnd.sig995:sfc"
+    "vwnd.sig995:sfc"
+    "rhum.sig995:sfc"
+    "omega.sig995:sfc"
 )
+
+COMBOS=()
+for v in "${PRESSURE_VARIABLES[@]}"; do
+    for lvl in $(levels_for_var "$v"); do
+        COMBOS+=("${v}:${lvl}")
+    done
+done
+COMBOS+=("${SURFACE_COMBOS[@]}")
 
 TOTAL=${#COMBOS[@]}
 OK=0
