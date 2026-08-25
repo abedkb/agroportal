@@ -105,7 +105,15 @@ done
 # ─────────────────────────────────────────────────────────────────────────────
 # Validate Variable Name & Determine URL Type
 # ─────────────────────────────────────────────────────────────────────────────
-SURFACE_VARS=("prate" "pr_wtr" "slp" "skt")
+# NOTE on names: pressure vars are one file per year covering all levels
+# (level extracted afterward via cdo). Surface vars are NOT simply
+# "${var}.${year}.nc" -- most carry a level suffix baked into the filename
+# itself (verified against the live NOAA server), so the "variable name"
+# here IS the exact download stem. slp is the one exception (no suffix).
+# skt and prate are NOT in this dataset's Dailies/surface catalog (they
+# live elsewhere, e.g. a Gaussian-grid product) -- omitted until verified,
+# rather than guessing a path that would silently 404.
+SURFACE_VARS=("slp" "pres.sfc" "pr_wtr.eatm" "air.sig995" "uwnd.sig995" "vwnd.sig995" "rhum.sig995" "omega.sig995")
 PRESSURE_VARS=("shum" "uwnd" "vwnd" "air" "omega" "hgt" "rhum")
 
 is_surface_var() {
@@ -518,6 +526,13 @@ VAR_META = {
     "rhum":  {"long_name": "Relative Humidity",    "units": "%",       "cmap": "YlGnBu",  "cmap_anom": "BrBG"},
     "prate": {"long_name": "Precipitation Rate",   "units": "kg/m2/s", "cmap": "Blues",   "cmap_anom": "BrBG"},
     "slp":   {"long_name": "Sea Level Pressure",   "units": "Pa",      "cmap": "RdYlBu_r","cmap_anom": "RdBu_r"},
+    "pres.sfc":    {"long_name": "Surface Pressure",         "units": "Pa",      "cmap": "RdYlBu_r", "cmap_anom": "RdBu_r"},
+    "pr_wtr.eatm": {"long_name": "Precipitable Water",       "units": "kg/m2",   "cmap": "YlGnBu",    "cmap_anom": "BrBG"},
+    "air.sig995":  {"long_name": "Surface Air Temperature",  "units": "K",       "cmap": "RdYlBu_r",  "cmap_anom": "RdBu_r"},
+    "uwnd.sig995": {"long_name": "Surface U-Wind",           "units": "m/s",     "cmap": "RdBu_r",    "cmap_anom": "RdBu_r"},
+    "vwnd.sig995": {"long_name": "Surface V-Wind",           "units": "m/s",     "cmap": "RdBu_r",    "cmap_anom": "RdBu_r"},
+    "rhum.sig995": {"long_name": "Surface Relative Humidity","units": "%",       "cmap": "YlGnBu",    "cmap_anom": "BrBG"},
+    "omega.sig995":{"long_name": "Surface Vertical Velocity","units": "Pa/s",    "cmap": "RdBu",      "cmap_anom": "RdBu"},
 }
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -1087,6 +1102,8 @@ if [[ -f "$UPLOAD_SCRIPT" ]]; then
     else
         python3 "$UPLOAD_SCRIPT" \
             --plots-dir  "$PLOT_DIR" \
+            --var        "$VAR" \
+            --level      "$LEVEL" \
             --start-year "$START_YEAR" \
             --end-year   "$END_YEAR" \
             --prefix     "${VAR}/"
@@ -1116,4 +1133,3 @@ echo -e "${GREEN}Plots       :${NC} ${PLOT_DIR}"
 echo -e "${GREEN}Log file    :${NC} ${LOG_FILE}"
 echo ""
 log_success "All done!"
-
