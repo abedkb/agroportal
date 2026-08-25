@@ -15,8 +15,8 @@ NEVER in the static site's JS):
     SUPABASE_SERVICE_KEY  the service_role key (Project Settings -> API)
 
 Usage:
-    python3 upload_to_supabase.py --plots-dir /path/to/NOAA/plots \
-        --start-year 1981 --end-year 2022
+    python3 upload_to_supabase.py --plots-dir /path/to/NOAA/plots/shum \
+        --var shum --level 850 --start-year 1948 --end-year 2026
 """
 
 import argparse
@@ -33,25 +33,34 @@ except ImportError:
 BUCKET = "noaa-plots"
 TABLE = "noaa_products"
 
-# Matches filenames produced by noaa_plot.py, e.g.:
-#   shum_850hPa_daily_spatial_....png
-#   shum_850hPa_monthly_timeseries_20.0N_80.0E.png
-#   shum_850hPa_daily_hovmoller_20.0N.png
-FNAME_RE = re.compile(
-    r"^(?P<var>[a-zA-Z]+)_(?P<level>\d+)hPa_(?P<aggr>[a-zA-Z]+)_"
+# var/level are passed in explicitly (the caller already knows them) rather
+# than parsed from the filename -- variable names now include dots and
+# underscores (e.g. "air.sig995", "pr_wtr.eatm"), which made a filename-only
+# regex unreliable, and "sfc" levels aren't numeric like pressure levels are.
+# Only the REMAINDER of the filename -- aggregation, plot type, and for
+# timeseries/hovmoller the lat/lon -- still needs parsing, since that part
+# stays a small known vocabulary regardless of variable name.
+#
+# Matches the suffix after "{var}_{level}hPa_", e.g.:
+#   daily_spatial_....png
+#   monthly_timeseries_20.0N_80.0E.png
+#   daily_hovmoller_20.0N.png
+SUFFIX_RE = re.compile(
+    r"^(?P<aggr>[a-zA-Z]+)_"
     r"(?P<plot_type>spatial|timeseries|hovmoller)"
     r"(?:_(?P<lat>-?\d+\.?\d*)N)?(?:_(?P<lon>-?\d+\.?\d*)E)?"
 )
 
 
-def parse_filename(fname: str) -> dict:
-    m = FNAME_RE.match(fname)
+def parse_filename(fname: str, var: str, level: str) -> dict:
+    known_prefix = f"{var}_{level}hPa_"
+    if not fname.startswith(known_prefix):
+        return {}
+    m = SUFFIX_RE.match(fname[len(known_prefix):])
     if not m:
         return {}
     d = m.groupdict()
     return {
-        "var": d["var"],
-        "level_hpa": int(d["level"]) if d["level"] else None,
         "aggr": d["aggr"],
         "plot_type": d["plot_type"],
         "lat": float(d["lat"]) if d.get("lat") else None,
@@ -62,6 +71,8 @@ def parse_filename(fname: str) -> dict:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--plots-dir", required=True, help="Directory of PNGs to upload (e.g. PLOT_DIR)")
+    ap.add_argument("--var", required=True, help="Variable name exactly as used by the pipeline (e.g. shum, air.sig995)")
+    ap.add_argument("--level", required=True, help="Level exactly as used by the pipeline (e.g. 850, sfc)")
     ap.add_argument("--start-year", type=int, default=None)
     ap.add_argument("--end-year", type=int, default=None)
     ap.add_argument("--prefix", default="", help="Optional subfolder prefix inside the bucket")
@@ -88,9 +99,9 @@ def main():
 
     for fname in sorted(pngs):
         local_path = os.path.join(args.plots_dir, fname)
-        meta = parse_filename(fname)
+        meta = parse_filename(fname, args.var, args.level)
         if not meta:
-            print(f"[WARN] Filename doesn't match expected pattern, skipping: {fname}")
+            print(f"[WARN] Filename doesn't match expected pattern for var={args.var} level={args.level}, skipping: {fname}")
             skipped += 1
             continue
 
@@ -112,8 +123,9 @@ def main():
         public_url = supabase.storage.from_(BUCKET).get_public_url(storage_path)
 
         row = {
-            "var": meta["var"],
-            "level_hpa": meta["level_hpa"],
+            "var": args.var,
+            "level_label": args.level,  # always set: "850", "sfc", etc.
+            "level_hpa": int(args.level) if args.level.isdigit() else None,
             "aggr": meta["aggr"],
             "plot_type": meta["plot_type"],
             "lat": meta["lat"],
