@@ -1064,6 +1064,21 @@ body{
 .lp-nav-logo{height:44px;width:auto}
 .lp-nav-title-main{display:block;font-size:17px;font-weight:700;color:#fff;letter-spacing:.2px;line-height:1.2}
 .lp-nav-title-sub{display:block;font-size:10px;color:rgba(255,255,255,0.6);letter-spacing:.6px;text-transform:uppercase}
+.lp-nav-links{display:flex;align-items:center;gap:2px;margin-right:auto;margin-left:2.5rem}
+.lp-nav-link{padding:9px 14px;border-radius:7px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.85);text-decoration:none;cursor:pointer;transition:.15s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;background:none;border:none;font-family:'IBM Plex Sans',sans-serif}
+.lp-nav-link:hover{color:#fff;background:rgba(255,255,255,0.1)}
+.lp-nav-dropdown{position:relative}
+.lp-nav-caret{font-size:10px;opacity:.8}
+/* top:100% (flush, no gap) so the mouse never crosses a dead zone between
+   the trigger and the menu while moving down -- any gap here (including
+   one made with margin, since margin still offsets an absolutely
+   positioned box) breaks :hover continuity and makes the menu vanish
+   before the cursor reaches it. */
+.lp-nav-dropdown-menu{position:absolute;top:100%;left:0;background:#fff;border-radius:9px;box-shadow:0 8px 28px rgba(0,0,0,0.22);min-width:220px;padding:6px;display:none;flex-direction:column;gap:2px;z-index:50}
+.lp-nav-dropdown:hover .lp-nav-dropdown-menu, .lp-nav-dropdown-menu.open{display:flex}
+.lp-nav-dropdown-menu a{padding:9px 12px;border-radius:6px;font-size:13px;font-weight:600;color:#0a1e3c;text-decoration:none;cursor:pointer}
+.lp-nav-dropdown-menu a:hover{background:#f0f4fa}
+@media(max-width:980px){.lp-nav-links{display:none}}
 .lp-nav-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;position:relative}
 .lp-hamburger-btn{width:44px;height:44px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.4);background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:.18s}
 .lp-hamburger-btn:hover{background:rgba(255,255,255,0.1);border-color:#fff}
@@ -1137,7 +1152,7 @@ body{
 .lp-feat-icon-red{background:#FFEBEE}
 .lp-feat-title{font-size:13.5px;font-weight:700;color:#0a1e3c;margin-bottom:3px}
 .lp-feat-desc{font-size:12px;color:#777;line-height:1.5}
-.lp-footer{background:linear-gradient(180deg,#061a40,#041230);color:rgba(255,255,255,0.6);padding:2.5rem 2rem 1.5rem;text-align:center;font-size:11.5px;line-height:1.8}
+.lp-footer{background:linear-gradient(180deg,#061a40,#041230);color:rgba(255,255,255,0.6);padding:1.75rem 2rem 1.1rem;text-align:center;font-size:11.5px;line-height:1.6}
 .lp-footer-brand{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:1rem}
 .lp-footer-brand img{height:34px;opacity:.85}
 .lp-footer-brand-name{display:block;font-size:14px;font-weight:700;color:rgba(255,255,255,0.9);text-align:left}
@@ -1172,21 +1187,26 @@ body{
 @media(max-width:640px){.lp-nav{padding:1rem 1.25rem}.lp-nav-title-main{font-size:14px}.lp-nav-actions{gap:6px}.lp-nav-btn{padding:7px 13px;font-size:12px}.lp-section{padding:3.5rem 1.25rem}.lp-access-section{padding:2.5rem 1.25rem}}
 
 /* ---- Landing page: station map / reanalysis animated carousel ---- */
-/* Full-bleed: breaks out of .lp-container's 1100px cap and the section's
-   own horizontal padding to span the full viewport width. */
-.lp-anim-stage{
-  position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;width:100vw;
-  height:100vh;min-height:460px;overflow:hidden;background:#0c1420;
+/* #lp-map-section has no .lp-container wrapper and no padding (see its
+   inline style), so this is already flush with the viewport edges without
+   needing the 100vw/negative-margin full-bleed trick -- that trick was
+   also confusing the page's scroll-height calculation, causing content
+   below it (the footer) to render past where the page thought it ended.
+   Reanalysis products cycle on the left, the live station map is fixed
+   on the right. */
+.lp-split-stage{
+  width:100%;
+  height:72vh;min-height:420px;overflow:hidden;background:#0c1420;
+  display:flex;
 }
-.lp-anim-slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .8s ease}
-.lp-anim-slide.active{opacity:1;visibility:visible}
-.lp-anim-slide-rx{display:flex;align-items:center;justify-content:center;background:#0c1420}
-.lp-anim-slide-rx img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+/* isolation:isolate forces a new stacking context so Leaflet's internal
+   map panes (which use z-index up to ~700) can't leak out and paint over
+   unrelated page elements like the nav's hamburger dropdown. */
+.lp-split-col{position:relative;flex:1 1 50%;min-width:0;overflow:hidden;isolation:isolate}
+.lp-split-rx{display:flex;align-items:center;justify-content:center;background:#0c1420}
+.lp-split-rx img{max-width:100%;max-height:100%;object-fit:contain;display:block}
 .lp-anim-caption{position:absolute;left:0;right:0;bottom:0;padding:16px 28px;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);color:#e8eef6;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.03em}
-.lp-anim-dots{position:absolute;top:18px;right:28px;display:flex;gap:6px;z-index:2}
-.lp-anim-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.35);transition:.2s}
-.lp-anim-dot.active{background:#fff}
-@media(max-width:640px){.lp-anim-stage{min-height:380px}}
+@media(max-width:900px){.lp-split-stage{flex-direction:column;height:auto;min-height:0}.lp-split-col{height:46vh}}
 
 /* ---- In-app Reanalysis page (Gallery + Live Explorer) ---- */
 .reanalysis-page{
@@ -1271,11 +1291,22 @@ body{
           <span class="lp-nav-title-sub">Tanzania Meteorological Authority</span>
         </div>
       </div>
+      <div class="lp-nav-links">
+        <a class="lp-nav-link" href="#" onclick="scrollToLandingTop();return false">Home</a>
+        <div class="lp-nav-dropdown">
+          <a class="lp-nav-link" href="#" onclick="return false">Products <span class="lp-nav-caret">&#9662;</span></a>
+          <div class="lp-nav-dropdown-menu">
+            <a href="#" onclick="showLandingProducts();return false">Agrometeorological Products</a>
+          </div>
+        </div>
+        <a class="lp-nav-link" href="#" onclick="landingComingSoon('About');return false">About</a>
+        <a class="lp-nav-link" href="#" onclick="landingComingSoon('Feedback');return false">Feedback</a>
+        <a class="lp-nav-link" href="#" onclick="landingComingSoon('Documentation');return false">Documentation</a>
+        <a class="lp-nav-link" href="#" onclick="landingComingSoon('Contact Us');return false">Contact Us</a>
+      </div>
       <div class="lp-nav-actions">
-        <button class="lp-nav-btn lp-nav-btn-outline" onclick="showLandingProducts()">Products</button>
         <button class="lp-hamburger-btn" onclick="toggleLandingMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
         <div class="lp-hamburger-menu" id="lp-hamburger-menu">
-          <button onclick="closeLandingMenu();showLandingProducts()">Products</button>
           <button onclick="closeLandingMenu();openStaffLogin()">Login</button>
           <button onclick="closeLandingMenu();openStaffRegister()">Register</button>
         </div>
@@ -1291,19 +1322,15 @@ body{
     </div>
   </div>
 
-  <!-- LIVE STATION MAP + REANALYSIS ANIMATION -->
-  <div id="lp-map-section" class="lp-section" style="padding:0">
-    <div class="lp-anim-stage" id="lp-anim-stage">
-      <div class="lp-anim-slide lp-anim-slide-map active" id="lp-slide-map">
-        <div id="tzStationMap" style="height:100%;width:100%"></div>
-      </div>
-      <div class="lp-anim-slide lp-anim-slide-rx" id="lp-slide-rx">
+  <!-- REANALYSIS PRODUCTS (left) + LIVE STATION MAP (right) -->
+  <div id="lp-map-section" class="lp-section" style="padding:2.5rem 0;background:var(--bg-tertiary)">
+    <div class="lp-split-stage" id="lp-split-stage">
+      <div class="lp-split-col lp-split-rx" id="lp-slide-rx">
         <img id="lp-rx-img" alt="NOAA reanalysis product" />
         <div class="lp-anim-caption" id="lp-rx-caption"></div>
       </div>
-      <div class="lp-anim-dots">
-        <span class="lp-anim-dot active" data-slide="map" title="Station map"></span>
-        <span class="lp-anim-dot" data-slide="rx" title="Reanalysis products"></span>
+      <div class="lp-split-col lp-split-map" id="lp-slide-map">
+        <div id="tzStationMap" style="height:100%;width:100%"></div>
       </div>
     </div>
   </div>
@@ -3392,6 +3419,14 @@ function hideLandingProducts() {
   const hero=document.querySelector('.lp-hero');
   if(hero) hero.scrollIntoView({behavior:'smooth'});
 }
+function scrollToLandingTop() {
+  closeLandingMenu();
+  hideLandingProducts();
+}
+function landingComingSoon(name) {
+  closeLandingMenu();
+  showToast('Coming soon', `The ${name} page is being finalized.`, 'info');
+}
 
 // ═══════════════════════════════════════════════════════════════
 //  LANDING PAGE — TANZANIA STATION MAP
@@ -3433,8 +3468,12 @@ function initTzStationMap() {
     minZoom: 6,
   });
   _tzMap.fitBounds(TZ_BOUNDS, { padding: [4, 4] });
-  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+  // Esri's free, keyless "World Street Map" -- shows region/province
+  // boundaries, place labels, and natural land/water coloring (matching
+  // the reference look requested), unlike the plain Canvas basemap used
+  // before.
+  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS, NGA, &copy; OpenStreetMap contributors',
     maxZoom: 12,
   }).addTo(_tzMap);
   // The container's real size isn't always settled at the moment the map
@@ -3493,65 +3532,34 @@ async function loadTzStationReadings() {
   }
 }
 
-// ── Landing page: station map / reanalysis animated carousel ────
+// ── Landing page: reanalysis product carousel (left panel). The station
+// map (right panel) is always visible now, so this only cycles images. ────
 let _lpAnimTimer = null;
 let _lpRxIndex = 0;
-let _lpRxShown = 0;
-const LP_ANIM_MAP_MS = 9000;
 const LP_ANIM_RX_MS = 3200;
-const LP_ANIM_RX_COUNT = 5;
 
 function startLandingAnimation() {
   stopLandingAnimation();
-  _lpRxShown = 0;
-  lpShowSlide('map');
-  _lpAnimTimer = setTimeout(lpEnterRxPhase, LP_ANIM_MAP_MS);
+  lpAdvanceRxImage();
 }
 function stopLandingAnimation() {
   if (_lpAnimTimer) { clearTimeout(_lpAnimTimer); _lpAnimTimer = null; }
-}
-function lpEnterRxPhase() {
-  const products = (noaaProductsCache || []).filter(p => p.public_url);
-  if (!products.length) {
-    // Products haven't loaded yet (or failed) -- try again shortly rather
-    // than showing a blank slide.
-    _lpAnimTimer = setTimeout(lpEnterRxPhase, 2000);
-    return;
-  }
-  _lpRxShown = 0;
-  lpShowSlide('rx');
-  lpAdvanceRxImage();
 }
 function lpAdvanceRxImage() {
   const products = (noaaProductsCache || []).filter(p => p.public_url);
   const img = document.getElementById('lp-rx-img');
   const cap = document.getElementById('lp-rx-caption');
   if (!products.length || !img) {
-    lpShowSlide('map');
-    _lpAnimTimer = setTimeout(lpEnterRxPhase, LP_ANIM_MAP_MS);
+    // Products haven't loaded yet (or failed) -- try again shortly rather
+    // than leaving the panel blank.
+    _lpAnimTimer = setTimeout(lpAdvanceRxImage, 2000);
     return;
   }
   const p = products[_lpRxIndex % products.length];
-  _lpRxIndex++; _lpRxShown++;
+  _lpRxIndex++;
   img.src = p.public_url;
   cap.textContent = `${VAR_LABELS[p.var] || (p.var||'').toUpperCase()}${p.level_hpa ? ' · ' + p.level_hpa + ' hPa' : ''} · ${p.aggr || ''}`;
-  const count = Math.min(LP_ANIM_RX_COUNT, products.length);
-  if (_lpRxShown >= count) {
-    _lpAnimTimer = setTimeout(() => {
-      lpShowSlide('map');
-      _lpAnimTimer = setTimeout(lpEnterRxPhase, LP_ANIM_MAP_MS);
-    }, LP_ANIM_RX_MS);
-  } else {
-    _lpAnimTimer = setTimeout(lpAdvanceRxImage, LP_ANIM_RX_MS);
-  }
-}
-function lpShowSlide(which) {
-  const mapEl = document.getElementById('lp-slide-map');
-  const rxEl = document.getElementById('lp-slide-rx');
-  if (mapEl) mapEl.classList.toggle('active', which === 'map');
-  if (rxEl) rxEl.classList.toggle('active', which === 'rx');
-  document.querySelectorAll('#lp-anim-stage .lp-anim-dot').forEach(d => d.classList.toggle('active', d.dataset.slide === which));
-  if (which === 'map' && _tzMap) requestAnimationFrame(() => _tzMap.invalidateSize());
+  _lpAnimTimer = setTimeout(lpAdvanceRxImage, LP_ANIM_RX_MS);
 }
 
 function enterPublicView() {
@@ -4169,8 +4177,10 @@ const RxExplorer = (function () {
 
   function init() {
     map = L.map("rx-map", { worldCopyJump: true }).setView([20, 80], 3);
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-      attribution: "&copy; OpenStreetMap &copy; CARTO",
+    // Same swap as the landing-page map: CARTO's free tiles now require an
+    // API key; Esri's dark Canvas basemap is the free, keyless equivalent.
+    L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}", {
+      attribution: "Tiles &copy; Esri &mdash; Esri, HERE, Garmin, &copy; OpenStreetMap contributors",
       maxZoom: 8,
     }).addTo(map);
 
