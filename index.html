@@ -1170,6 +1170,89 @@ body{
 .lp-access-btn-green{background:transparent;color:#2E7D32;border:2px solid #2E7D32}
 .lp-access-btn-green:hover{background:#2E7D32;color:#fff;transform:translateY(-1px)}
 @media(max-width:640px){.lp-nav{padding:1rem 1.25rem}.lp-nav-title-main{font-size:14px}.lp-nav-actions{gap:6px}.lp-nav-btn{padding:7px 13px;font-size:12px}.lp-section{padding:3.5rem 1.25rem}.lp-access-section{padding:2.5rem 1.25rem}}
+
+/* ---- Landing page: station map / reanalysis animated carousel ---- */
+/* Full-bleed: breaks out of .lp-container's 1100px cap and the section's
+   own horizontal padding to span the full viewport width. */
+.lp-anim-stage{
+  position:relative;left:50%;right:50%;margin-left:-50vw;margin-right:-50vw;width:100vw;
+  height:100vh;min-height:460px;overflow:hidden;background:#0c1420;
+}
+.lp-anim-slide{position:absolute;inset:0;opacity:0;visibility:hidden;transition:opacity .8s ease}
+.lp-anim-slide.active{opacity:1;visibility:visible}
+.lp-anim-slide-rx{display:flex;align-items:center;justify-content:center;background:#0c1420}
+.lp-anim-slide-rx img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+.lp-anim-caption{position:absolute;left:0;right:0;bottom:0;padding:16px 28px;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);color:#e8eef6;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.03em}
+.lp-anim-dots{position:absolute;top:18px;right:28px;display:flex;gap:6px;z-index:2}
+.lp-anim-dot{width:9px;height:9px;border-radius:50%;background:rgba(255,255,255,.35);transition:.2s}
+.lp-anim-dot.active{background:#fff}
+@media(max-width:640px){.lp-anim-stage{min-height:380px}}
+
+/* ---- In-app Reanalysis page (Gallery + Live Explorer) ---- */
+.reanalysis-page{
+  --rx-ink:#0c1420;--rx-panel:#101c2c;--rx-panel-2:#152238;--rx-line:#22354d;
+  --rx-fog:#a9bdd4;--rx-paper:#e8eef6;--rx-isobar:#ffb454;--rx-isobar-dim:#7a5a2c;
+  --rx-mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
+  background:var(--rx-ink);color:var(--rx-paper);border-radius:var(--radius-lg);
+  overflow:hidden;display:flex;flex-direction:column;height:calc(100vh - 220px);min-height:520px;
+  box-shadow:0 4px 18px rgba(0,0,0,.15);
+}
+.reanalysis-page .rx-isobar-band{
+  height:36px;width:100%;flex:none;
+  background:repeating-linear-gradient(180deg,transparent 0px,transparent 10px,var(--rx-isobar-dim) 10px,var(--rx-isobar-dim) 11px);
+  -webkit-mask-image:linear-gradient(180deg,black,transparent);mask-image:linear-gradient(180deg,black,transparent);opacity:.55;
+}
+.reanalysis-page .rx-tabs{display:flex;gap:8px;padding:0 18px;flex:none}
+.reanalysis-page .rx-tab-btn{
+  padding:9px 16px;border-radius:7px 7px 0 0;border:1px solid var(--rx-line);border-bottom:none;
+  background:var(--rx-panel-2);color:var(--rx-fog);font-family:var(--rx-mono);font-size:12.5px;
+  cursor:pointer;text-transform:uppercase;letter-spacing:.05em;
+}
+.reanalysis-page .rx-tab-btn.active{color:var(--rx-isobar);border-color:var(--rx-isobar-dim);background:var(--rx-panel)}
+.reanalysis-page .rx-main{flex:1;min-height:0;display:flex;flex-direction:column}
+.reanalysis-page .rx-panel{display:none;flex:1;min-height:0}
+.reanalysis-page .rx-panel.active{display:flex;flex-direction:column}
+.reanalysis-page select,.reanalysis-page input[type=text],.reanalysis-page input[type=date]{
+  background:var(--rx-panel-2);color:var(--rx-paper);border:1px solid var(--rx-line);
+  border-radius:6px;padding:8px 10px;font-family:var(--rx-mono);font-size:13px;
+}
+.reanalysis-page .rx-field{display:flex;flex-direction:column;gap:4px}
+.reanalysis-page .rx-field label{font-family:var(--rx-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--rx-fog)}
+.reanalysis-page .rx-filters{display:flex;flex-wrap:wrap;gap:10px;flex:none;padding:14px 18px;border-bottom:1px solid var(--rx-line);background:var(--rx-panel)}
+.reanalysis-page .rx-filters select{min-width:140px}
+.reanalysis-page .rx-gallery-scroll{flex:1;min-height:0;overflow-y:auto;padding:18px 18px 40px}
+.reanalysis-page .rx-status{font-family:var(--rx-mono);font-size:12.5px;color:var(--rx-fog);margin:0 0 14px}
+.reanalysis-page .rx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.reanalysis-page .rx-card{background:var(--rx-panel);border:1px solid var(--rx-line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s ease,transform .15s ease}
+.reanalysis-page .rx-card:hover{border-color:var(--rx-isobar-dim);transform:translateY(-2px)}
+.reanalysis-page .rx-card img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#08101c}
+.reanalysis-page .rx-card-body{padding:11px 13px 13px;display:flex;flex-direction:column;gap:6px}
+.reanalysis-page .rx-card-title{font-size:14px;font-weight:600;letter-spacing:-.01em}
+.reanalysis-page .rx-tags{display:flex;flex-wrap:wrap;gap:6px;font-family:var(--rx-mono);font-size:10.5px}
+.reanalysis-page .rx-tag{border:1px solid var(--rx-line);color:var(--rx-fog);padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+.reanalysis-page .rx-tag.rx-tag-type{color:var(--rx-isobar);border-color:var(--rx-isobar-dim)}
+.reanalysis-page .rx-empty,.reanalysis-page .rx-error{font-family:var(--rx-mono);font-size:13px;color:var(--rx-fog);border:1px dashed var(--rx-line);border-radius:8px;padding:24px;text-align:center}
+.reanalysis-page .rx-error{color:#ff9e8a;border-color:#5a2c26}
+.reanalysis-page a.rx-card-link{color:inherit;text-decoration:none}
+.reanalysis-page .rx-layout{flex:1;min-height:0;display:grid;grid-template-columns:320px 1fr}
+@media(max-width:820px){.reanalysis-page .rx-layout{grid-template-columns:1fr}}
+.reanalysis-page .rx-sidebar{border-right:1px solid var(--rx-line);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;background:var(--rx-panel)}
+.reanalysis-page .rx-mode-toggle{display:flex;gap:8px}
+.reanalysis-page .rx-mode-btn{flex:1;padding:9px 8px;border-radius:7px;border:1px solid var(--rx-line);background:var(--rx-panel-2);color:var(--rx-fog);font-family:var(--rx-mono);font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
+.reanalysis-page .rx-mode-btn.active{color:var(--rx-isobar);border-color:var(--rx-isobar-dim);background:#1c2e22}
+.reanalysis-page .rx-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.reanalysis-page .rx-hint{font-family:var(--rx-mono);font-size:11.5px;color:var(--rx-fog);border:1px dashed var(--rx-line);border-radius:7px;padding:10px 11px;line-height:1.5}
+.reanalysis-page .rx-coords{font-family:var(--rx-mono);font-size:12.5px;color:var(--rx-paper);background:var(--rx-panel-2);border:1px solid var(--rx-line);border-radius:7px;padding:10px 11px}
+.reanalysis-page .rx-btn-primary{background:var(--rx-isobar);color:#20140a;border:none;border-radius:7px;padding:11px 14px;font-weight:600;font-size:14px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif}
+.reanalysis-page .rx-btn-primary:disabled{opacity:.45;cursor:not-allowed}
+.reanalysis-page .rx-btn-ghost{background:transparent;color:var(--rx-fog);border:1px solid var(--rx-line);border-radius:7px;padding:9px 12px;font-family:var(--rx-mono);font-size:12px;cursor:pointer}
+.reanalysis-page .rx-map-col{display:flex;flex-direction:column;min-height:0}
+.reanalysis-page .rx-map{flex:1;min-height:0}
+.reanalysis-page .rx-result{flex:none;max-height:42%;overflow-y:auto;border-top:1px solid var(--rx-line);padding:14px 16px;background:var(--rx-panel)}
+.reanalysis-page .rx-result img{max-width:100%;border-radius:8px;border:1px solid var(--rx-line);display:block}
+.reanalysis-page .rx-result .rx-status.rx-error{color:#ff9e8a}
+.reanalysis-page .rx-spinner{width:14px;height:14px;border:2px solid var(--rx-isobar-dim);border-top-color:var(--rx-isobar);border-radius:50%;display:inline-block;vertical-align:-2px;margin-right:8px;animation:rx-spin .8s linear infinite}
+@keyframes rx-spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -1208,14 +1291,20 @@ body{
     </div>
   </div>
 
-  <!-- LIVE STATION MAP -->
-  <div id="lp-map-section" class="lp-section">
-    <div class="lp-container">
-      <div class="lp-section-hd">
-        <h2>Agromet Station Map</h2>
-        <p>Today&rsquo;s latest rainfall and temperature readings across Tanzania&rsquo;s agrometeorological stations</p>
+  <!-- LIVE STATION MAP + REANALYSIS ANIMATION -->
+  <div id="lp-map-section" class="lp-section" style="padding:0">
+    <div class="lp-anim-stage" id="lp-anim-stage">
+      <div class="lp-anim-slide lp-anim-slide-map active" id="lp-slide-map">
+        <div id="tzStationMap" style="height:100%;width:100%"></div>
       </div>
-      <div id="tzStationMap" style="height:640px;max-width:700px;border-radius:12px;overflow:hidden;box-shadow:0 4px 18px rgba(0,0,0,0.1);margin:0 auto"></div>
+      <div class="lp-anim-slide lp-anim-slide-rx" id="lp-slide-rx">
+        <img id="lp-rx-img" alt="NOAA reanalysis product" />
+        <div class="lp-anim-caption" id="lp-rx-caption"></div>
+      </div>
+      <div class="lp-anim-dots">
+        <span class="lp-anim-dot active" data-slide="map" title="Station map"></span>
+        <span class="lp-anim-dot" data-slide="rx" title="Reanalysis products"></span>
+      </div>
     </div>
   </div>
 
@@ -1427,6 +1516,7 @@ body{
       <button class="tab-btn" data-page="returns" onclick="showPage('returns',this)">&#128203; Returns <span class="auto-badge">AUTO</span></button>
       <button class="tab-btn" data-page="products" onclick="showPage('products',this)">&#10571; Downloads</button>
       <button class="tab-btn" data-page="messages" onclick="showPage('messages',this)">&#9711; Notifications</button>
+      <button class="tab-btn" data-page="reanalysis" onclick="showPage('reanalysis',this)">&#127760; Reanalysis</button>
     </div>
     <!-- Stakeholder tabs -->
     <div class="tabnav-inner" id="stakeholderTabs" style="display:none">
@@ -1435,6 +1525,7 @@ body{
       <button class="tab-btn" data-page="stakeholderProducts" onclick="showPage('stakeholderProducts',this)">&#10571; Met Products</button>
       <button class="tab-btn" data-page="stakeholderRequest" onclick="showPage('stakeholderRequest',this)">&#9993; Request Product</button>
       <button class="tab-btn" data-page="stakeholderMessages" onclick="showPage('stakeholderMessages',this)">&#9711; Notifications</button>
+      <button class="tab-btn" data-page="reanalysis" onclick="showPage('reanalysis',this)">&#127760; Reanalysis</button>
       <button class="tab-btn" style="margin-left:auto;color:#dc2626;font-weight:600;border-left:2px solid #fee2e2" onclick="logout()">&#9211; Sign Out</button>
     </div>
     <!-- Admin tabs -->
@@ -1448,6 +1539,7 @@ body{
       <button class="tab-btn" data-page="adminMessages" onclick="showPage('adminMessages',this)">&#9711; Comms</button>
       <button class="tab-btn" data-page="observers" onclick="showPage('observers',this)">&#9673; Observers</button>
       <button class="tab-btn" data-page="manageStakeholders" onclick="showPage('manageStakeholders',this)">&#9672; Stakeholders</button>
+      <button class="tab-btn" data-page="reanalysis" onclick="showPage('reanalysis',this)">&#127760; Reanalysis</button>
     </div>
   </div>
 
@@ -1473,6 +1565,8 @@ body{
       <div class="nav-label">Downloads & Comms</div>
       <div class="nav-item" onclick="showPage('products',this)"><span class="nav-icon">⤓</span>Products &amp; downloads</div>
       <div class="nav-item" onclick="showPage('messages',this)"><span class="nav-icon">◎</span>Notifications</div>
+      <div class="nav-label">NOAA Reanalysis</div>
+      <div class="nav-item" onclick="showPage('reanalysis',this)"><span class="nav-icon">🌐</span>Reanalysis explorer</div>
     </div>
     <div class="nav-section" id="stakeholderNav" style="display:none">
       <div class="nav-item" onclick="goHome()"><span class="nav-icon">&#8962;</span>Home</div>
@@ -1481,6 +1575,8 @@ body{
       <div class="nav-item" onclick="showPage('stakeholderProducts',this)"><span class="nav-icon">⤓</span>Meteorological Products</div>
       <div class="nav-item" onclick="showPage('stakeholderRequest',this)"><span class="nav-icon">✉</span>Request a Product</div>
       <div class="nav-item" onclick="showPage('stakeholderMessages',this)"><span class="nav-icon">◎</span>Notifications</div>
+      <div class="nav-label">NOAA Reanalysis</div>
+      <div class="nav-item" onclick="showPage('reanalysis',this)"><span class="nav-icon">🌐</span>Reanalysis explorer</div>
     </div>
     <div class="nav-section" id="adminNav" style="display:none">
       <div class="nav-item" onclick="goHome()"><span class="nav-icon">&#8962;</span>Home</div>
@@ -1492,6 +1588,8 @@ body{
       <div class="nav-item" onclick="showPage('adminMessages',this)"><span class="nav-icon">◎</span>Notifications &amp; comms</div>
       <div class="nav-item" onclick="showPage('observers',this)"><span class="nav-icon">◉</span>Manage observers</div>
       <div class="nav-item" onclick="showPage('manageStakeholders',this)"><span class="nav-icon">◈</span>Manage stakeholders</div>
+      <div class="nav-label">NOAA Reanalysis</div>
+      <div class="nav-item" onclick="showPage('reanalysis',this)"><span class="nav-icon">🌐</span>Reanalysis explorer</div>
     </div>
     <div class="sidebar-footer">
       <div class="user-chip">
@@ -2721,6 +2819,94 @@ body{
 
       </div>
 
+      <!-- Reanalysis page (folded in from reanalysis.html) -->
+      <div class="page" id="page-reanalysis">
+        <div class="reanalysis-page">
+          <div class="rx-isobar-band"></div>
+          <div class="rx-tabs">
+            <button class="rx-tab-btn active" id="rx-tab-gallery" data-tab="gallery">Gallery</button>
+            <button class="rx-tab-btn" id="rx-tab-explorer" data-tab="explorer">Live Explorer</button>
+          </div>
+          <div class="rx-main">
+
+            <!-- Gallery -->
+            <section class="rx-panel active" id="rx-panel-gallery">
+              <div class="rx-filters">
+                <div class="rx-field"><label for="rx-f-var">Variable</label>
+                  <select id="rx-f-var"><option value="">All</option></select>
+                </div>
+                <div class="rx-field"><label for="rx-f-level">Level (hPa)</label>
+                  <select id="rx-f-level"><option value="">All</option></select>
+                </div>
+                <div class="rx-field"><label for="rx-f-aggr">Aggregation</label>
+                  <select id="rx-f-aggr"><option value="">All</option></select>
+                </div>
+                <div class="rx-field"><label for="rx-f-type">Plot type</label>
+                  <select id="rx-f-type"><option value="">All</option></select>
+                </div>
+                <div class="rx-field"><label for="rx-f-year-from">From year</label>
+                  <select id="rx-f-year-from"><option value="">Any</option></select>
+                </div>
+                <div class="rx-field"><label for="rx-f-year-to">To year</label>
+                  <select id="rx-f-year-to"><option value="">Any</option></select>
+                </div>
+              </div>
+              <div class="rx-gallery-scroll">
+                <p class="rx-status" id="rx-gallery-status">Loading products&hellip;</p>
+                <div class="rx-grid" id="rx-gallery-grid"></div>
+              </div>
+            </section>
+
+            <!-- Live Explorer -->
+            <section class="rx-panel" id="rx-panel-explorer">
+              <div class="rx-layout">
+                <div class="rx-sidebar">
+                  <div class="rx-mode-toggle">
+                    <button class="rx-mode-btn active" id="rx-mode-point">Point &middot; Time series</button>
+                    <button class="rx-mode-btn" id="rx-mode-region">Region &middot; Spatial map</button>
+                  </div>
+                  <div class="rx-field"><label for="rx-sel-var">Variable</label>
+                    <select id="rx-sel-var"></select>
+                  </div>
+                  <div class="rx-row2">
+                    <div class="rx-field"><label for="rx-sel-level">Level (hPa)</label>
+                      <select id="rx-sel-level"></select>
+                    </div>
+                    <div class="rx-field"><label for="rx-sel-aggr">Aggregation</label>
+                      <select id="rx-sel-aggr"></select>
+                    </div>
+                  </div>
+                  <div class="rx-row2">
+                    <div class="rx-field"><label for="rx-date-start">Start date (optional)</label>
+                      <input type="date" id="rx-date-start" />
+                    </div>
+                    <div class="rx-field"><label for="rx-date-end">End date (optional)</label>
+                      <input type="date" id="rx-date-end" />
+                    </div>
+                  </div>
+                  <div id="rx-hint-point" class="rx-hint">Click anywhere on the map to choose a point.</div>
+                  <div id="rx-hint-region" class="rx-hint" style="display:none;">
+                    Click once for the first corner, click again for the opposite corner.
+                    Click "Reset selection" to start over.
+                  </div>
+                  <div class="rx-coords" id="rx-coords">No selection yet</div>
+                  <button class="rx-btn-ghost" id="rx-btn-reset">Reset selection</button>
+                  <button class="rx-btn-primary" id="rx-btn-generate" disabled>Generate plot</button>
+                </div>
+                <div class="rx-map-col">
+                  <div class="rx-map" id="rx-map"></div>
+                  <div class="rx-result" id="rx-result" style="display:none;">
+                    <p class="rx-status" id="rx-explorer-status"></p>
+                    <img id="rx-result-img" alt="Generated plot" />
+                  </div>
+                </div>
+              </div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+
     </div><!-- /content -->
   </div><!-- /main -->
 </div><!-- /layout -->
@@ -2801,6 +2987,18 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 //                         
 
 let supabaseClient = window.supabase?.createClient(SUPABASE_URL, SUPABASE_ANON_KEY) ?? null;
+
+// Shared with the landing-page animation carousel and the in-app Reanalysis page.
+const VAR_LABELS = {
+  shum: "Specific Humidity", uwnd: "U-Wind", vwnd: "V-Wind",
+  air: "Air Temperature", omega: "Vertical Velocity", hgt: "Geopotential Height",
+  rhum: "Relative Humidity", slp: "Sea Level Pressure",
+  "pres.sfc": "Surface Pressure", "pr_wtr.eatm": "Precipitable Water",
+  "air.sig995": "Surface Air Temperature", "uwnd.sig995": "Surface U-Wind",
+  "vwnd.sig995": "Surface V-Wind", "rhum.sig995": "Surface Relative Humidity",
+  "omega.sig995": "Surface Vertical Velocity",
+  precip: "Rainfall (CHIRPS)",
+};
 
 // ---- NOAA meteorological products (front-page "Our Products" grid) ----
 let noaaProductsCache = null;
@@ -3151,6 +3349,7 @@ function showLanding() {
   closeLandingMenu();
   initTzStationMap();
   loadTzStationReadings();
+  startLandingAnimation();
 }
 
 function toggleLandingMenu() {
@@ -3234,8 +3433,8 @@ function initTzStationMap() {
     minZoom: 6,
   });
   _tzMap.fitBounds(TZ_BOUNDS, { padding: [4, 4] });
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors',
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
     maxZoom: 12,
   }).addTo(_tzMap);
   // The container's real size isn't always settled at the moment the map
@@ -3294,7 +3493,69 @@ async function loadTzStationReadings() {
   }
 }
 
+// ── Landing page: station map / reanalysis animated carousel ────
+let _lpAnimTimer = null;
+let _lpRxIndex = 0;
+let _lpRxShown = 0;
+const LP_ANIM_MAP_MS = 9000;
+const LP_ANIM_RX_MS = 3200;
+const LP_ANIM_RX_COUNT = 5;
+
+function startLandingAnimation() {
+  stopLandingAnimation();
+  _lpRxShown = 0;
+  lpShowSlide('map');
+  _lpAnimTimer = setTimeout(lpEnterRxPhase, LP_ANIM_MAP_MS);
+}
+function stopLandingAnimation() {
+  if (_lpAnimTimer) { clearTimeout(_lpAnimTimer); _lpAnimTimer = null; }
+}
+function lpEnterRxPhase() {
+  const products = (noaaProductsCache || []).filter(p => p.public_url);
+  if (!products.length) {
+    // Products haven't loaded yet (or failed) -- try again shortly rather
+    // than showing a blank slide.
+    _lpAnimTimer = setTimeout(lpEnterRxPhase, 2000);
+    return;
+  }
+  _lpRxShown = 0;
+  lpShowSlide('rx');
+  lpAdvanceRxImage();
+}
+function lpAdvanceRxImage() {
+  const products = (noaaProductsCache || []).filter(p => p.public_url);
+  const img = document.getElementById('lp-rx-img');
+  const cap = document.getElementById('lp-rx-caption');
+  if (!products.length || !img) {
+    lpShowSlide('map');
+    _lpAnimTimer = setTimeout(lpEnterRxPhase, LP_ANIM_MAP_MS);
+    return;
+  }
+  const p = products[_lpRxIndex % products.length];
+  _lpRxIndex++; _lpRxShown++;
+  img.src = p.public_url;
+  cap.textContent = `${VAR_LABELS[p.var] || (p.var||'').toUpperCase()}${p.level_hpa ? ' · ' + p.level_hpa + ' hPa' : ''} · ${p.aggr || ''}`;
+  const count = Math.min(LP_ANIM_RX_COUNT, products.length);
+  if (_lpRxShown >= count) {
+    _lpAnimTimer = setTimeout(() => {
+      lpShowSlide('map');
+      _lpAnimTimer = setTimeout(lpEnterRxPhase, LP_ANIM_MAP_MS);
+    }, LP_ANIM_RX_MS);
+  } else {
+    _lpAnimTimer = setTimeout(lpAdvanceRxImage, LP_ANIM_RX_MS);
+  }
+}
+function lpShowSlide(which) {
+  const mapEl = document.getElementById('lp-slide-map');
+  const rxEl = document.getElementById('lp-slide-rx');
+  if (mapEl) mapEl.classList.toggle('active', which === 'map');
+  if (rxEl) rxEl.classList.toggle('active', which === 'rx');
+  document.querySelectorAll('#lp-anim-stage .lp-anim-dot').forEach(d => d.classList.toggle('active', d.dataset.slide === which));
+  if (which === 'map' && _tzMap) requestAnimationFrame(() => _tzMap.invalidateSize());
+}
+
 function enterPublicView() {
+  stopLandingAnimation();
   const ls=document.getElementById('landingScreen'); if(ls) ls.style.display='none';
   state.role='public'; state.currentUser=null;
   state.stakeholderName='Guest'; state.stakeholderOrg='';
@@ -3321,12 +3582,14 @@ function enterPublicView() {
 
 function openStaffLogin() {
   switchAuthTab('login');
+  stopLandingAnimation();
   const ls=document.getElementById('landingScreen'); if(ls) ls.style.display='none';
   document.getElementById('authScreen').style.display='flex';
 }
 
 function openStaffRegister() {
   switchAuthTab('register');
+  stopLandingAnimation();
   const ls=document.getElementById('landingScreen'); if(ls) ls.style.display='none';
   document.getElementById('authScreen').style.display='flex';
 }
@@ -3588,6 +3851,7 @@ function showPage(id,navEl) {
     adminMessages:['Notifications & Comms',`Admin: ${ADMIN_PHONE}`],
     observers:['Manage Observers','All registered observers'],
     manageStakeholders:['Manage Stakeholders','All registered stakeholders'],
+    reanalysis:['NOAA Reanalysis','Browse products or generate a plot on demand'],
   };
   if(titles[id]){document.getElementById('pageTitle').textContent=titles[id][0];document.getElementById('pageDate').textContent=titles[id][1];}
   if(id==='obsForms') setTodayDate();
@@ -3599,11 +3863,364 @@ function showPage(id,navEl) {
     adminDash:refreshAdminDash,approvals:refreshApprovals,allRecords:refreshAllRecords,
     uploadProducts:refreshAdminProducts,adminMessages:refreshAdminMessages,
     observers:refreshObservers,manageStakeholders:refreshManageStakeholders,
+    reanalysis:refreshReanalysisPage,
   };
   if(rfMap[id]) rfMap[id]();
 }
 
+// ═══════════════════════════════════════════════════════════════
+//  REANALYSIS PAGE (folded in from reanalysis.html — Gallery + Live
+//  Explorer). API_BASE is a placeholder: plot_api.py (the FastAPI
+//  service behind the Live Explorer tab) hasn't been deployed yet.
+// ═══════════════════════════════════════════════════════════════
+const RX_API_BASE = "https://your-plot-api.example.com";
+let rxInitialized = false;
 
+function refreshReanalysisPage() {
+  if (rxInitialized) return;
+  rxInitialized = true;
+
+  document.getElementById('rx-tab-gallery').addEventListener('click', () => rxShowTab('gallery'));
+  document.getElementById('rx-tab-explorer').addEventListener('click', () => rxShowTab('explorer'));
+
+  RxGallery.load();
+}
+
+let rxExplorerInitialized = false;
+function rxShowTab(target) {
+  document.getElementById('rx-tab-gallery').classList.toggle('active', target === 'gallery');
+  document.getElementById('rx-tab-explorer').classList.toggle('active', target === 'explorer');
+  document.getElementById('rx-panel-gallery').classList.toggle('active', target === 'gallery');
+  document.getElementById('rx-panel-explorer').classList.toggle('active', target === 'explorer');
+  if (target === 'explorer') {
+    if (!rxExplorerInitialized) { rxExplorerInitialized = true; RxExplorer.init(); }
+    else RxExplorer.invalidateSize();
+  }
+}
+
+const RxGallery = (function () {
+  let allProducts = [];
+  const els = {
+    grid: document.getElementById("rx-gallery-grid"),
+    status: document.getElementById("rx-gallery-status"),
+    fVar: document.getElementById("rx-f-var"),
+    fLevel: document.getElementById("rx-f-level"),
+    fAggr: document.getElementById("rx-f-aggr"),
+    fType: document.getElementById("rx-f-type"),
+    fYearFrom: document.getElementById("rx-f-year-from"),
+    fYearTo: document.getElementById("rx-f-year-to"),
+  };
+
+  function uniqueSorted(arr) {
+    return [...new Set(arr.filter(v => v !== null && v !== undefined))].sort();
+  }
+
+  function populateFilters(products) {
+    const fill = (select, values, formatter) => {
+      values.forEach(v => {
+        const opt = document.createElement("option");
+        opt.value = v;
+        opt.textContent = formatter ? formatter(v) : v;
+        select.appendChild(opt);
+      });
+    };
+    fill(els.fVar, uniqueSorted(products.map(p => p.var)), v => VAR_LABELS[v] || v);
+    fill(els.fLevel, uniqueSorted(products.map(p => p.level_hpa)), v => `${v} hPa`);
+    fill(els.fAggr, uniqueSorted(products.map(p => p.aggr)));
+    fill(els.fType, uniqueSorted(products.map(p => p.plot_type)));
+
+    const starts = products.map(p => p.start_year).filter(v => v != null);
+    const ends = products.map(p => p.end_year).filter(v => v != null);
+    if (starts.length && ends.length) {
+      const minYear = Math.min(...starts);
+      const maxYear = Math.max(...ends);
+      const years = [];
+      for (let y = minYear; y <= maxYear; y++) years.push(y);
+      fill(els.fYearFrom, years);
+      fill(els.fYearTo, years);
+    }
+  }
+
+  function currentFilters() {
+    return {
+      var: els.fVar.value,
+      level: els.fLevel.value,
+      aggr: els.fAggr.value,
+      type: els.fType.value,
+      yearFrom: els.fYearFrom.value ? parseInt(els.fYearFrom.value, 10) : null,
+      yearTo: els.fYearTo.value ? parseInt(els.fYearTo.value, 10) : null,
+    };
+  }
+
+  function render() {
+    const f = currentFilters();
+    let lo = f.yearFrom, hi = f.yearTo;
+    if (lo !== null && hi !== null && lo > hi) [lo, hi] = [hi, lo];
+
+    const filtered = allProducts.filter(p => {
+      if (lo !== null || hi !== null) {
+        if (p.start_year == null || p.end_year == null) return false;
+        if (lo !== null && p.end_year < lo) return false;
+        if (hi !== null && p.start_year > hi) return false;
+      }
+      return (
+        (!f.var || p.var === f.var) &&
+        (!f.level || String(p.level_hpa) === f.level) &&
+        (!f.aggr || p.aggr === f.aggr) &&
+        (!f.type || p.plot_type === f.type)
+      );
+    });
+
+    els.status.textContent = `${filtered.length} product${filtered.length === 1 ? "" : "s"}`;
+    els.grid.innerHTML = "";
+
+    if (filtered.length === 0) {
+      const div = document.createElement("div");
+      div.className = "rx-empty";
+      div.textContent = "No products match these filters yet.";
+      els.grid.appendChild(div);
+      return;
+    }
+
+    for (const p of filtered) {
+      const card = document.createElement("a");
+      card.className = "rx-card-link";
+      card.href = p.public_url;
+      card.target = "_blank";
+      card.rel = "noopener";
+
+      const label = VAR_LABELS[p.var] || p.var;
+      card.innerHTML = `
+        <div class="rx-card">
+          <img src="${p.public_url}" alt="${label} ${p.plot_type} plot" loading="lazy" />
+          <div class="rx-card-body">
+            <div class="rx-card-title">${label}${p.level_hpa ? ` &middot; ${p.level_hpa} hPa` : ""}</div>
+            <div class="rx-tags">
+              <span class="rx-tag rx-tag-type">${p.plot_type}</span>
+              <span class="rx-tag">${p.aggr}</span>
+              ${p.start_year ? `<span class="rx-tag">${p.start_year}&ndash;${p.end_year}</span>` : ""}
+            </div>
+          </div>
+        </div>
+      `;
+      els.grid.appendChild(card);
+    }
+  }
+
+  async function load() {
+    if (!supabaseClient) {
+      els.status.textContent = "";
+      els.grid.innerHTML = `<div class="rx-error">Supabase client not available.</div>`;
+      return;
+    }
+    const { data, error } = await supabaseClient
+      .from('noaa_products')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      els.status.textContent = "";
+      els.grid.innerHTML = `<div class="rx-error">Could not load products: ${error.message}</div>`;
+      return;
+    }
+
+    allProducts = data || [];
+    populateFilters(allProducts);
+    render();
+  }
+
+  [els.fVar, els.fLevel, els.fAggr, els.fType, els.fYearFrom, els.fYearTo].forEach(sel =>
+    sel.addEventListener("change", render)
+  );
+
+  return { load };
+})();
+
+const RxExplorer = (function () {
+  let combos = [];
+  let mode = "point";
+  let point = null;
+  let corner1 = null, corner2 = null;
+  let marker = null, rect = null;
+  let map = null;
+
+  const els = {
+    selVar: document.getElementById("rx-sel-var"),
+    selLevel: document.getElementById("rx-sel-level"),
+    selAggr: document.getElementById("rx-sel-aggr"),
+    dateStart: document.getElementById("rx-date-start"),
+    dateEnd: document.getElementById("rx-date-end"),
+    hintPoint: document.getElementById("rx-hint-point"),
+    hintRegion: document.getElementById("rx-hint-region"),
+    coords: document.getElementById("rx-coords"),
+    btnReset: document.getElementById("rx-btn-reset"),
+    btnGenerate: document.getElementById("rx-btn-generate"),
+    result: document.getElementById("rx-result"),
+    status: document.getElementById("rx-explorer-status"),
+    resultImg: document.getElementById("rx-result-img"),
+    modePoint: document.getElementById("rx-mode-point"),
+    modeRegion: document.getElementById("rx-mode-region"),
+  };
+
+  function setMode(next) {
+    mode = next;
+    els.modePoint.classList.toggle("active", mode === "point");
+    els.modeRegion.classList.toggle("active", mode === "region");
+    els.hintPoint.style.display = mode === "point" ? "block" : "none";
+    els.hintRegion.style.display = mode === "region" ? "block" : "none";
+    resetSelection();
+  }
+
+  function resetSelection() {
+    point = null; corner1 = null; corner2 = null;
+    if (marker) { map.removeLayer(marker); marker = null; }
+    if (rect) { map.removeLayer(rect); rect = null; }
+    els.coords.textContent = "No selection yet";
+    els.btnGenerate.disabled = true;
+    els.result.style.display = "none";
+  }
+
+  function updateLevels() {
+    const v = els.selVar.value;
+    const levels = [...new Set(combos.filter(c => c.var === v).map(c => c.level))]
+      .filter(l => l !== null && l !== undefined)
+      .sort((a, b) => a - b);
+    if (levels.length) {
+      els.selLevel.innerHTML = levels.map(l => `<option value="${l}">${l} hPa</option>`).join("");
+      els.selLevel.disabled = false;
+    } else {
+      els.selLevel.innerHTML = `<option value="">Surface</option>`;
+      els.selLevel.disabled = true;
+    }
+    updateAggrs();
+  }
+
+  function selectedLevel() {
+    return els.selLevel.disabled || els.selLevel.value === "" ? null : Number(els.selLevel.value);
+  }
+
+  function updateAggrs() {
+    const v = els.selVar.value, l = selectedLevel();
+    const aggrs = [...new Set(
+      combos.filter(c => c.var === v && c.level === l).map(c => c.aggr)
+    )].sort();
+    els.selAggr.innerHTML = aggrs.map(a => `<option value="${a}">${a}</option>`).join("");
+  }
+
+  async function loadMeta() {
+    try {
+      const res = await fetch(`${RX_API_BASE}/api/meta`);
+      const data = await res.json();
+      combos = data.combos || [];
+    } catch (e) {
+      combos = [];
+    }
+    const vars = [...new Set(combos.map(c => c.var))].sort();
+    els.selVar.innerHTML = vars.map(v => `<option value="${v}">${VAR_LABELS[v] || v}</option>`).join("");
+    updateLevels();
+  }
+
+  async function generate() {
+    els.btnGenerate.disabled = true;
+    els.result.style.display = "block";
+    els.status.className = "rx-status";
+    els.status.innerHTML = `<span class="rx-spinner"></span>Generating plot… this can take a few seconds.`;
+    els.resultImg.style.display = "none";
+
+    const var_ = els.selVar.value, level = selectedLevel(), aggr = els.selAggr.value;
+    const start = els.dateStart.value || null;
+    const end = els.dateEnd.value || null;
+
+    let url, body;
+    if (mode === "point") {
+      url = `${RX_API_BASE}/api/timeseries`;
+      body = { var: var_, level, aggr, lat: point.lat, lon: point.lon, start, end };
+    } else {
+      url = `${RX_API_BASE}/api/spatial`;
+      body = {
+        var: var_, level, aggr,
+        lat_min: Math.min(corner1.lat, corner2.lat), lat_max: Math.max(corner1.lat, corner2.lat),
+        lon_min: Math.min(corner1.lon, corner2.lon), lon_max: Math.max(corner1.lon, corner2.lon),
+        start, end,
+      };
+    }
+
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({}));
+        throw new Error(err.detail || `Request failed (${res.status})`);
+      }
+      const blob = await res.blob();
+      els.resultImg.src = URL.createObjectURL(blob);
+      els.resultImg.style.display = "block";
+      els.status.textContent = "";
+    } catch (e) {
+      els.status.className = "rx-status rx-error";
+      els.status.textContent = `Could not generate plot: ${e.message}`;
+    } finally {
+      els.btnGenerate.disabled = false;
+    }
+  }
+
+  function init() {
+    map = L.map("rx-map", { worldCopyJump: true }).setView([20, 80], 3);
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      attribution: "&copy; OpenStreetMap &copy; CARTO",
+      maxZoom: 8,
+    }).addTo(map);
+
+    map.on("click", (e) => {
+      const { lat, lng } = e.latlng;
+      if (mode === "point") {
+        point = { lat, lon: lng };
+        if (marker) map.removeLayer(marker);
+        marker = L.circleMarker([lat, lng], { radius: 6, color: "#ffb454", fillOpacity: 0.9 }).addTo(map);
+        els.coords.innerHTML = `lat <b>${lat.toFixed(2)}</b>, lon <b>${lng.toFixed(2)}</b>`;
+        els.btnGenerate.disabled = false;
+      } else {
+        if (!corner1 || (corner1 && corner2)) {
+          corner1 = { lat, lon: lng };
+          corner2 = null;
+          if (rect) { map.removeLayer(rect); rect = null; }
+          els.coords.textContent = "First corner set — click the opposite corner";
+          els.btnGenerate.disabled = true;
+        } else {
+          corner2 = { lat, lon: lng };
+          const bounds = [[corner1.lat, corner1.lon], [corner2.lat, corner2.lon]];
+          if (rect) map.removeLayer(rect);
+          rect = L.rectangle(bounds, { color: "#ffb454", weight: 2, fillOpacity: 0.08 }).addTo(map);
+          const latMin = Math.min(corner1.lat, corner2.lat).toFixed(2);
+          const latMax = Math.max(corner1.lat, corner2.lat).toFixed(2);
+          const lonMin = Math.min(corner1.lon, corner2.lon).toFixed(2);
+          const lonMax = Math.max(corner1.lon, corner2.lon).toFixed(2);
+          els.coords.innerHTML = `lat <b>${latMin}</b>&ndash;<b>${latMax}</b>, lon <b>${lonMin}</b>&ndash;<b>${lonMax}</b>`;
+          els.btnGenerate.disabled = false;
+        }
+      }
+    });
+
+    els.modePoint.addEventListener("click", () => setMode("point"));
+    els.modeRegion.addEventListener("click", () => setMode("region"));
+    els.btnReset.addEventListener("click", resetSelection);
+    els.selVar.addEventListener("change", updateLevels);
+    els.selLevel.addEventListener("change", updateAggrs);
+    els.btnGenerate.addEventListener("click", generate);
+
+    loadMeta();
+    requestAnimationFrame(() => map.invalidateSize());
+  }
+
+  function invalidateSize() {
+    if (map) requestAnimationFrame(() => map.invalidateSize());
+  }
+
+  return { init, invalidateSize };
+})();
 
 const FORM_LABELS = {
   'ret-626':     'Form 626 — Monthly Return of Daily Climatological Observations',
