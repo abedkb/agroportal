@@ -1203,10 +1203,26 @@ body{
    map panes (which use z-index up to ~700) can't leak out and paint over
    unrelated page elements like the nav's hamburger dropdown. */
 .lp-split-col{position:relative;flex:1 1 50%;min-width:0;overflow:hidden;isolation:isolate}
-.lp-split-rx{display:flex;align-items:center;justify-content:center;background:#0c1420}
-.lp-split-rx img{max-width:100%;max-height:100%;object-fit:contain;display:block}
+/* Our-Products auto-slider now lives here (beside the map) instead of the
+   single cycling reanalysis image it used to show. */
+.lp-split-rx{display:flex;flex-direction:column;justify-content:center;align-items:stretch;background:#f7f9fc;padding:1.75rem 1.75rem 1.25rem;overflow-y:auto}
+.lp-split-rx .lp-section-hd{text-align:left;margin-bottom:1rem}
+.lp-split-rx .lp-section-hd h2{font-size:20px;margin-bottom:.35rem}
+.lp-split-rx .lp-section-hd p{font-size:12.5px;margin:0;max-width:none}
+.lp-split-rx .lp-noaa-filters{justify-content:flex-start;margin-bottom:1rem}
+.lp-split-rx .lp-noaa-track .lp-card{flex:0 0 220px;width:220px}
+.lp-split-rx .lp-card-vis,.lp-split-rx .lp-card-vis-img{height:120px}
 .lp-anim-caption{position:absolute;left:0;right:0;bottom:0;padding:16px 28px;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);color:#e8eef6;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.03em}
 @media(max-width:900px){.lp-split-stage{flex-direction:column;height:auto;min-height:0}.lp-split-col{height:46vh}}
+
+/* Standalone mode: the Reanalysis explorer opened from the landing nav's
+   "Agrometeorological Products" link is its own independent page — no
+   dashboard topnav (user/logout) or tabnav (other dashboard tabs) chrome,
+   just the explorer itself plus a small way back to the site. */
+#mainApp.standalone .topnav,
+#mainApp.standalone .tabnav{display:none!important}
+#standaloneBackBtn{display:none;position:fixed;top:14px;left:14px;z-index:2000;background:#0D47A1;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.18)}
+#standaloneBackBtn:hover{background:#0b3a86}
 
 /* ---- In-app Reanalysis page (Gallery + Live Explorer) ---- */
 .reanalysis-page{
@@ -1296,7 +1312,8 @@ body{
         <div class="lp-nav-dropdown">
           <a class="lp-nav-link" href="#" onclick="return false">Products <span class="lp-nav-caret">&#9662;</span></a>
           <div class="lp-nav-dropdown-menu">
-            <a href="#" onclick="showLandingProducts();return false">Agrometeorological Products</a>
+            <a href="#" onclick="landingComingSoon('Agrometeorological Products');return false">Agrometeorological Products</a>
+            <a href="#" onclick="openGriddedDataProducts();return false">Gridded Data Products</a>
           </div>
         </div>
         <a class="lp-nav-link" href="#" onclick="landingComingSoon('About');return false">About</a>
@@ -1326,33 +1343,24 @@ body{
   <div id="lp-map-section" class="lp-section" style="padding:2.5rem 0;background:var(--bg-tertiary)">
     <div class="lp-split-stage" id="lp-split-stage">
       <div class="lp-split-col lp-split-rx" id="lp-slide-rx">
-        <img id="lp-rx-img" alt="NOAA reanalysis product" />
-        <div class="lp-anim-caption" id="lp-rx-caption"></div>
+        <div class="lp-section-hd">
+          <span class="lp-pill lp-pill-blue">Our Products</span>
+          <h2>Agrometeorological Services &amp; Products</h2>
+          <p>From daily field observations to seasonal forecasts &mdash; decision support for Tanzania&rsquo;s agricultural sector</p>
+        </div>
+        <div class="lp-noaa-filters">
+          <select id="noaaVarFilter" onchange="renderNoaaProducts()"><option value="">All Variables</option></select>
+          <select id="noaaAggrFilter" onchange="renderNoaaProducts()"><option value="">All Aggregations</option></select>
+          <select id="noaaTypeFilter" onchange="renderNoaaProducts()"><option value="">All Types</option></select>
+        </div>
+        <div class="lp-noaa-track-wrap">
+          <div class="lp-noaa-track" id="lp-noaa-cards">
+            <div class="lp-noaa-status">Loading products&hellip;</div>
+          </div>
+        </div>
       </div>
       <div class="lp-split-col lp-split-map" id="lp-slide-map">
         <div id="tzStationMap" style="height:100%;width:100%"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PRODUCTS SECTION (hidden from the default scroll — opened via the "Products" nav link) -->
-  <div id="lp-products-anchor" class="lp-section lp-section-alt" style="display:none">
-    <div class="lp-container">
-      <button class="btn" style="margin-bottom:1.25rem" onclick="hideLandingProducts()">&larr; Back to Home</button>
-      <div class="lp-section-hd">
-        <span class="lp-pill lp-pill-blue">Our Products</span>
-        <h2>Agrometeorological Services &amp; Products</h2>
-        <p>From daily field observations to seasonal forecasts &mdash; decision support for Tanzania&rsquo;s agricultural sector</p>
-      </div>
-      <div class="lp-noaa-filters">
-        <select id="noaaVarFilter" onchange="renderNoaaProducts()"><option value="">All Variables</option></select>
-        <select id="noaaAggrFilter" onchange="renderNoaaProducts()"><option value="">All Aggregations</option></select>
-        <select id="noaaTypeFilter" onchange="renderNoaaProducts()"><option value="">All Types</option></select>
-      </div>
-      <div class="lp-noaa-track-wrap">
-        <div class="lp-noaa-track" id="lp-noaa-cards">
-          <div class="lp-noaa-status">Loading products&hellip;</div>
-        </div>
       </div>
     </div>
   </div>
@@ -1368,7 +1376,7 @@ body{
     </div>
     <div class="lp-footer-links">
       <a href="#" onclick="openStaffLogin();return false">Stakeholder Login</a>
-      <a href="#" onclick="showLandingProducts();return false">Browse Products</a>
+      <a href="#" onclick="openGriddedDataProducts();return false">Browse Products</a>
       <a href="#" onclick="openStaffLogin();return false">Staff Login</a>
       <a href="https://www.meteo.go.tz" target="_blank" rel="noopener">TMA Website</a>
     </div>
@@ -1506,6 +1514,11 @@ body{
   </div>
 </div>
 
+<!-- Standalone-mode "back to home" button — only shown when the Reanalysis
+     explorer is opened directly from the landing page nav, independent of
+     any dashboard (see openGriddedDataProducts()/enterPublicView()). -->
+<button id="standaloneBackBtn" onclick="goHome()">&larr; Back to Home</button>
+
 <!-- ======================== MAIN APP ======================== -->
 <div class="layout" id="mainApp" style="display:none">
 
@@ -1543,7 +1556,6 @@ body{
       <button class="tab-btn" data-page="returns" onclick="showPage('returns',this)">&#128203; Returns <span class="auto-badge">AUTO</span></button>
       <button class="tab-btn" data-page="products" onclick="showPage('products',this)">&#10571; Downloads</button>
       <button class="tab-btn" data-page="messages" onclick="showPage('messages',this)">&#9711; Notifications</button>
-      <button class="tab-btn" data-page="reanalysis" onclick="showPage('reanalysis',this)">&#127760; Reanalysis</button>
     </div>
     <!-- Stakeholder tabs -->
     <div class="tabnav-inner" id="stakeholderTabs" style="display:none">
@@ -1552,7 +1564,7 @@ body{
       <button class="tab-btn" data-page="stakeholderProducts" onclick="showPage('stakeholderProducts',this)">&#10571; Met Products</button>
       <button class="tab-btn" data-page="stakeholderRequest" onclick="showPage('stakeholderRequest',this)">&#9993; Request Product</button>
       <button class="tab-btn" data-page="stakeholderMessages" onclick="showPage('stakeholderMessages',this)">&#9711; Notifications</button>
-      <button class="tab-btn" data-page="reanalysis" onclick="showPage('reanalysis',this)">&#127760; Reanalysis</button>
+      <button class="tab-btn" data-page="reanalysis" onclick="showPage('reanalysis',this)">&#127760; Gridded Data</button>
       <button class="tab-btn" style="margin-left:auto;color:#dc2626;font-weight:600;border-left:2px solid #fee2e2" onclick="logout()">&#9211; Sign Out</button>
     </div>
     <!-- Admin tabs -->
@@ -1566,7 +1578,6 @@ body{
       <button class="tab-btn" data-page="adminMessages" onclick="showPage('adminMessages',this)">&#9711; Comms</button>
       <button class="tab-btn" data-page="observers" onclick="showPage('observers',this)">&#9673; Observers</button>
       <button class="tab-btn" data-page="manageStakeholders" onclick="showPage('manageStakeholders',this)">&#9672; Stakeholders</button>
-      <button class="tab-btn" data-page="reanalysis" onclick="showPage('reanalysis',this)">&#127760; Reanalysis</button>
     </div>
   </div>
 
@@ -1592,8 +1603,6 @@ body{
       <div class="nav-label">Downloads & Comms</div>
       <div class="nav-item" onclick="showPage('products',this)"><span class="nav-icon">⤓</span>Products &amp; downloads</div>
       <div class="nav-item" onclick="showPage('messages',this)"><span class="nav-icon">◎</span>Notifications</div>
-      <div class="nav-label">NOAA Reanalysis</div>
-      <div class="nav-item" onclick="showPage('reanalysis',this)"><span class="nav-icon">🌐</span>Reanalysis explorer</div>
     </div>
     <div class="nav-section" id="stakeholderNav" style="display:none">
       <div class="nav-item" onclick="goHome()"><span class="nav-icon">&#8962;</span>Home</div>
@@ -1602,8 +1611,8 @@ body{
       <div class="nav-item" onclick="showPage('stakeholderProducts',this)"><span class="nav-icon">⤓</span>Meteorological Products</div>
       <div class="nav-item" onclick="showPage('stakeholderRequest',this)"><span class="nav-icon">✉</span>Request a Product</div>
       <div class="nav-item" onclick="showPage('stakeholderMessages',this)"><span class="nav-icon">◎</span>Notifications</div>
-      <div class="nav-label">NOAA Reanalysis</div>
-      <div class="nav-item" onclick="showPage('reanalysis',this)"><span class="nav-icon">🌐</span>Reanalysis explorer</div>
+      <div class="nav-label">Gridded Data</div>
+      <div class="nav-item" onclick="showPage('reanalysis',this)"><span class="nav-icon">🌐</span>Gridded Data Products</div>
     </div>
     <div class="nav-section" id="adminNav" style="display:none">
       <div class="nav-item" onclick="goHome()"><span class="nav-icon">&#8962;</span>Home</div>
@@ -1615,8 +1624,6 @@ body{
       <div class="nav-item" onclick="showPage('adminMessages',this)"><span class="nav-icon">◎</span>Notifications &amp; comms</div>
       <div class="nav-item" onclick="showPage('observers',this)"><span class="nav-icon">◉</span>Manage observers</div>
       <div class="nav-item" onclick="showPage('manageStakeholders',this)"><span class="nav-icon">◈</span>Manage stakeholders</div>
-      <div class="nav-label">NOAA Reanalysis</div>
-      <div class="nav-item" onclick="showPage('reanalysis',this)"><span class="nav-icon">🌐</span>Reanalysis explorer</div>
     </div>
     <div class="sidebar-footer">
       <div class="user-chip">
@@ -3291,7 +3298,7 @@ function loginAs(role, user) {
     document.getElementById('sessionBadge').style.display='';
     showPage('dashboard',null);
   }
-  const logoutBtn=document.getElementById('topnavLogoutBtn'); if(logoutBtn) logoutBtn.style.display=(role==='observer')?'none':'';
+  const logoutBtn=document.getElementById('topnavLogoutBtn'); if(logoutBtn) logoutBtn.style.display=(role==='stakeholder')?'':'none';
   loadState();
   loadPhenoState();
   loadFromSupabase().then(() => {
@@ -3371,6 +3378,12 @@ function showLanding() {
   const ls=document.getElementById('landingScreen'); if(ls) ls.style.display='flex';
   document.getElementById('authScreen').style.display='none';
   document.getElementById('mainApp').style.display='none';
+  // Clear any standalone-Reanalysis chrome so the next dashboard entry
+  // (login, register, or public browse) starts with the normal topnav/tabnav.
+  const mainAppEl = document.getElementById('mainApp');
+  if(mainAppEl) mainAppEl.classList.remove('standalone');
+  const backBtn = document.getElementById('standaloneBackBtn');
+  if(backBtn) backBtn.style.display = 'none';
   window.scrollTo({top:0,behavior:'smooth'});
   loadNoaaProducts();
   closeLandingMenu();
@@ -3405,23 +3418,20 @@ function _greetByTimeOfDay() {
   if (h < 18) return 'Good afternoon';
   return 'Good evening';
 }
-function showLandingProducts() {
+// "Gridded Data Products" (nav bar + footer) — a distinct entry from
+// "Agrometeorological Products" (still a placeholder; the real content
+// will be uploaded later) — opens the full Reanalysis tab (Gallery + Live
+// Explorer), the same one available inside the stakeholder dashboard,
+// as its own standalone page instead of the old static "Our Products"
+// grid (that grid now auto-slides beside the map on the front page
+// instead, see enterPublicView()/lp-slide-rx).
+function openGriddedDataProducts() {
   closeLandingMenu();
-  const el=document.getElementById('lp-products-anchor');
-  if(!el) return;
-  el.style.display='';
-  el.scrollIntoView({behavior:'smooth'});
-}
-function hideLandingProducts() {
-  const el=document.getElementById('lp-products-anchor');
-  if(!el) return;
-  el.style.display='none';
-  const hero=document.querySelector('.lp-hero');
-  if(hero) hero.scrollIntoView({behavior:'smooth'});
+  enterPublicView('reanalysis');
 }
 function scrollToLandingTop() {
   closeLandingMenu();
-  hideLandingProducts();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 function landingComingSoon(name) {
   closeLandingMenu();
@@ -3468,13 +3478,13 @@ function initTzStationMap() {
     minZoom: 6,
   });
   _tzMap.fitBounds(TZ_BOUNDS, { padding: [4, 4] });
-  // Esri's free, keyless "World Street Map" -- shows region/province
-  // boundaries, place labels, and natural land/water coloring (matching
-  // the reference look requested), unlike the plain Canvas basemap used
-  // before.
-  L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
-    attribution: 'Tiles &copy; Esri &mdash; Esri, HERE, Garmin, USGS, NGA, &copy; OpenStreetMap contributors',
-    maxZoom: 12,
+  // Standard OpenStreetMap tiles — the familiar cream/green/blue OSM look
+  // (place labels, roads, land use) requested, instead of the flatter
+  // Esri street basemap used before.
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    subdomains: 'abc',
+    maxZoom: 19,
   }).addTo(_tzMap);
   // The container's real size isn't always settled at the moment the map
   // is created, which can leave Leaflet's initial fit too zoomed-out —
@@ -3532,37 +3542,20 @@ async function loadTzStationReadings() {
   }
 }
 
-// ── Landing page: reanalysis product carousel (left panel). The station
-// map (right panel) is always visible now, so this only cycles images. ────
-let _lpAnimTimer = null;
-let _lpRxIndex = 0;
-const LP_ANIM_RX_MS = 3200;
+// ── Landing page: "Our Products" auto-slider (left panel, beside the
+// station map). This used to cycle single images on its own timer; now it
+// just shows the same auto-scrolling product-card marquee (#lp-noaa-cards)
+// that renderNoaaProducts() already drives via CSS animation, so there is
+// nothing extra to start/stop here — these are kept as harmless no-ops
+// since other functions below still call them at auth-screen transitions.
+function startLandingAnimation() {}
+function stopLandingAnimation() {}
 
-function startLandingAnimation() {
-  stopLandingAnimation();
-  lpAdvanceRxImage();
-}
-function stopLandingAnimation() {
-  if (_lpAnimTimer) { clearTimeout(_lpAnimTimer); _lpAnimTimer = null; }
-}
-function lpAdvanceRxImage() {
-  const products = (noaaProductsCache || []).filter(p => p.public_url);
-  const img = document.getElementById('lp-rx-img');
-  const cap = document.getElementById('lp-rx-caption');
-  if (!products.length || !img) {
-    // Products haven't loaded yet (or failed) -- try again shortly rather
-    // than leaving the panel blank.
-    _lpAnimTimer = setTimeout(lpAdvanceRxImage, 2000);
-    return;
-  }
-  const p = products[_lpRxIndex % products.length];
-  _lpRxIndex++;
-  img.src = p.public_url;
-  cap.textContent = `${VAR_LABELS[p.var] || (p.var||'').toUpperCase()}${p.level_hpa ? ' · ' + p.level_hpa + ' hPa' : ''} · ${p.aggr || ''}`;
-  _lpAnimTimer = setTimeout(lpAdvanceRxImage, LP_ANIM_RX_MS);
-}
-
-function enterPublicView() {
+// role==='public': used both for anonymous "browse the dashboard" access
+// and for the nav bar's "Agrometeorological Products" link, which opens
+// straight into the full Reanalysis tab (Gallery + Live Explorer) instead
+// of the stakeholder dashboard.
+function enterPublicView(landingPage) {
   stopLandingAnimation();
   const ls=document.getElementById('landingScreen'); if(ls) ls.style.display='none';
   state.role='public'; state.currentUser=null;
@@ -3583,8 +3576,17 @@ function enterPublicView() {
   document.getElementById('sessionBadge').style.display='none';
   const logoutBtn=document.getElementById('topnavLogoutBtn'); if(logoutBtn) logoutBtn.style.display='none';
   loadState(); loadPhenoState(); loadFromSupabase();
-  showPage('stakeholderDash',null);
-  setTimeout(()=>{refreshStakeholderDash();},80);
+  const page = landingPage || 'stakeholderDash';
+  // Reanalysis opened straight from the landing nav is a fully independent
+  // page — no dashboard topnav/tabnav chrome around it, just its own
+  // "Back to Home" button.
+  const standalone = page === 'reanalysis';
+  const mainAppEl = document.getElementById('mainApp');
+  if(mainAppEl) mainAppEl.classList.toggle('standalone', standalone);
+  const backBtn = document.getElementById('standaloneBackBtn');
+  if(backBtn) backBtn.style.display = standalone ? 'inline-block' : 'none';
+  showPage(page,null);
+  if(page==='stakeholderDash') setTimeout(()=>{refreshStakeholderDash();},80);
   setTodayDate(); updateClock();
 }
 
@@ -3859,7 +3861,7 @@ function showPage(id,navEl) {
     adminMessages:['Notifications & Comms',`Admin: ${ADMIN_PHONE}`],
     observers:['Manage Observers','All registered observers'],
     manageStakeholders:['Manage Stakeholders','All registered stakeholders'],
-    reanalysis:['NOAA Reanalysis','Browse products or generate a plot on demand'],
+    reanalysis:['Gridded Data Products','Browse products or generate a plot on demand'],
   };
   if(titles[id]){document.getElementById('pageTitle').textContent=titles[id][0];document.getElementById('pageDate').textContent=titles[id][1];}
   if(id==='obsForms') setTodayDate();
