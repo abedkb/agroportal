@@ -12,12 +12,23 @@
 #               e.g.: 1000 925 850 700 600 500 400 300 250 200 150 100 50 10
 #   --start     Start year, or "all" for dataset start / 1948 (default: all)
 #   --end       End year, or "all" to auto-detect latest year on the server (default: all)
-#   --aggr      Aggregation(s), comma-separated (default: daily,monthly,seasonal,annual)
-#               Options: daily | monthly | seasonal | annual
+#   --aggr      Aggregation(s), comma-separated (default: daily,monthly,seasonal,annual,dekad,pentad)
+#               Options: daily | monthly | seasonal | annual | dekad | pentad | climatology | anomaly
 #   --plot      Launch Python plot after processing (default: true)
-#   --lat       Latitude  for time series -- any value in the grid (default: 20.0)
-#   --lon       Longitude for time series -- any value in the grid (default: 80.0)
+#   --lat       Latitude  for time series -- only used in --point mode (default: -6.1630, Dodoma)
+#   --lon       Longitude for time series -- only used in --point mode (default: 35.7516, Dodoma)
 #   --plot-type Plot type: spatial | timeseries | both (default: both)
+#   --lat-min   Spatial-map domain crop: min latitude  (default: -12.5, Tanzania region)
+#   --lat-max   Spatial-map domain crop: max latitude  (default: 1.5,  Tanzania region)
+#   --lon-min   Spatial-map domain crop: min longitude (default: 28.5, Tanzania region)
+#   --lon-max   Spatial-map domain crop: max longitude (default: 41.5, Tanzania region)
+#   --global    Disable the domain crop above -- render a full global spatial map instead
+#   --point     Sample time series/Hovmoller at a single --lat/--lon point instead of
+#               averaging across Tanzania (default: area-average, see below)
+#   --avg-lat-min  Tanzania-average region: min latitude  (default: -11.8, Tanzania only)
+#   --avg-lat-max  Tanzania-average region: max latitude  (default: -0.9,  Tanzania only)
+#   --avg-lon-min  Tanzania-average region: min longitude (default: 29.3,  Tanzania only)
+#   --avg-lon-max  Tanzania-average region: max longitude (default: 40.9,  Tanzania only)
 #   --clean-raw Delete raw yearly downloads + merged intermediate after
 #               aggregation succeeds, to save disk (default: false).
 #               WARNING: breaks the "skip if exists" resume/extend behavior --
@@ -32,10 +43,12 @@
 #   - Python 3 with: xarray, matplotlib, cartopy, numpy, pandas, scipy
 #
 # Examples:
-#   bash noaa_pipeline.sh --var shum --level 850                    # full record, auto-detected
+#   bash noaa_pipeline.sh --var shum --level 850                    # full record, Tanzania-region maps
 #   bash noaa_pipeline.sh --var uwnd --level 500 --start 1990 --end 2020
 #   bash noaa_pipeline.sh --var air  --level 850 --lat 12.5 --lon 45.2 --plot-type timeseries
 #   bash noaa_pipeline.sh --var shum --level 850 --clean-raw true   # save disk after aggregating
+#   bash noaa_pipeline.sh --var air  --level 850 --global           # global map instead of Tanzania crop
+#   bash noaa_pipeline.sh --var air  --level 850 --point --lat -6.8 --lon 39.28   # single-point mode (Dar es Salaam)
 # =============================================================================
 
 set -euo pipefail
@@ -47,14 +60,50 @@ VAR="shum"
 LEVEL="850"
 START_YEAR="all"   # "all" = dataset start (1948), or override with e.g. 1981
 END_YEAR="all"     # "all" = latest year found on the NOAA server
-AGGREGATIONS="daily,monthly,seasonal,annual"
+# dekad/pentad included by default now -- Tanzania agromet reporting (TMA
+# bulletins, crop monitoring) runs on dekadal periods, so leaving these out
+# by default meant the portal could never offer a dekad option no matter
+# how many variables/levels were generated.
+AGGREGATIONS="daily,monthly,seasonal,annual,dekad,pentad"
 LAUNCH_PLOT=true
-USER_LAT=20.0
-USER_LON=80.0
+# Sample point, only used when --point mode is on (see AREA_AVERAGE below):
+# Dodoma, Tanzania's capital, roughly central to the country -- was
+# previously 20.0/80.0 (South Asia), a leftover default from unrelated
+# prior use of this script. Override with --lat/--lon for a specific
+# station, e.g. Dar es Salaam: --point --lat -6.8 --lon 39.28
+USER_LAT=-6.1630
+USER_LON=35.7516
 PLOT_TYPE="both"
+
+# Default: the sample time series/Hovmoller represent Tanzania as a whole --
+# averaged across AVG_LAT_MIN..AVG_LAT_MAX / AVG_LON_MIN..AVG_LON_MAX at
+# every time step -- rather than one arbitrarily-chosen point. This box is
+# deliberately TIGHTER than DOMAIN_LAT_MIN/MAX below (which includes
+# neighboring countries for map-display context): averaging in a "Tanzania"
+# time series should not pull in Kenyan/Zambian grid cells. Pass --point to
+# fall back to single lat/lon extraction (e.g. for a specific station).
+AREA_AVERAGE=true
+AVG_LAT_MIN=-11.8
+AVG_LAT_MAX=-0.9
+AVG_LON_MIN=29.3
+AVG_LON_MAX=40.9
 CLEAN_RAW=false   # true = delete raw yearly downloads + merged intermediate after aggregation succeeds
 #OUTDIR="/mnt/d/Research_papers/paper10/Analysis/sample/mainpy/epd_network_data/global_monsoon/NOAA"
 OUTDIR="$(pwd)/NOAA"
+
+# Default spatial-map domain crop: Tanzania + immediate neighbors (Kenya,
+# Uganda, Rwanda, Burundi, DRC, Zambia, Malawi, Mozambique) -- matching the
+# region the portal's own station map already shows. noaa_plot.py (written
+# below in Step 5) already accepts --lat-min/--lat-max/--lon-min/--lon-max
+# for exactly this; it just was never passed from here, so every spatial map
+# defaulted to rendering the whole globe regardless of who the site is for.
+# This also narrows the Hovmoller longitude range to the same region, since
+# load_data() applies the domain crop before any plot type-specific work.
+# Pass --global to opt out and get a full global map instead.
+DOMAIN_LAT_MIN=-12.5
+DOMAIN_LAT_MAX=1.5
+DOMAIN_LON_MIN=28.5
+DOMAIN_LON_MAX=41.5
 
 # NOAA PSL Base URLs (NCEP Reanalysis I Daily Pressure Level Data)
 BASE_URL_DAILY="https://downloads.psl.noaa.gov/Datasets/ncep.reanalysis/Dailies/pressure"
@@ -80,7 +129,14 @@ log_section() { echo -e "\n${BOLD}${CYAN}>>> $* ${NC}\n"; }
 # Parse Arguments
 # ─────────────────────────────────────────────────────────────────────────────
 show_help() {
-    sed -n '4,35p' "$0" | sed 's/^# //; s/^#//'
+    # Prints everything between the 2nd and 3rd "# ====...====" banner line
+    # at the top of this file (the 1st/2nd pair just wraps the title; the
+    # real Usage/Options/Examples block sits between the 2nd and 3rd).
+    # Matches on the banner pattern instead of hardcoded line numbers, so it
+    # stays correct as the option list above grows -- a fixed line range
+    # would silently go stale (cut off new options, or start printing code)
+    # the next time this header is edited.
+    awk '/^# =+$/{c++; next} c==2' "$0" | sed 's/^# //; s/^#//'
     exit 0
 }
 
@@ -95,6 +151,16 @@ while [[ $# -gt 0 ]]; do
         --lat)        USER_LAT="$2";     shift 2 ;;
         --lon)        USER_LON="$2";     shift 2 ;;
         --plot-type)  PLOT_TYPE="$2";    shift 2 ;;
+        --lat-min)    DOMAIN_LAT_MIN="$2"; shift 2 ;;
+        --lat-max)    DOMAIN_LAT_MAX="$2"; shift 2 ;;
+        --lon-min)    DOMAIN_LON_MIN="$2"; shift 2 ;;
+        --lon-max)    DOMAIN_LON_MAX="$2"; shift 2 ;;
+        --global)     DOMAIN_LAT_MIN=""; DOMAIN_LAT_MAX=""; DOMAIN_LON_MIN=""; DOMAIN_LON_MAX=""; shift ;;
+        --point)         AREA_AVERAGE=false; shift ;;
+        --avg-lat-min)   AVG_LAT_MIN="$2"; shift 2 ;;
+        --avg-lat-max)   AVG_LAT_MAX="$2"; shift 2 ;;
+        --avg-lon-min)   AVG_LON_MIN="$2"; shift 2 ;;
+        --avg-lon-max)   AVG_LON_MAX="$2"; shift 2 ;;
         --clean-raw)  CLEAN_RAW="$2";    shift 2 ;;
         --outdir)     OUTDIR="$2";       shift 2 ;;
         --help|-h)    show_help ;;
@@ -683,6 +749,13 @@ def parse_args():
     p.add_argument("--lat-max",   type=float, default=None, help="Domain crop: max latitude (spatial maps)")
     p.add_argument("--lon-min",   type=float, default=None, help="Domain crop: min longitude, -180..180 (spatial maps)")
     p.add_argument("--lon-max",   type=float, default=None, help="Domain crop: max longitude, -180..180 (spatial maps)")
+    p.add_argument("--area-average", action="store_true",
+                    help="Average the time series/Hovmoller over --avg-lat-min/max/--avg-lon-min/max "
+                         "instead of extracting a single --lat/--lon point")
+    p.add_argument("--avg-lat-min", type=float, default=None, help="Area-average region: min latitude")
+    p.add_argument("--avg-lat-max", type=float, default=None, help="Area-average region: max latitude")
+    p.add_argument("--avg-lon-min", type=float, default=None, help="Area-average region: min longitude, -180..180")
+    p.add_argument("--avg-lon-max", type=float, default=None, help="Area-average region: max longitude, -180..180")
     p.add_argument("--plot-type", default="both", choices=["spatial","timeseries","both"])
     p.add_argument("--aggr",      default="daily", help="Aggregation label")
     p.add_argument("--outdir",    default="./plots", help="Output plot directory")
@@ -699,13 +772,26 @@ def parse_args():
 # Data Loading
 # ─────────────────────────────────────────────────────────────────────────────
 def load_data(nc_path: str, var_name: str, lat: float, lon: float,
-              start: str = None, end: str = None, domain: dict = None) -> dict:
+              start: str = None, end: str = None, domain: dict = None,
+              area_average: bool = False, avg_domain: dict = None) -> dict:
     """Load and subset NetCDF data.
 
     domain, if given, is {"lat_min","lat_max","lon_min","lon_max"} (degrees,
     lon in -180..180) and crops the grid before the spatial mean is taken --
     both for correctness (a regional mean, not a global one) and speed
     (matplotlib/cartopy render far less data for a small region).
+
+    area_average, if True, builds the returned time series ("ts") by
+    averaging over avg_domain (same dict shape as domain) at every time
+    step, instead of extracting the nearest single grid point to
+    (lat, lon). This is what makes a "national" time series actually
+    representative of a whole country's average rather than one arbitrary
+    location -- a single point, however well chosen, is still just one
+    point. avg_domain is intentionally a SEPARATE box from domain: domain
+    (used only for spatial maps) is typically wider for visual map context
+    (e.g. including neighboring countries), while avg_domain should be
+    tight to the actual country extent so the average isn't diluted by
+    grid cells outside it.
     """
     print(f"[INFO] Loading: {nc_path}")
     ds = xr.open_dataset(nc_path, decode_times=True)
@@ -767,11 +853,35 @@ def load_data(nc_path: str, var_name: str, lat: float, lon: float,
     print(f"[INFO] Lat range : {float(da.lat.min()):.2f} to {float(da.lat.max()):.2f}")
     print(f"[INFO] Lon range : {float(da.lon.min()):.2f} to {float(da.lon.max()):.2f}")
 
-    # Extract time series at (lat, lon)
-    ts = da.sel(lat=lat, lon=lon, method="nearest")
-    actual_lat = float(ts.lat.values)
-    actual_lon = float(ts.lon.values)
-    print(f"[INFO] Nearest grid point: lat={actual_lat:.2f}, lon={actual_lon:.2f}")
+    # Extract the time series: either a national area-average, or the
+    # single nearest grid point to (lat, lon) -- see the area_average
+    # docstring note above for why these are genuinely different, not
+    # just two ways of picking "a" location.
+    if area_average:
+        if not avg_domain:
+            raise ValueError("area_average=True requires avg_domain "
+                              "(avg-lat-min/max, avg-lon-min/max).")
+        avg_da = da.sel(
+            lat=slice(avg_domain["lat_min"], avg_domain["lat_max"]),
+            lon=slice(avg_domain["lon_min"], avg_domain["lon_max"]),
+        )
+        if avg_da.sizes.get("lat", 0) == 0 or avg_da.sizes.get("lon", 0) == 0:
+            raise ValueError(f"Area-average domain produced an empty grid: {avg_domain}")
+        ts = avg_da.mean(dim=["lat", "lon"], skipna=True)
+        # actual_lat/actual_lon become the center of the averaging box --
+        # used only for display/filenames downstream, not for re-selecting
+        # data (the average has already been taken over the whole box).
+        actual_lat = (avg_domain["lat_min"] + avg_domain["lat_max"]) / 2
+        actual_lon = (avg_domain["lon_min"] + avg_domain["lon_max"]) / 2
+        n_cells = avg_da.sizes.get("lat", 0) * avg_da.sizes.get("lon", 0)
+        print(f"[INFO] Area-averaging over {n_cells} grid cell(s) "
+              f"(lat {avg_domain['lat_min']} to {avg_domain['lat_max']}, "
+              f"lon {avg_domain['lon_min']} to {avg_domain['lon_max']})")
+    else:
+        ts = da.sel(lat=lat, lon=lon, method="nearest")
+        actual_lat = float(ts.lat.values)
+        actual_lon = float(ts.lon.values)
+        print(f"[INFO] Nearest grid point: lat={actual_lat:.2f}, lon={actual_lon:.2f}")
 
     # Compute climatological mean (spatial) -- mean over time
     spatial_mean = da.mean(dim="time")
@@ -784,17 +894,24 @@ def load_data(nc_path: str, var_name: str, lat: float, lon: float,
         "actual_lat": actual_lat,
         "actual_lon": actual_lon,
         "domain":     domain,
+        "area_average": area_average,
+        "avg_domain": avg_domain,
     }
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Spatial Map
 # ─────────────────────────────────────────────────────────────────────────────
 def plot_spatial(da_spatial, var_name: str, args, meta: dict,
-                 actual_lat: float, actual_lon: float, domain: dict = None):
+                 actual_lat: float, actual_lon: float, domain: dict = None,
+                 area_average: bool = False, avg_domain: dict = None):
     """Plot global/regional spatial map with optional cartopy.
 
     domain, if given, restricts the map extent to a bounding box instead
     of the whole globe -- {"lat_min","lat_max","lon_min","lon_max"}.
+
+    area_average/avg_domain, if given, draw the national-average region as
+    an outlined box (what the accompanying time series/Hovmoller actually
+    represent) instead of a single-point star marker.
     """
     try:
         import cartopy.crs as ccrs
@@ -852,10 +969,20 @@ def plot_spatial(da_spatial, var_name: str, args, meta: dict,
                      alpha=0.5, linestyle="--",
                      xlocs=range(-180, 181, 30), ylocs=range(-90, 91, 30))
 
-        # Mark selected coordinate (only meaningful if it's inside the shown extent)
-        ax.plot(actual_lon, actual_lat, marker="*", color="#ff6b6b",
-                markersize=14, transform=proj, zorder=10,
-                label=f"Selected: {actual_lat:.1f}N, {actual_lon:.1f}E")
+        # Mark either the national-average region (a box) or a single
+        # selected point (a star) -- whichever the accompanying time
+        # series/Hovmoller actually represent.
+        if area_average and avg_domain:
+            box_lons = [avg_domain["lon_min"], avg_domain["lon_max"], avg_domain["lon_max"],
+                        avg_domain["lon_min"], avg_domain["lon_min"]]
+            box_lats = [avg_domain["lat_min"], avg_domain["lat_min"], avg_domain["lat_max"],
+                        avg_domain["lat_max"], avg_domain["lat_min"]]
+            ax.plot(box_lons, box_lats, color="#ff6b6b", linewidth=1.8,
+                    transform=proj, zorder=10, label="Tanzania average region")
+        else:
+            ax.plot(actual_lon, actual_lat, marker="*", color="#ff6b6b",
+                    markersize=14, transform=proj, zorder=10,
+                    label=f"Selected: {actual_lat:.1f}N, {actual_lon:.1f}E")
         ax.legend(loc="lower left", fontsize=9,
                   facecolor="#1a1a2e", edgecolor="#444466", labelcolor="white")
 
@@ -877,8 +1004,15 @@ def plot_spatial(da_spatial, var_name: str, args, meta: dict,
         else:
             cf = ax.pcolormesh(lons2d, lats2d, data, cmap=cmap,
                                vmin=vmin, vmax=vmax, shading="auto")
-        ax.plot(actual_lon, actual_lat, "r*", markersize=14,
-                label=f"Selected: {actual_lat:.1f}N, {actual_lon:.1f}E")
+        if area_average and avg_domain:
+            box_lons = [avg_domain["lon_min"], avg_domain["lon_max"], avg_domain["lon_max"],
+                        avg_domain["lon_min"], avg_domain["lon_min"]]
+            box_lats = [avg_domain["lat_min"], avg_domain["lat_min"], avg_domain["lat_max"],
+                        avg_domain["lat_max"], avg_domain["lat_min"]]
+            ax.plot(box_lons, box_lats, color="red", linewidth=1.8, label="Tanzania average region")
+        else:
+            ax.plot(actual_lon, actual_lat, "r*", markersize=14,
+                    label=f"Selected: {actual_lat:.1f}N, {actual_lon:.1f}E")
         ax.set_xlabel("Longitude", color="white")
         ax.set_ylabel("Latitude",  color="white")
         ax.tick_params(colors="white")
@@ -907,6 +1041,8 @@ def plot_spatial(da_spatial, var_name: str, args, meta: dict,
     plt.savefig(fpath, dpi=args.dpi, bbox_inches="tight",
                 facecolor="#0f0f1a", edgecolor="none")
     print(f"[OK] Saved spatial map -> {fpath}")
+    # (filename intentionally unaffected by area_average -- the spatial map
+    # itself doesn't change shape, only the box/star overlay on top of it)
 
     if args.show:
         matplotlib.use("TkAgg")
@@ -990,9 +1126,11 @@ def plot_timeseries(ts, var_name: str, args, meta: dict,
     mid_idx = len(times) // 2
     ax_main.axvline(times[0], color="none")  # dummy for spacing
 
+    loc_label = "Tanzania-wide average" if getattr(args, "area_average", False) \
+        else f"({actual_lat:.2f}N, {actual_lon:.2f}E)"
     ax_main.set_title(
         f"{meta.get('long_name', var_name)} | {args.level} hPa | "
-        f"({actual_lat:.2f}N, {actual_lon:.2f}E) | {args.aggr.title()}",
+        f"{loc_label} | {args.aggr.title()}",
         color="white", fontsize=13, fontweight="bold", pad=10
     )
     ax_main.set_ylabel(f"{meta.get('long_name', var_name)} ({display_label})",
@@ -1030,8 +1168,9 @@ def plot_timeseries(ts, var_name: str, args, meta: dict,
     plt.tight_layout(rect=[0, 0, 1, 1], h_pad=0.5)
 
     os.makedirs(args.outdir, exist_ok=True)
-    fname = (f"{var_name}_{args.level}hPa_{args.aggr}_"
-             f"timeseries_{actual_lat:.1f}N_{actual_lon:.1f}E.{args.format}")
+    loc_tag = "tanzania_avg" if getattr(args, "area_average", False) \
+        else f"{actual_lat:.1f}N_{actual_lon:.1f}E"
+    fname = f"{var_name}_{args.level}hPa_{args.aggr}_timeseries_{loc_tag}.{args.format}"
     fpath = os.path.join(args.outdir, fname)
     plt.savefig(fpath, dpi=args.dpi, bbox_inches="tight",
                 facecolor="#0f0f1a", edgecolor="none")
@@ -1047,12 +1186,23 @@ def plot_timeseries(ts, var_name: str, args, meta: dict,
 # Hovmoller Diagram (Lat-Time or Lon-Time)
 # ─────────────────────────────────────────────────────────────────────────────
 def plot_hovmoller(da, var_name: str, args, meta: dict,
-                   actual_lat: float, actual_lon: float):
-    """Plot a Hovmoller diagram (longitude-time) at selected latitude."""
+                   actual_lat: float, actual_lon: float, avg_domain: dict = None):
+    """Plot a Hovmoller diagram (longitude-time) at selected latitude.
+
+    In area-average mode, the latitude band averaged over is Tanzania's
+    actual latitude extent (avg_domain), not an arbitrary +/-2.5 degrees
+    around one point -- so the diagram represents the whole country's
+    longitude structure over time, not just a slice near one location.
+    """
     cmap = args.colormap or meta.get("cmap", "RdBu_r")
 
-    # Slice lat band +/- 2.5 degrees
-    lat_band = da.sel(lat=slice(actual_lat - 2.5, actual_lat + 2.5)).mean(dim="lat")
+    if getattr(args, "area_average", False) and avg_domain:
+        lat_band = da.sel(lat=slice(avg_domain["lat_min"], avg_domain["lat_max"])).mean(dim="lat")
+        band_label = "Tanzania-wide"
+    else:
+        # Slice lat band +/- 2.5 degrees around the selected point
+        lat_band = da.sel(lat=slice(actual_lat - 2.5, actual_lat + 2.5)).mean(dim="lat")
+        band_label = f"~{actual_lat:.1f}"
     data = lat_band.values.astype(float)
     if var_name == "shum":
         data *= 1000
@@ -1087,12 +1237,12 @@ def plot_hovmoller(da, var_name: str, args, meta: dict,
     cbar.outline.set_edgecolor("#444466")
 
     ax.set_title(f"Hovmoller (Lon-Time) | {meta.get('long_name', var_name)} | "
-                 f"Lat band ~{actual_lat:.1f} | {args.level} hPa",
+                 f"Lat band {band_label} | {args.level} hPa",
                  color="white", fontsize=13, fontweight="bold", pad=10)
 
     os.makedirs(args.outdir, exist_ok=True)
-    fname = (f"{var_name}_{args.level}hPa_{args.aggr}_"
-             f"hovmoller_{actual_lat:.1f}N.{args.format}")
+    loc_tag = "tanzania_avg" if getattr(args, "area_average", False) else f"{actual_lat:.1f}N"
+    fname = f"{var_name}_{args.level}hPa_{args.aggr}_hovmoller_{loc_tag}.{args.format}"
     fpath = os.path.join(args.outdir, fname)
     plt.savefig(fpath, dpi=args.dpi, bbox_inches="tight",
                 facecolor="#0f0f1a", edgecolor="none")
@@ -1125,11 +1275,27 @@ def main():
             "lon_min": args.lon_min, "lon_max": args.lon_max,
         }
 
+    # Optional area-average region for the time series/Hovmoller (see
+    # load_data()'s area_average docstring for why this is a separate,
+    # tighter box than the spatial-map domain above)
+    avg_domain = None
+    if args.area_average:
+        if None in (args.avg_lat_min, args.avg_lat_max, args.avg_lon_min, args.avg_lon_max):
+            print("[ERROR] --area-average requires --avg-lat-min/--avg-lat-max/"
+                  "--avg-lon-min/--avg-lon-max")
+            sys.exit(1)
+        avg_domain = {
+            "lat_min": args.avg_lat_min, "lat_max": args.avg_lat_max,
+            "lon_min": args.avg_lon_min, "lon_max": args.avg_lon_max,
+        }
+
     # Load data
     result = load_data(args.nc, args.var,
                        args.lat, args.lon,
                        args.start, args.end,
-                       domain=domain)
+                       domain=domain,
+                       area_average=args.area_average,
+                       avg_domain=avg_domain)
 
     plots_saved = []
 
@@ -1138,7 +1304,9 @@ def main():
         p = plot_spatial(result["spatial"], result["var_name"],
                          args, meta,
                          result["actual_lat"], result["actual_lon"],
-                         domain=result["domain"])
+                         domain=result["domain"],
+                         area_average=args.area_average,
+                         avg_domain=avg_domain)
         plots_saved.append(p)
 
     # Time series
@@ -1154,7 +1322,8 @@ def main():
         try:
             p = plot_hovmoller(result["da"], result["var_name"],
                                args, meta,
-                               result["actual_lat"], result["actual_lon"])
+                               result["actual_lat"], result["actual_lon"],
+                               avg_domain=avg_domain)
             plots_saved.append(p)
         except Exception as e:
             print(f"[WARN] Hovmoller skipped: {e}")
@@ -1175,6 +1344,30 @@ log_success "Python script written -> ${PYTHON_SCRIPT}"
 # ─────────────────────────────────────────────────────────────────────────────
 if $LAUNCH_PLOT; then
     log_section "Step 6: Launching Python Visualization"
+
+    # Only pass a domain crop if all four bounds are set (empty = --global
+    # was requested, or the defaults were cleared) -- built once here and
+    # reused for every aggregation below, since the region doesn't change
+    # per-aggregation. This also narrows the Hovmoller longitude range to
+    # match, since load_data() applies the crop before any plot-type-
+    # specific work happens.
+    DOMAIN_ARGS=()
+    if [[ -n "$DOMAIN_LAT_MIN" && -n "$DOMAIN_LAT_MAX" && -n "$DOMAIN_LON_MIN" && -n "$DOMAIN_LON_MAX" ]]; then
+        DOMAIN_ARGS=(--lat-min "$DOMAIN_LAT_MIN" --lat-max "$DOMAIN_LAT_MAX" --lon-min "$DOMAIN_LON_MIN" --lon-max "$DOMAIN_LON_MAX")
+        log_info "Spatial maps cropped to: lat ${DOMAIN_LAT_MIN} to ${DOMAIN_LAT_MAX}, lon ${DOMAIN_LON_MIN} to ${DOMAIN_LON_MAX}"
+    else
+        log_info "Spatial maps: global (--global was set)"
+    fi
+
+    # Sample time series/Hovmoller: Tanzania-wide average by default
+    # (AREA_AVERAGE=true), or a single point if --point was passed.
+    AREA_AVG_ARGS=()
+    if $AREA_AVERAGE; then
+        AREA_AVG_ARGS=(--area-average --avg-lat-min "$AVG_LAT_MIN" --avg-lat-max "$AVG_LAT_MAX" --avg-lon-min "$AVG_LON_MIN" --avg-lon-max "$AVG_LON_MAX")
+        log_info "Sample time series: Tanzania-wide average (lat ${AVG_LAT_MIN} to ${AVG_LAT_MAX}, lon ${AVG_LON_MIN} to ${AVG_LON_MAX})"
+    else
+        log_info "Sample time series: single point lat=${USER_LAT}, lon=${USER_LON} (--point mode)"
+    fi
 
     # Build aggregations list for plotting
     IFS=',' read -ra AGGR_LIST <<< "$AGGREGATIONS"
@@ -1200,7 +1393,9 @@ if $LAUNCH_PLOT; then
             --level     "$LEVEL"     \
             --outdir    "$PLOT_DIR"  \
             --dpi       150          \
-            --format    png
+            --format    png          \
+            "${DOMAIN_ARGS[@]}"      \
+            "${AREA_AVG_ARGS[@]}"
 
         if [[ $? -eq 0 ]]; then
             log_success "Plot completed for ${AGGR}"
@@ -1219,7 +1414,11 @@ else
     echo "    --lon    ${USER_LON} \\"
     echo "    --aggr   monthly \\"
     echo "    --level  ${LEVEL} \\"
-    echo "    --outdir ${PLOT_DIR}"
+    echo "    --outdir ${PLOT_DIR} \\"
+    echo "    --lat-min ${DOMAIN_LAT_MIN} --lat-max ${DOMAIN_LAT_MAX} --lon-min ${DOMAIN_LON_MIN} --lon-max ${DOMAIN_LON_MAX} \\"
+    if $AREA_AVERAGE; then
+        echo "    --area-average --avg-lat-min ${AVG_LAT_MIN} --avg-lat-max ${AVG_LAT_MAX} --avg-lon-min ${AVG_LON_MIN} --avg-lon-max ${AVG_LON_MAX}"
+    fi
     echo ""
 fi
 
@@ -1261,11 +1460,19 @@ log_section "Pipeline Complete"
 echo -e "${GREEN}Variable    :${NC} ${VAR} @ ${LEVEL} hPa"
 echo -e "${GREEN}Period      :${NC} ${START_YEAR} - ${END_YEAR}"
 echo -e "${GREEN}Aggregations:${NC} ${AGGREGATIONS}"
-echo -e "${GREEN}Coordinate  :${NC} lat=${USER_LAT}, lon=${USER_LON}"
+if $AREA_AVERAGE; then
+    echo -e "${GREEN}Sample series:${NC} Tanzania-wide average (lat ${AVG_LAT_MIN} to ${AVG_LAT_MAX}, lon ${AVG_LON_MIN} to ${AVG_LON_MAX})"
+else
+    echo -e "${GREEN}Sample series:${NC} point lat=${USER_LAT}, lon=${USER_LON}"
+fi
+if [[ -n "$DOMAIN_LAT_MIN" ]]; then
+    echo -e "${GREEN}Map domain  :${NC} lat ${DOMAIN_LAT_MIN} to ${DOMAIN_LAT_MAX}, lon ${DOMAIN_LON_MIN} to ${DOMAIN_LON_MAX} (Tanzania region)"
+else
+    echo -e "${GREEN}Map domain  :${NC} global"
+fi
 echo -e "${GREEN}Raw data    :${NC} ${RAW_DIR}"
 echo -e "${GREEN}Aggregated  :${NC} ${AGG_DIR}"
 echo -e "${GREEN}Plots       :${NC} ${PLOT_DIR}"
 echo -e "${GREEN}Log file    :${NC} ${LOG_FILE}"
 echo ""
 log_success "All done!"
-
