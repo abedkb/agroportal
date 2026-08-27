@@ -31,7 +31,9 @@ import hashlib
 import importlib.util
 import os
 import re
+import shutil
 import sys
+import tempfile
 import types
 from pathlib import Path
 
@@ -49,7 +51,46 @@ NOAA_PLOT_PY = os.path.join(OUTDIR, "noaa_plot.py")
 CACHE_DIR = os.path.join(OUTDIR, "live_cache")
 # Comma-separated list of allowed frontend origins, e.g.
 #   ALLOWED_ORIGINS="https://your-site.com,https://www.your-site.com"
+# NOTE: default is "*" for local development only. Set this explicitly to
+# your real portal domain(s) before deploying -- an open CORS + unauthenticated,
+# CPU-heavy render endpoint is an easy target for load-based abuse.
 ALLOWED_ORIGINS = os.environ.get("ALLOWED_ORIGINS", "*").split(",")
+
+# Tanzania + immediate neighbors -- keeps the live API scoped to what this
+# portal is actually for, matching the default domain crop noaa_pipeline.sh
+# now uses for its own generated maps. Requests outside this box are
+# rejected rather than silently rendering some unrelated part of the globe
+# (both to keep the site's purpose clear, and because this endpoint is
+# otherwise unauthenticated -- an unrestricted region is an easy target for
+# someone using your compute to render maps that have nothing to do with
+# Tanzania).
+REGION_BOUNDS = {
+    "lat_min": -12.5, "lat_max": 1.5,
+    "lon_min": 28.5, "lon_max": 41.5,
+}
+
+
+def require_point_in_region(lat: float, lon: float) -> None:
+    if not (REGION_BOUNDS["lat_min"] <= lat <= REGION_BOUNDS["lat_max"]
+            and REGION_BOUNDS["lon_min"] <= lon <= REGION_BOUNDS["lon_max"]):
+        raise HTTPException(
+            status_code=422,
+            detail=(f"({lat}, {lon}) is outside the supported region "
+                    f"(lat {REGION_BOUNDS['lat_min']} to {REGION_BOUNDS['lat_max']}, "
+                    f"lon {REGION_BOUNDS['lon_min']} to {REGION_BOUNDS['lon_max']})."),
+        )
+
+
+def require_domain_in_region(lat_min: float, lat_max: float, lon_min: float, lon_max: float) -> None:
+    if not (lat_min >= REGION_BOUNDS["lat_min"] and lat_max <= REGION_BOUNDS["lat_max"]
+            and lon_min >= REGION_BOUNDS["lon_min"] and lon_max <= REGION_BOUNDS["lon_max"]):
+        raise HTTPException(
+            status_code=422,
+            detail=(f"Requested box is outside the supported region "
+                    f"(lat {REGION_BOUNDS['lat_min']} to {REGION_BOUNDS['lat_max']}, "
+                    f"lon {REGION_BOUNDS['lon_min']} to {REGION_BOUNDS['lon_max']})."),
+        )
+
 
 os.makedirs(CACHE_DIR, exist_ok=True)
 
@@ -76,12 +117,28 @@ app.add_middleware(
 # ─────────────────────────────────────────────────────────────────────────────
 # Locating aggregated NetCDF files produced by the pipeline
 # ─────────────────────────────────────────────────────────────────────────────
-def find_aggregated_file(var: str, level: str, aggr: str) -> str:
+def _year_span(path: str) -> tuple:
+    """Extract (start_year, end_year) from a filename like
+    .../shum_850hPa_monthly_1948_2024.nc -- returns (0, 0) if unparseable."""
+    m = re.search(r"_(\d{4})_(\d{4})\.nc$", path)
+    if not m:
+        return (0, 0)
+    return (int(m.group(1)), int(m.group(2)))
+
+
+def find_aggregated_file(var: str, level: str, aggr: str,
+                          start: str | None = None, end: str | None = None) -> str:
     """
     Aggregated files are named:
         {AGG_ROOT}/{var}/{var}_{level}hPa_{aggr}_{start_year}_{end_year}.nc
-    start/end vary run to run (especially with --start all --end all), so
-    glob for it and pick the one covering the widest year range.
+    start/end vary run to run (especially with --start all --end all), and
+    it's possible to have more than one file for the same var/level/aggr
+    covering different year ranges (e.g. an older 1948-2000 run alongside a
+    newer 2001-2024 extension). Prefer whichever file's range actually
+    *covers* the requested start/end dates; only fall back to "widest
+    overall span" when no file covers the request (or none was given) --
+    picking by widest span alone can silently return a file that doesn't
+    even contain the requested dates.
     """
     pattern = os.path.join(AGG_ROOT, var, f"{var}_{level}hPa_{aggr}_*_*.nc")
     matches = glob.glob(pattern)
@@ -92,13 +149,19 @@ def find_aggregated_file(var: str, level: str, aggr: str) -> str:
                     f"Run the pipeline for this combination first (see run_all_variables.sh)."),
         )
 
-    def year_span(path: str) -> int:
-        m = re.search(r"_(\d{4})_(\d{4})\.nc$", path)
-        if not m:
-            return 0
-        return int(m.group(2)) - int(m.group(1))
+    req_start_year = int(start[:4]) if start else None
+    req_end_year = int(end[:4]) if end else None
 
-    return max(matches, key=year_span)
+    if req_start_year is not None or req_end_year is not None:
+        covering = [
+            p for p in matches
+            if (req_start_year is None or _year_span(p)[0] <= req_start_year)
+            and (req_end_year is None or _year_span(p)[1] >= req_end_year)
+        ]
+        if covering:
+            matches = covering
+
+    return max(matches, key=lambda p: _year_span(p)[1] - _year_span(p)[0])
 
 
 def list_available_combos() -> list:
@@ -132,7 +195,6 @@ class TimeseriesRequest(BaseModel):
     lon: float
     start: str | None = Field(default=None, description="YYYY-MM-DD")
     end: str | None = Field(default=None, description="YYYY-MM-DD")
-    include_hovmoller: bool = False
 
 
 class SpatialRequest(BaseModel):
@@ -147,12 +209,46 @@ class SpatialRequest(BaseModel):
     end: str | None = Field(default=None, description="YYYY-MM-DD")
 
 
+class HovmollerRequest(BaseModel):
+    var: str
+    level: str = "850"
+    aggr: str = "daily"
+    lat: float
+    lon: float
+    start: str | None = Field(default=None, description="YYYY-MM-DD")
+    end: str | None = Field(default=None, description="YYYY-MM-DD")
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Caching -- identical requests reuse the same rendered PNG on disk
 # ─────────────────────────────────────────────────────────────────────────────
 def cache_path(prefix: str, payload: BaseModel) -> str:
     key = hashlib.sha256(payload.model_dump_json().encode()).hexdigest()[:24]
     return os.path.join(CACHE_DIR, f"{prefix}_{key}.png")
+
+
+def render_to_cache(cpath: str, render_fn) -> None:
+    """
+    Run render_fn(tmp_dir) -> generated_file_path inside an isolated,
+    per-request temp directory, then atomically move the single result into
+    the shared cache path.
+
+    This matters because FastAPI runs sync `def` routes in a thread pool, so
+    two requests genuinely can render concurrently. noaa_plot.py's plotting
+    functions build output filenames from var/level/aggr/lat/lon (rounded),
+    so two different users hitting close-but-different coordinates at the
+    same moment could otherwise collide on the same filename inside the
+    shared CACHE_DIR -- one request's rename can grab the other's
+    half-written or already-renamed file, occasionally serving the WRONG
+    plot to someone. Rendering into a private temp dir first makes that
+    collision impossible.
+    """
+    tmp_dir = tempfile.mkdtemp(dir=CACHE_DIR)
+    try:
+        fpath = render_fn(tmp_dir)
+        shutil.move(fpath, cpath)
+    finally:
+        shutil.rmtree(tmp_dir, ignore_errors=True)
 
 
 def make_args(**overrides) -> types.SimpleNamespace:
@@ -168,6 +264,12 @@ def make_args(**overrides) -> types.SimpleNamespace:
     return types.SimpleNamespace(**defaults)
 
 
+def get_var_meta(var: str) -> dict:
+    return noaa_plot.VAR_META.get(var, {
+        "long_name": var.upper(), "units": "", "cmap": "viridis", "cmap_anom": "RdBu_r"
+    })
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Endpoints
 # ─────────────────────────────────────────────────────────────────────────────
@@ -181,30 +283,31 @@ def meta():
     """
     What the frontend needs to constrain the UI: which var/level/aggr
     combinations actually have data ready, so the map/coordinate picker
-    doesn't let someone request something that doesn't exist yet.
+    doesn't let someone request something that doesn't exist yet. Also
+    returns the supported region so the map picker can be bounded to it
+    client-side too, not just enforced server-side.
     """
-    return {"combos": list_available_combos()}
+    return {"combos": list_available_combos(), "region": REGION_BOUNDS}
 
 
 @app.post("/api/timeseries")
 def timeseries(req: TimeseriesRequest):
+    require_point_in_region(req.lat, req.lon)
     cpath = cache_path("ts", req)
     if os.path.isfile(cpath):
         return FileResponse(cpath, media_type="image/png")
 
-    nc_path = find_aggregated_file(req.var, req.level, req.aggr)
-    meta_info = noaa_plot.VAR_META.get(req.var, {
-        "long_name": req.var.upper(), "units": "", "cmap": "viridis", "cmap_anom": "RdBu_r"
-    })
+    nc_path = find_aggregated_file(req.var, req.level, req.aggr, req.start, req.end)
+    meta_info = get_var_meta(req.var)
 
-    try:
+    def render(tmp_dir):
         result = noaa_plot.load_data(
             nc_path, req.var, req.lat, req.lon, req.start, req.end, domain=None
         )
         args = make_args(
             nc=nc_path, var=req.var, level=req.level, aggr=req.aggr,
             lat=req.lat, lon=req.lon, start=req.start, end=req.end,
-            plot_type="timeseries",
+            plot_type="timeseries", outdir=tmp_dir,
         )
         fpath = noaa_plot.plot_timeseries(
             result["ts"], result["var_name"], args, meta_info,
@@ -212,12 +315,15 @@ def timeseries(req: TimeseriesRequest):
         )
         if fpath is None:
             raise HTTPException(status_code=422, detail="No valid data at that point/date range.")
+        return fpath
+
+    try:
+        render_to_cache(cpath, render)
     except HTTPException:
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Plot generation failed: {e}")
 
-    os.replace(fpath, cpath)  # normalize to the cache key filename
     return FileResponse(cpath, media_type="image/png")
 
 
@@ -225,15 +331,14 @@ def timeseries(req: TimeseriesRequest):
 def spatial(req: SpatialRequest):
     if req.lat_min >= req.lat_max or req.lon_min >= req.lon_max:
         raise HTTPException(status_code=422, detail="lat_min/lon_min must be less than lat_max/lon_max.")
+    require_domain_in_region(req.lat_min, req.lat_max, req.lon_min, req.lon_max)
 
     cpath = cache_path("sp", req)
     if os.path.isfile(cpath):
         return FileResponse(cpath, media_type="image/png")
 
-    nc_path = find_aggregated_file(req.var, req.level, req.aggr)
-    meta_info = noaa_plot.VAR_META.get(req.var, {
-        "long_name": req.var.upper(), "units": "", "cmap": "viridis", "cmap_anom": "RdBu_r"
-    })
+    nc_path = find_aggregated_file(req.var, req.level, req.aggr, req.start, req.end)
+    meta_info = get_var_meta(req.var)
     domain = {
         "lat_min": req.lat_min, "lat_max": req.lat_max,
         "lon_min": req.lon_min, "lon_max": req.lon_max,
@@ -241,23 +346,66 @@ def spatial(req: SpatialRequest):
     center_lat = (req.lat_min + req.lat_max) / 2
     center_lon = (req.lon_min + req.lon_max) / 2
 
-    try:
+    def render(tmp_dir):
         result = noaa_plot.load_data(
             nc_path, req.var, center_lat, center_lon, req.start, req.end, domain=domain
         )
         args = make_args(
             nc=nc_path, var=req.var, level=req.level, aggr=req.aggr,
             lat=center_lat, lon=center_lon, start=req.start, end=req.end,
-            plot_type="spatial",
+            plot_type="spatial", outdir=tmp_dir,
         )
-        fpath = noaa_plot.plot_spatial(
+        return noaa_plot.plot_spatial(
             result["spatial"], result["var_name"], args, meta_info,
             result["actual_lat"], result["actual_lon"], domain=result["domain"],
         )
+
+    try:
+        render_to_cache(cpath, render)
     except HTTPException:
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Plot generation failed: {e}")
 
-    os.replace(fpath, cpath)
+    return FileResponse(cpath, media_type="image/png")
+
+
+@app.post("/api/hovmoller")
+def hovmoller(req: HovmollerRequest):
+    """
+    Longitude-time Hovmoller diagram for a latitude band centered on
+    req.lat (see noaa_plot.plot_hovmoller -- it averages over lat +/- 2.5
+    degrees). This was previously an `include_hovmoller` flag on the
+    timeseries request that nothing ever read; split out into its own
+    endpoint since a single PNG response can only carry one plot anyway.
+    """
+    require_point_in_region(req.lat, req.lon)
+    cpath = cache_path("hv", req)
+    if os.path.isfile(cpath):
+        return FileResponse(cpath, media_type="image/png")
+
+    nc_path = find_aggregated_file(req.var, req.level, req.aggr, req.start, req.end)
+    meta_info = get_var_meta(req.var)
+
+    def render(tmp_dir):
+        result = noaa_plot.load_data(
+            nc_path, req.var, req.lat, req.lon, req.start, req.end, domain=None
+        )
+        args = make_args(
+            nc=nc_path, var=req.var, level=req.level, aggr=req.aggr,
+            lat=req.lat, lon=req.lon, start=req.start, end=req.end,
+            plot_type="timeseries", outdir=tmp_dir,
+        )
+        return noaa_plot.plot_hovmoller(
+            result["da"], result["var_name"], args, meta_info,
+            result["actual_lat"], result["actual_lon"],
+        )
+
+    try:
+        render_to_cache(cpath, render)
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Plot generation failed: {e}")
+
     return FileResponse(cpath, media_type="image/png")
