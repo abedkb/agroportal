@@ -1212,6 +1212,10 @@ body{
 .lp-split-rx .lp-section-hd h2{font-size:19px;margin:.25rem 0;color:#fff}
 .lp-split-rx .lp-section-hd p{font-size:12px;margin:0;color:#e8eef6;max-width:none}
 .lp-split-rx .lp-agromet-carousel{position:absolute;inset:0;width:100%;height:100%;max-width:none;margin:0;border-radius:0;box-shadow:none;aspect-ratio:auto}
+/* Map title overlay -- matches the carousel panel's header treatment
+   for visual consistency between the two panels. pointer-events:none so
+   it never blocks clicks to Leaflet's zoom control underneath it. */
+.lp-map-title{position:absolute;top:0;left:0;right:0;z-index:1100;margin:0;padding:10px 16px;background:linear-gradient(180deg,rgba(0,0,0,.6),transparent);color:#fff;font-weight:700;font-size:15px;pointer-events:none}
 .lp-anim-caption{position:absolute;left:0;right:0;bottom:0;padding:16px 28px;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);color:#e8eef6;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.03em}
 
 /* Agrometeorological Products -- standalone landing section with an
@@ -1225,7 +1229,16 @@ body{
 .lp-agromet-dots{display:flex;gap:8px;justify-content:center;margin-top:1rem}
 .lp-agromet-dot{width:9px;height:9px;border-radius:50%;background:#c7ccd1;border:none;cursor:pointer;padding:0;transition:background .2s,transform .2s}
 .lp-agromet-dot.active{background:#0D47A1;transform:scale(1.2)}
-@media(max-width:900px){.lp-split-stage{flex-direction:column;height:auto;min-height:0}.lp-split-col{height:46vh}}
+/* On the front page, the dots overlay the bottom of the photo (like a
+   normal carousel), rather than sitting in normal document flow -- on
+   that panel, the header/carousel/dots are now ALL position:absolute, so
+   nothing in .lp-split-rx depends on content size to determine its own
+   height (only the explicit CSS height rules below do), which is what
+   actually keeps this panel from ever visually collapsing on mobile. */
+.lp-split-rx .lp-agromet-dots{position:absolute;left:0;right:0;bottom:14px;z-index:7;margin:0}
+.lp-split-rx .lp-agromet-dot{background:rgba(255,255,255,.55)}
+.lp-split-rx .lp-agromet-dot.active{background:#fff}
+@media(max-width:900px){.lp-split-stage{flex-direction:column;height:auto;min-height:0}.lp-split-col{height:clamp(220px,46vh,420px)}}
 
 /* Standalone mode: the Reanalysis explorer opened from the landing nav's
    "Agrometeorological Products" link is its own independent page — no
@@ -1358,7 +1371,7 @@ body{
         <div class="lp-section-hd">
           <span class="lp-pill lp-pill-blue">Our Products</span>
           <h2>Agrometeorological Services &amp; Products</h2>
-          <p>From daily field observations to seasonal forecasts &mdash; decision support for Tanzania&rsquo;s agricultural sector</p>
+          <p>From daily field observations to seasonal forecasts leading to decision support for Tanzania&rsquo;s farmers, fisheries and livestock keeping</p>
         </div>
       <div class="lp-agromet-carousel" id="lp-agromet-carousel">
           <div class="lp-agromet-slide active" data-slide="0">
@@ -1390,6 +1403,7 @@ body{
           <button class="lp-agromet-dot" onclick="agrometGoToSlide(4)" aria-label="Slide 5"></button>
       </div>      </div>
       <div class="lp-split-col lp-split-map" id="lp-slide-map">
+        <div class="lp-map-title">Agrometeorological Stations Network</div>
         <div id="tzStationMap" style="height:100%;width:100%"></div>
       </div>
     </div>
@@ -1403,7 +1417,7 @@ body{
       <div class="lp-section-hd">
         <span class="lp-pill lp-pill-blue">Agrometeorological Products</span>
         <h2>Agrometeorological Services &amp; Products</h2>
-        <p>From daily field observations to seasonal forecasts &mdash; decision support for Tanzania&rsquo;s agricultural sector.</p>
+        <p>From daily field observations to seasonal forecasts leading to decision support for Tanzania&rsquo;s farmers, fisheries and livestock keeping.</p>
       </div>
       <div class="lp-noaa-filters">
         <select id="noaaVarFilter" onchange="renderNoaaProducts()"><option value="">All Variables</option></select>
@@ -1632,6 +1646,7 @@ body{
       <button class="tab-btn" data-page="adminMessages" onclick="showPage('adminMessages',this)">&#9711; Comms</button>
       <button class="tab-btn" data-page="observers" onclick="showPage('observers',this)">&#9673; Observers</button>
       <button class="tab-btn" data-page="manageStakeholders" onclick="showPage('manageStakeholders',this)">&#9672; Stakeholders</button>
+      <button class="tab-btn" data-page="landingImages" onclick="showPage('landingImages',this)">&#128444; Landing Images</button>
     </div>
   </div>
 
@@ -1678,6 +1693,7 @@ body{
       <div class="nav-item" onclick="showPage('adminMessages',this)"><span class="nav-icon">◎</span>Notifications &amp; comms</div>
       <div class="nav-item" onclick="showPage('observers',this)"><span class="nav-icon">◉</span>Manage observers</div>
       <div class="nav-item" onclick="showPage('manageStakeholders',this)"><span class="nav-icon">◈</span>Manage stakeholders</div>
+      <div class="nav-item" onclick="showPage('landingImages',this)"><span class="nav-icon">🖼</span>Landing page images</div>
     </div>
     <div class="sidebar-footer">
       <div class="user-chip">
@@ -2907,6 +2923,27 @@ body{
 
       </div>
 
+      <!-- Landing page images (admin-managed front-page carousel) -->
+      <div class="page" id="page-landingImages">
+        <div class="card" style="margin-bottom:1rem">
+          <div class="card-title">Upload New Image</div>
+          <div class="field-row">
+            <div class="field"><label>Image file</label><input type="file" id="li-upload-file" accept="image/*"/></div>
+            <div class="field"><label>Caption (optional)</label><input type="text" id="li-upload-caption" placeholder="e.g. Farmers preparing land for planting"/></div>
+          </div>
+          <div style="text-align:right;margin-top:.5rem">
+            <button class="btn btn-primary" id="li-upload-btn" onclick="adminUploadLandingImage()">Upload</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Front-Page Carousel Images</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:.75rem">These are the images that auto-slide beside the station map on the public front page. Use the arrows to reorder them.</div>
+          <div class="empty-state" id="li-empty"><div class="empty-state-icon">🖼</div><div class="empty-state-title">No images yet</div></div>
+          <div id="li-list" style="display:none"></div>
+        </div>
+      </div>
+
       <!-- Reanalysis page (folded in from reanalysis.html) -->
       <div class="page" id="page-reanalysis">
         <div class="reanalysis-page">
@@ -3091,6 +3128,38 @@ const VAR_LABELS = {
 // ---- NOAA meteorological products (front-page "Our Products" grid) ----
 let noaaProductsCache = null;
 let noaaProductsLoading = false;
+
+// Front-page carousel images -- admin-managed via the "Landing Images" admin
+// page. Falls back to whatever slides are already in the HTML (the default
+// set) if the table is empty or unreachable, so the front page never ends
+// up with nothing to show.
+let _landingImagesLoaded = false;
+async function loadLandingImages() {
+  if (_landingImagesLoaded || !_sbReady()) return;
+  const { data, error } = await supabaseClient
+    .from('landing_images')
+    .select('*')
+    .order('sort_order', { ascending: true });
+  if (error) { console.error('landing_images load error:', error.message); return; }
+  if (data && data.length > 0) {
+    renderLandingImagesCarousel(data);
+    _landingImagesLoaded = true;
+  }
+}
+
+function renderLandingImagesCarousel(images) {
+  const track = document.getElementById('lp-agromet-carousel');
+  const dots = document.getElementById('lp-agromet-dots');
+  if (!track || !dots) return;
+  track.innerHTML = images.map((img, i) => `
+    <div class="lp-agromet-slide${i===0?' active':''}" data-slide="${i}">
+      <img src="${img.image_url}" alt="${(img.caption||'').replace(/"/g,'&quot;')}">
+      ${img.caption ? `<div class="lp-agromet-caption">${img.caption}</div>` : ''}
+    </div>`).join('');
+  dots.innerHTML = images.map((_, i) => `
+    <button class="lp-agromet-dot${i===0?' active':''}" onclick="agrometGoToSlide(${i})" aria-label="Slide ${i+1}"></button>`).join('');
+  _agrometSlideIndex = 0;
+}
 
 async function loadNoaaProducts() {
   if (noaaProductsCache || noaaProductsLoading || !supabaseClient) return;
@@ -3441,6 +3510,7 @@ function showLanding() {
   closeAgrometProducts();
   window.scrollTo({top:0,behavior:'smooth'});
   loadNoaaProducts();
+  loadLandingImages();
   closeLandingMenu();
   initTzStationMap();
   loadTzStationReadings();
@@ -3586,6 +3656,17 @@ function initTzStationMap() {
   // is created, which can leave Leaflet's initial fit too zoomed-out —
   // re-fit once layout has actually finished.
   setTimeout(() => { if (_tzMap) { _tzMap.invalidateSize(); _tzMap.fitBounds(TZ_BOUNDS, { padding: [4, 4] }); } }, 250);
+  // Mobile browsers resize the viewport after load (address bar
+  // collapsing on scroll, orientation change) without re-running any of
+  // the code above -- Leaflet doesn't know its container changed size
+  // unless told, so it can end up rendered at a stale (often much too
+  // large or too small) size. Re-check on resize, debounced so rapid
+  // events during a drag/rotate don't thrash it.
+  let _tzResizeTimer = null;
+  window.addEventListener('resize', () => {
+    clearTimeout(_tzResizeTimer);
+    _tzResizeTimer = setTimeout(() => { if (_tzMap) _tzMap.invalidateSize(); }, 200);
+  });
 
   TZ_STATIONS.forEach(st => {
     const marker = L.circleMarker([st.lat, st.lng], {
@@ -3621,10 +3702,11 @@ async function loadTzStationReadings() {
     Object.entries(_tzMarkers).forEach(([name, marker]) => {
       const rec = latestByStation[name];
       if (!rec) {
+        marker.setStyle({ color: '#b71c1c', fillColor: '#e53935' });
         marker.bindPopup(`<b>${name}</b><br/>No observation received yet today.`);
         return;
       }
-      marker.setStyle({ color: '#1565C0', fillColor: '#42a5f5' });
+      marker.setStyle({ color: '#1b5e20', fillColor: '#43a047' });
       const rain = (rec.rainfall_std_mm ?? '--');
       const tmax = (rec.temp_max ?? '--');
       const tmin = (rec.temp_min ?? '--');
@@ -3960,6 +4042,7 @@ function showPage(id,navEl) {
     adminMessages:['Notifications & Comms',`Admin: ${ADMIN_PHONE}`],
     observers:['Manage Observers','All registered observers'],
     manageStakeholders:['Manage Stakeholders','All registered stakeholders'],
+    landingImages:['Landing Page Images','Manage the photos shown in the front-page carousel'],
     reanalysis:['Gridded Data Products','Browse products or generate a plot on demand'],
   };
   if(titles[id]){document.getElementById('pageTitle').textContent=titles[id][0];document.getElementById('pageDate').textContent=titles[id][1];}
@@ -3971,7 +4054,7 @@ function showPage(id,navEl) {
     stakeholderRequest:refreshStakeholderRequest,stakeholderMessages:refreshStakeholderMessages,
     adminDash:refreshAdminDash,approvals:refreshApprovals,allRecords:refreshAllRecords,
     uploadProducts:refreshAdminProducts,adminMessages:refreshAdminMessages,
-    observers:refreshObservers,manageStakeholders:refreshManageStakeholders,
+    observers:refreshObservers,manageStakeholders:refreshManageStakeholders,landingImages:refreshLandingImagesAdmin,
     reanalysis:refreshReanalysisPage,
   };
   if(rfMap[id]) rfMap[id]();
@@ -7425,6 +7508,137 @@ function adminRegisterStakeholder(){
 
 function toggleAllStakeholderCheckboxes(masterCb){
   document.querySelectorAll('.sh-row-chk').forEach(cb=>{cb.checked=masterCb.checked;});
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// Admin: Landing page images (front-page carousel management)
+// ─────────────────────────────────────────────────────────────────────────
+const LANDING_IMAGES_BUCKET = 'landing-images';
+let _liCache = [];
+
+async function refreshLandingImagesAdmin() {
+  const empty = document.getElementById('li-empty');
+  const list = document.getElementById('li-list');
+  if (!empty || !list) return;
+  if (!_sbReady()) { empty.style.display=''; list.style.display='none'; return; }
+
+  const { data, error } = await supabaseClient
+    .from('landing_images')
+    .select('*')
+    .order('sort_order', { ascending: true });
+  if (error) {
+    console.error('landing_images load error:', error.message);
+    showToast('Could not load images', error.message, 'error');
+    return;
+  }
+  _liCache = data || [];
+
+  if (_liCache.length === 0) {
+    empty.style.display=''; list.style.display='none';
+    return;
+  }
+  empty.style.display='none'; list.style.display='';
+
+  list.innerHTML = _liCache.map((img, i) => `
+    <div class="card" style="display:flex;gap:12px;align-items:center;margin-bottom:.6rem;padding:.6rem">
+      <img src="${img.image_url}" alt="" style="width:96px;height:64px;object-fit:cover;border-radius:6px;flex-shrink:0"/>
+      <div style="flex:1;min-width:0">
+        <input type="text" value="${(img.caption||'').replace(/"/g,'&quot;')}" placeholder="Caption"
+          style="width:100%;margin-bottom:4px"
+          onblur="adminUpdateLandingImageCaption(${img.id}, this.value)"/>
+        <div style="font-size:11px;color:var(--text-tertiary)">Position ${i+1} of ${_liCache.length}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:4px">
+        <button class="btn btn-sm" title="Move up" ${i===0?'disabled':''} onclick="adminMoveLandingImage(${img.id},'up')">&uarr;</button>
+        <button class="btn btn-sm" title="Move down" ${i===_liCache.length-1?'disabled':''} onclick="adminMoveLandingImage(${img.id},'down')">&darr;</button>
+      </div>
+      <button class="btn btn-sm btn-danger" onclick="adminDeleteLandingImage(${img.id},'${img.storage_path}')">Delete</button>
+    </div>
+  `).join('');
+}
+
+async function adminUploadLandingImage() {
+  const fileInput = document.getElementById('li-upload-file');
+  const captionInput = document.getElementById('li-upload-caption');
+  const btn = document.getElementById('li-upload-btn');
+  const file = fileInput?.files?.[0];
+  if (!file) { showToast('No file selected', 'Choose an image first.', 'error'); return; }
+  if (!_sbReady()) { showToast('Not connected', 'Supabase is not available right now.', 'error'); return; }
+
+  if (btn) { btn.disabled = true; btn.textContent = 'Uploading…'; }
+  try {
+    const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+    const path = `${Date.now()}_${Math.random().toString(36).slice(2,8)}.${ext}`;
+
+    const { error: upErr } = await supabaseClient.storage
+      .from(LANDING_IMAGES_BUCKET)
+      .upload(path, file, { upsert: false });
+    if (upErr) throw upErr;
+
+    const { data: pub } = supabaseClient.storage.from(LANDING_IMAGES_BUCKET).getPublicUrl(path);
+    const nextOrder = _liCache.length ? Math.max(...(_liCache.map(i => i.sort_order))) + 1 : 0;
+
+    const { error: insErr } = await supabaseClient.from('landing_images').insert({
+      image_url: pub.publicUrl,
+      storage_path: path,
+      caption: (captionInput?.value || '').trim() || null,
+      sort_order: nextOrder,
+    });
+    if (insErr) throw insErr;
+
+    if (fileInput) fileInput.value = '';
+    if (captionInput) captionInput.value = '';
+    showToast('Image uploaded', 'Added to the front-page carousel.', 'success');
+    refreshLandingImagesAdmin();
+  } catch (e) {
+    console.error('Landing image upload failed:', e);
+    showToast('Upload failed', e.message || 'Please try again.', 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Upload'; }
+  }
+}
+
+async function adminDeleteLandingImage(id, storagePath) {
+  if (!confirm('Remove this image from the front page?')) return;
+  if (!_sbReady()) return;
+  try {
+    if (storagePath) {
+      const { error: rmErr } = await supabaseClient.storage.from(LANDING_IMAGES_BUCKET).remove([storagePath]);
+      if (rmErr) console.warn('Storage file removal warning:', rmErr.message);
+    }
+    const { error } = await supabaseClient.from('landing_images').delete().eq('id', id);
+    if (error) throw error;
+    showToast('Image removed', 'It will no longer appear on the front page.', 'success');
+    refreshLandingImagesAdmin();
+  } catch (e) {
+    console.error('Landing image delete failed:', e);
+    showToast('Delete failed', e.message || 'Please try again.', 'error');
+  }
+}
+
+async function adminUpdateLandingImageCaption(id, caption) {
+  if (!_sbReady()) return;
+  const { error } = await supabaseClient.from('landing_images').update({ caption: caption.trim() || null }).eq('id', id);
+  if (error) { console.error('Caption update failed:', error.message); showToast('Could not save caption', error.message, 'error'); }
+}
+
+async function adminMoveLandingImage(id, direction) {
+  const idx = _liCache.findIndex(i => i.id === id);
+  if (idx === -1) return;
+  const swapIdx = direction === 'up' ? idx - 1 : idx + 1;
+  if (swapIdx < 0 || swapIdx >= _liCache.length) return;
+  const a = _liCache[idx], b = _liCache[swapIdx];
+  if (!_sbReady()) return;
+  try {
+    await Promise.all([
+      supabaseClient.from('landing_images').update({ sort_order: b.sort_order }).eq('id', a.id),
+      supabaseClient.from('landing_images').update({ sort_order: a.sort_order }).eq('id', b.id),
+    ]);
+    refreshLandingImagesAdmin();
+  } catch (e) {
+    console.error('Reorder failed:', e);
+    showToast('Could not reorder', 'Please try again.', 'error');
+  }
 }
 
 function contactMemberEmail(type,i){
