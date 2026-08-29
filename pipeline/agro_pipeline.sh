@@ -266,14 +266,30 @@ run_noaa() {
     for YEAR in $(seq "$START_YEAR" "$END_YEAR"); do
         local URL="${BASE_URL}/${VAR}.${YEAR}.nc" OUTFILE="${RAW_DIR}/${VAR}.${YEAR}.nc"
         if [[ -f "$OUTFILE" ]]; then
-            if cdo -s info "$OUTFILE" &>/dev/null; then log_info "Skipping ${YEAR} -- exists."; ((SKIP_COUNT++)) || true; continue
-            else log_warn "${YEAR} corrupt, re-downloading..."; rm -f "$OUTFILE"; fi
+            if cdo -s info "$OUTFILE" &>/dev/null; then
+                log_info "Skipping ${YEAR} -- exists and is valid."; ((SKIP_COUNT++)) || true; continue
+            else
+                log_info "${YEAR} file exists but is incomplete -- resuming rather than restarting from 0%."
+            fi
         fi
         log_info "Downloading ${VAR} for ${YEAR}..."
-        if wget -q --timeout=60 --tries=3 --retry-connrefused -O "$OUTFILE" "$URL" 2>&1; then
-            log_success "Downloaded ${YEAR}"; ((DOWNLOAD_COUNT++)) || true
+        # -c (resume) is the key fix here: your observed connection behavior
+        # is slow-but-genuinely-progressing (each attempt nets a few percent
+        # before stalling) -- so resuming instead of restarting from 0% each
+        # time turns "never quite finishes" into "eventually finishes across
+        # a few re-runs". Higher --tries gives wget more internal resumed
+        # attempts within one invocation before giving up. The partial file
+        # is deliberately NOT deleted on failure below -- that's what makes
+        # the next re-run able to pick up where this one left off.
+        if wget -q -c --timeout=60 --tries=10 --retry-connrefused -O "$OUTFILE" "$URL" 2>&1; then
+            if cdo -s info "$OUTFILE" &>/dev/null; then
+                log_success "Downloaded ${YEAR}"; ((DOWNLOAD_COUNT++)) || true
+            else
+                log_error "${YEAR} downloaded but failed validation -- removing so the next run starts fresh (not resumable, unlike a plain stall)."
+                rm -f "$OUTFILE"; FAILED_YEARS+=("$YEAR"); ((FAIL_COUNT++)) || true
+            fi
         else
-            log_error "Failed: ${YEAR}"; rm -f "$OUTFILE"; FAILED_YEARS+=("$YEAR"); ((FAIL_COUNT++)) || true
+            log_error "Failed: ${YEAR} (partial file kept -- next run will resume from here, not restart)"; FAILED_YEARS+=("$YEAR"); ((FAIL_COUNT++)) || true
         fi
     done
     log_info "Downloaded: ${DOWNLOAD_COUNT}, Skipped: ${SKIP_COUNT}, Failed: ${FAIL_COUNT}"
@@ -397,11 +413,26 @@ run_chirps() {
     log_section "Step 1: Downloading CHIRPS (${START_YEAR}-${END_YEAR})"
     for YEAR in $(seq "$START_YEAR" "$END_YEAR"); do
         local OUT_FILE="${RAW_DIR}/chirps-v2.0.${YEAR}.days_p25.nc"
-        [[ -f "$OUT_FILE" && -s "$OUT_FILE" ]] && { log_info "Already have ${YEAR}."; continue; }
+        if [[ -f "$OUT_FILE" ]]; then
+            if cdo -s info "$OUT_FILE" &>/dev/null; then
+                log_info "Already have ${YEAR}, and it's valid."; continue
+            else
+                # Previously this only checked "-s" (non-empty), which
+                # wrongly treated a partial/incomplete file as "already
+                # have it" and skipped it forever -- now validated the same
+                # way NOAA's downloader is, and resumed instead.
+                log_info "${YEAR} file exists but is incomplete -- resuming rather than restarting from 0%."
+            fi
+        fi
         log_info "Downloading ${YEAR}..."
-        if wget -q --timeout=60 --tries=3 -O "$OUT_FILE" "${BASE_URL_CHIRPS}/chirps-v2.0.${YEAR}.days_p25.nc"; then
-            log_success "${YEAR} -> ${OUT_FILE}"
-        else log_error "Failed: ${YEAR}"; rm -f "$OUT_FILE"; fi
+        if wget -q -c --timeout=60 --tries=10 -O "$OUT_FILE" "${BASE_URL_CHIRPS}/chirps-v2.0.${YEAR}.days_p25.nc"; then
+            if cdo -s info "$OUT_FILE" &>/dev/null; then
+                log_success "${YEAR} -> ${OUT_FILE}"
+            else
+                log_error "${YEAR} downloaded but failed validation -- removing so the next run starts fresh."
+                rm -f "$OUT_FILE"
+            fi
+        else log_error "Failed: ${YEAR} (partial file kept -- next run will resume from here, not restart)"; fi
     done
 
     log_section "Step 2: Merging + Normalizing Dimensions"
