@@ -1,0 +1,58 @@
+name: Update Agromet Data
+
+# Two ways to run this, neither needs a server:
+#   1. Automatically, once a day (the schedule below)
+#   2. Manually, any time -- go to this repo's "Actions" tab, pick this
+#      workflow, click "Run workflow". That's the button.
+on:
+  workflow_dispatch:
+    inputs:
+      sources:
+        description: 'Sources to update (noaa, chirps, or noaa,chirps)'
+        default: 'noaa,chirps'
+        required: false
+  schedule:
+    - cron: '0 4 * * *'   # 04:00 UTC daily = 07:00 East Africa Time
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      # Restore whatever was cached from previous runs BEFORE doing any
+      # work, so "update" only has to fetch what's genuinely new (not
+      # redownload everything -- GitHub Actions runners are wiped clean
+      # after each run, so without this the whole point of "incremental"
+      # update would be lost).
+      - name: Restore cached data from previous runs
+        uses: actions/cache@v4
+        with:
+          path: pipeline/NOAA
+          key: agromet-noaa-data-${{ github.run_id }}
+          restore-keys: |
+            agromet-noaa-data-
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cdo nco
+
+      - name: Install Python dependencies
+        run: |
+          pip install --break-system-packages \
+            xarray matplotlib cartopy numpy pandas scipy requests
+
+      - name: Run incremental update
+        working-directory: pipeline
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_KEY: ${{ secrets.SUPABASE_SERVICE_KEY }}
+        run: |
+          SOURCES="${{ inputs.sources }}"
+          SOURCES="${SOURCES:-noaa,chirps}"
+          bash agro_pipeline.sh update --sources "$SOURCES"
+      # No explicit "save" step needed: actions/cache@v4 automatically
+      # saves the path above under this run's key once the job finishes
+      # successfully, so the NEXT run's restore-keys match finds it.
