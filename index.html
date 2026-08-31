@@ -1488,7 +1488,7 @@ body{
         <select id="reg-title"><option value="">-- Select designation --</option><option>Meteorological Officer</option><option>Meteorologist</option></select>
       </div>
       <div class="field"><label>Station</label>
-        <select id="reg-station"><option value="">-- Select station --</option><option>Ilonga Agromet Station</option><option>Mlingano Station</option><option>Ukiriguru Station</option><option>Naliendele Station</option><option>Tumbi Station</option><option>Kibaha Station</option><option>Uyole Station</option><option>Igeri Station</option><option>Kizimbani Station</option><option>Matangatuani Station</option><option>Hombolo Station</option><option>Lyamungu Station</option><option>Agromet Headquarter</option></select>
+        <select id="reg-station"><option value="">-- Select station --</option><option>Ilonga Agromet Station</option><option>Mlingano Station</option><option>Ukiriguru Station</option><option>Naliendele Station</option><option>Tumbi Station</option><option>Kibaha Station</option><option>Uyole Station</option><option>Igeri Station</option><option>Kizimbani Station</option><option>Matangatuani Station</option><option>Hombolo Station</option><option>Lyamungu Station</option><option>Mbiba Station</option><option>Agromet Headquarter</option></select>
       </div>
       <div class="field-row">
         <div class="field"><label>Phone number</label><input type="tel" id="reg-phone" placeholder="+255 7XX XXX XXX"/></div>
@@ -3589,8 +3589,8 @@ function stopAgrometSlideshow() {
 //  NOTE: coordinates below are approximate (district/town-level),
 //  sourced from each station's known host institute location.
 //  Ilonga, Mlingano, Ukiriguru, Naliendele, Tumbi, Kibaha, Uyole and
-//  Hombolo are well-confirmed; Igeri, Kizimbani, Matangatuani and
-//  Lyamungu should be double-checked against TMA's own station
+//  Hombolo are well-confirmed; Igeri, Kizimbani, Matangatuani, Lyamungu
+//  and Mbiba should be double-checked against TMA's own station
 //  registry before this is treated as survey-accurate.
 // ═══════════════════════════════════════════════════════════════
 const TZ_STATIONS = [
@@ -3606,6 +3606,7 @@ const TZ_STATIONS = [
   { name: 'Matangatuani Station',        lat: -5.0000,  lng: 39.7667 },
   { name: 'Hombolo Station',             lat: -5.9500,  lng: 35.8500 },
   { name: 'Lyamungu Station',            lat: -3.3667,  lng: 37.2167 },
+  { name: 'Mbiba Station',               lat: -8.8500,  lng: 32.9500 },
 ];
 
 let _tzMap = null;
