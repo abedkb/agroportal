@@ -1212,14 +1212,13 @@ body{
    it so each title lines up over its own panel, but renders in normal
    document flow in the section's light background -- not overlaid on the
    carousel/map. */
-.lp-split-header{display:flex;max-width:1200px;margin:0 auto 1.25rem;padding:0 1.5rem;gap:2rem}
+.lp-split-header{display:flex;max-width:1200px;margin:0 auto .4rem;padding:0 1.5rem;gap:2rem}
 .lp-split-header-col{flex:1 1 50%;min-width:0;text-align:left}
-.lp-split-header-col .lp-pill{margin-bottom:.4rem}
-.lp-split-header-col h2{font-size:19px;font-weight:800;color:#0a1e3c;margin:.25rem 0;letter-spacing:-.3px}
+.lp-split-header-col h2{font-size:19px;font-weight:800;color:#0a1e3c;margin:0 0 .2rem;letter-spacing:-.3px}
 .lp-split-header-col p{font-size:12px;color:#666;margin:0;max-width:none;line-height:1.5}
 .lp-split-header-col-map{display:flex;align-items:center;justify-content:center;text-align:center}
 .lp-split-header-col-map h2{margin:0;width:100%}
-@media(max-width:900px){.lp-split-header{flex-direction:column;gap:.75rem;margin-bottom:.75rem}}
+@media(max-width:900px){.lp-split-header{flex-direction:column;gap:.5rem;margin-bottom:.4rem}}
 .lp-anim-caption{position:absolute;left:0;right:0;bottom:0;padding:16px 28px;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);color:#e8eef6;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.03em}
 
 /* Agrometeorological Products -- standalone landing section with an
@@ -1488,10 +1487,9 @@ body{
   </div>
 
   <!-- REANALYSIS PRODUCTS (left) + LIVE STATION MAP (right) -->
-  <div id="lp-map-section" class="lp-section" style="padding:2.5rem 0;background:var(--bg-tertiary)">
+  <div id="lp-map-section" class="lp-section" style="padding:.75rem 0 1.5rem;background:var(--bg-tertiary)">
     <div class="lp-split-header">
       <div class="lp-split-header-col">
-        <span class="lp-pill lp-pill-blue">Our Products</span>
         <h2>Agrometeorological Services &amp; Products</h2>
         <p>From daily field observations to seasonal forecasts leading to decision support for Tanzania&rsquo;s farmers, fisheries and livestock keeping</p>
       </div>
