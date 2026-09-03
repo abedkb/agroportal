@@ -1716,7 +1716,7 @@ body{
       <button class="tab-btn" data-page="obsForms" onclick="showPage('obsForms',this)">&#9998; Fill Observation</button>
       <button class="tab-btn" data-page="myRecords" onclick="showPage('myRecords',this)">&#8801; My Records</button>
       <button class="tab-btn" data-page="returns" onclick="showPage('returns',this)">&#128203; Returns <span class="auto-badge">AUTO</span></button>
-      <button class="tab-btn" data-page="products" onclick="showPage('products',this)">&#10571; Downloads</button>
+      <button class="tab-btn" data-page="products" onclick="showPage('products',this)">&#10571; Products</button>
       <button class="tab-btn" data-page="messages" onclick="showPage('messages',this)">&#9711; Notifications</button>
     </div>
     <!-- Stakeholder tabs -->
@@ -1736,7 +1736,7 @@ body{
       <button class="tab-btn" data-page="approvals" onclick="showPage('approvals',this)">&#10003; Approvals <span class="tab-badge" id="tabApprovalBadge" style="display:none">0</span></button>
       <button class="tab-btn" data-page="allRecords" onclick="showPage('allRecords',this)">&#8801; All Records</button>
       <button class="tab-btn" data-page="returns" onclick="showPage('returns',this)">&#128203; Returns</button>
-      <button class="tab-btn" data-page="uploadProducts" onclick="showPage('uploadProducts',this)">&#10570; Upload</button>
+      <button class="tab-btn" data-page="uploadProducts" onclick="showPage('uploadProducts',this)">&#10570; Products</button>
       <button class="tab-btn" data-page="adminMessages" onclick="showPage('adminMessages',this)">&#9711; Comms</button>
       <button class="tab-btn" data-page="observers" onclick="showPage('observers',this)">&#9673; Observers</button>
       <button class="tab-btn" data-page="manageStakeholders" onclick="showPage('manageStakeholders',this)">&#9672; Stakeholders</button>
@@ -1764,8 +1764,8 @@ body{
       <div class="nav-item" onclick="showPage('myRecords',this)"><span class="nav-icon">≡</span>My records</div>
       <div class="nav-label">Climatological Returns</div>
       <div class="nav-item" onclick="showPage('returns',this)"><span class="nav-icon">📋</span>All return forms<span class="auto-badge" style="margin-left:4px">AUTO</span></div>
-      <div class="nav-label">Downloads & Comms</div>
-      <div class="nav-item" onclick="showPage('products',this)"><span class="nav-icon">⤓</span>Products &amp; downloads</div>
+      <div class="nav-label">Products &amp; Comms</div>
+      <div class="nav-item" onclick="showPage('products',this)"><span class="nav-icon">⤓</span>Products</div>
       <div class="nav-item" onclick="showPage('messages',this)"><span class="nav-icon">◎</span>Notifications</div>
     </div>
     <div class="nav-section" id="stakeholderNav" style="display:none">
@@ -1784,7 +1784,7 @@ body{
       <div class="nav-item active" onclick="showPage('adminDash',this)"><span class="nav-icon">⊞</span>Dashboard</div>
       <div class="nav-item" onclick="showPage('approvals',this)"><span class="nav-icon">✓</span>Approvals<span class="badge badge-amber" style="margin-left:auto;font-size:10px;display:none" id="approvalBadge">0</span></div>
       <div class="nav-item" onclick="showPage('allRecords',this)"><span class="nav-icon">≡</span>All records</div>
-      <div class="nav-item" onclick="showPage('uploadProducts',this)"><span class="nav-icon">⤒</span>Upload products</div>
+      <div class="nav-item" onclick="showPage('uploadProducts',this)"><span class="nav-icon">⤒</span>Products</div>
       <div class="nav-item" onclick="showPage('adminMessages',this)"><span class="nav-icon">◎</span>Notifications &amp; comms</div>
       <div class="nav-item" onclick="showPage('observers',this)"><span class="nav-icon">◉</span>Manage observers</div>
       <div class="nav-item" onclick="showPage('manageStakeholders',this)"><span class="nav-icon">◈</span>Manage stakeholders</div>
@@ -3816,11 +3816,16 @@ document.addEventListener('click', function(e){
 // ═══════════════════════════════════════════════════════════════
 //  LANDING PAGE — PRODUCTS PANEL (moved behind the top nav link)
 // ═══════════════════════════════════════════════════════════════
+// Recipient-local time-of-day greeting, on minute precision so the
+// boundaries match exactly what was asked for:
+//   06:00–12:00 → Good morning   12:01–15:00 → Good afternoon
+//   15:01–19:59 → Good evening   20:00–05:59 → Good night
 function _greetByTimeOfDay() {
-  const h = new Date().getHours();
-  if (h < 12) return 'Good morning';
-  if (h < 18) return 'Good afternoon';
-  if (h < 22) return 'Good evening';
+  const now = new Date();
+  const mins = now.getHours() * 60 + now.getMinutes();
+  if (mins >= 360 && mins <= 720) return 'Good morning';
+  if (mins > 720 && mins <= 900) return 'Good afternoon';
+  if (mins > 900 && mins <= 1199) return 'Good evening';
   return 'Good night';
 }
 // "Gridded Data Products" and "Agrometeorological Products" (nav bar) both
@@ -4343,7 +4348,7 @@ function showPage(id,navEl) {
     obsForms:['Fill Observation','Form 601 — Agricultural Meteorological Observations'],
     myRecords:['My Records','Submission history'],
     returns:[state.role==='admin'?'Climatological Returns — All Stations':'Climatological Returns','Auto-populated from Form 601 submissions'],
-    products:['Products & Downloads','Meteorological products from TMA Admin'],
+    products:['Products','Meteorological products from TMA Admin'],
     messages:['Notifications','SMS, WhatsApp & dashboard messages'],
     stakeholderDash:['Stakeholder Dashboard',`${state.stakeholderOrg} · ${getTodayStr()}`],
     stakeholderProducts:['Meteorological Products','Available products'],
@@ -4352,7 +4357,7 @@ function showPage(id,navEl) {
     adminDash:['Admin Dashboard',`Tanzania Meteorological Authority · ${getTodayStr()}`],
     approvals:['Approvals','Registration requests'],
     allRecords:['All Records','System-wide observation data'],
-    uploadProducts:['Upload Products','Publish meteorological products'],
+    uploadProducts:['Products','Publish meteorological products'],
     adminMessages:['Notifications & Comms',`Admin: ${ADMIN_PHONE}`],
     observers:['Manage Observers','All registered observers'],
     manageStakeholders:['Manage Stakeholders','All registered stakeholders'],
