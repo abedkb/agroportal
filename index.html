@@ -8092,7 +8092,7 @@ async function notifyProductUploadSms(prod){
   const greeting = _greetByTimeOfDay();
   let allOk = true;
   for (const r of recipients) {
-    const msg = `${greeting} ${r.name}. New ${prod.cat} has been uploaded. Please, can you visit into the Agromet system and management to go through the document and take specific measures as advised by experts.\n${link}\nThank you!!`;
+    const msg = `${greeting} ${r.name}. New ${prod.cat} has been uploaded. Please, can you visit into the Agromet Service System to go through the document and take specific measures as advised by experts.\n${link}\nThank you!!`;
     const ok = await sendBeemSms([r.phone], msg);
     if (!ok) allOk = false;
   }
