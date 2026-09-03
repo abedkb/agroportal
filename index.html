@@ -12,6 +12,7 @@
   .leaflet-control-attribution{font-size:8px!important;opacity:.55;padding:0 4px!important}
 </style>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -462,6 +463,19 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;back
 .empty-state-sub{font-size:12px}
 .check-row{display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer}
 .check-row input[type="checkbox"]{width:14px;height:14px;cursor:pointer}
+.page-breadcrumb{position:relative;margin-top:36px;padding:14px 18px;background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius-lg) var(--radius-lg) 0 0;font-size:12px;letter-spacing:.04em;text-transform:uppercase;font-weight:600;color:var(--text-tertiary)}
+.page-breadcrumb::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:var(--radius-lg) var(--radius-lg) 0 0;background:linear-gradient(90deg,var(--tma-teal),var(--tma-blue))}
+.page-breadcrumb .crumb-home{cursor:pointer}
+.page-breadcrumb .crumb-home:hover{color:var(--tma-blue)}
+.page-breadcrumb .crumb-sep{margin:0 8px;color:var(--border-medium)}
+.page-breadcrumb .crumb-current{color:var(--text-primary)}
+.agromet-products-card{border-top:none;border-radius:0 0 var(--radius-lg) var(--radius-lg)}
+.agromet-layout{display:grid;grid-template-columns:220px 1fr;gap:1.5rem;align-items:start}
+@media(max-width:720px){.agromet-layout{grid-template-columns:1fr}}
+.agromet-sidebar{border:0.5px solid var(--border-light);border-radius:var(--radius);padding:.875rem;background:var(--bg-secondary)}
+.agromet-sidebar-title{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;color:var(--text-tertiary);margin-bottom:.6rem}
+.agromet-sidebar .check-row{padding:6px 4px;border-radius:6px}
+.agromet-sidebar .check-row:hover{background:var(--bg-tertiary)}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-thumb{background:var(--border-medium);border-radius:3px}
 
@@ -1120,26 +1134,11 @@ body{
 .lp-card-vis-amber{background:linear-gradient(135deg,#FFFDE7,#FFF9C4)}
 .lp-card-vis svg{max-width:210px;height:auto;max-height:165px;filter:drop-shadow(0 2px 8px rgba(0,0,0,0.09))}
 .lp-card-body{padding:1.4rem}
-.lp-card-tag{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;margin-bottom:.35rem}
-.lp-card-tag-blue{color:#1565C0}
-.lp-card-tag-green{color:#2E7D32}
-.lp-card-tag-amber{color:#E65100}
 .lp-card-title{font-size:16px;font-weight:700;color:#0a1e3c;margin-bottom:.4rem}
 .lp-card-desc{font-size:12.5px;color:#666;line-height:1.6;margin-bottom:.9rem}
 .lp-card-list{list-style:none;display:flex;flex-direction:column;gap:.28rem}
 .lp-card-list li{font-size:12px;color:#555;display:flex;align-items:flex-start;gap:5px;line-height:1.45}
 .lp-card-list li::before{content:'✓';color:#1EB53A;font-weight:800;flex-shrink:0}
-.lp-noaa-filters{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:2rem}
-.lp-noaa-track-wrap{overflow:hidden;width:100%;-webkit-mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(90deg,transparent,#000 6%,#000 94%,transparent)}
-.lp-noaa-track{display:flex;gap:1.75rem;width:max-content;animation:lp-noaa-scroll linear infinite}
-.lp-noaa-track:hover{animation-play-state:paused}
-.lp-noaa-track .lp-card{flex:0 0 300px;width:300px}
-@keyframes lp-noaa-scroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-@media(prefers-reduced-motion:reduce){.lp-noaa-track{animation:none;flex-wrap:wrap;width:100%}}
-.lp-noaa-filters select{padding:8px 12px;border-radius:8px;border:1px solid rgba(0,0,0,0.12);background:#fff;color:#0a1e3c;font-size:12.5px;font-family:inherit;cursor:pointer}
-.lp-noaa-status{grid-column:1/-1;text-align:center;color:#666;font-size:13px;padding:2.5rem 0}
-.lp-card-vis-img{height:185px;padding:0;overflow:hidden}
-.lp-card-vis-img img{width:100%;height:100%;object-fit:cover;display:block}
 .lp-features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1.25rem}
 .lp-feat{background:#fff;border-radius:12px;padding:1.35rem;border:1px solid rgba(0,0,0,0.07);display:flex;gap:.9rem;align-items:flex-start;transition:.2s}
 .lp-feat:hover{border-color:rgba(21,101,192,0.2);box-shadow:0 4px 16px rgba(21,101,192,0.08);transform:translateY(-2px)}
@@ -1246,74 +1245,198 @@ body{
    just the explorer itself plus a small way back to the site. */
 #mainApp.standalone .topnav,
 #mainApp.standalone .tabnav{display:none!important}
-#standaloneBackBtn{display:none;position:fixed;top:14px;left:14px;z-index:2000;background:#0D47A1;color:#fff;border:none;border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.18)}
-#standaloneBackBtn:hover{background:#0b3a86}
 
 /* ---- In-app Reanalysis page (Gallery + Live Explorer) ---- */
 .reanalysis-page{
-  --rx-ink:#0c1420;--rx-panel:#101c2c;--rx-panel-2:#152238;--rx-line:#22354d;
-  --rx-fog:#a9bdd4;--rx-paper:#e8eef6;--rx-isobar:#ffb454;--rx-isobar-dim:#7a5a2c;
-  --rx-mono:'IBM Plex Mono','SFMono-Regular',Consolas,monospace;
-  background:var(--rx-ink);color:var(--rx-paper);border-radius:var(--radius-lg);
+  background:var(--bg-primary);color:var(--text-primary);border:0.5px solid var(--border-light);border-top:none;
+  border-radius:0 0 var(--radius-lg) var(--radius-lg);
   overflow:hidden;display:flex;flex-direction:column;height:calc(100vh - 220px);min-height:520px;
-  box-shadow:0 4px 18px rgba(0,0,0,.15);
 }
-.reanalysis-page .rx-isobar-band{
-  height:36px;width:100%;flex:none;
-  background:repeating-linear-gradient(180deg,transparent 0px,transparent 10px,var(--rx-isobar-dim) 10px,var(--rx-isobar-dim) 11px);
-  -webkit-mask-image:linear-gradient(180deg,black,transparent);mask-image:linear-gradient(180deg,black,transparent);opacity:.55;
-}
-.reanalysis-page .rx-tabs{display:flex;gap:8px;padding:0 18px;flex:none}
+.reanalysis-page .rx-tabs{display:flex;gap:8px;padding:14px 18px 0;flex:none;background:var(--bg-primary)}
 .reanalysis-page .rx-tab-btn{
-  padding:9px 16px;border-radius:7px 7px 0 0;border:1px solid var(--rx-line);border-bottom:none;
-  background:var(--rx-panel-2);color:var(--rx-fog);font-family:var(--rx-mono);font-size:12.5px;
+  padding:9px 16px;border-radius:7px 7px 0 0;border:1px solid var(--border-light);border-bottom:none;
+  background:var(--bg-secondary);color:var(--text-tertiary);font-size:12.5px;font-weight:600;
   cursor:pointer;text-transform:uppercase;letter-spacing:.05em;
 }
-.reanalysis-page .rx-tab-btn.active{color:var(--rx-isobar);border-color:var(--rx-isobar-dim);background:var(--rx-panel)}
-.reanalysis-page .rx-main{flex:1;min-height:0;display:flex;flex-direction:column}
+.reanalysis-page .rx-tab-btn.active{color:var(--tma-blue);background:var(--bg-primary)}
+.reanalysis-page .rx-main{flex:1;min-height:0;display:flex;flex-direction:column;border-top:1px solid var(--border-light)}
 .reanalysis-page .rx-panel{display:none;flex:1;min-height:0}
 .reanalysis-page .rx-panel.active{display:flex;flex-direction:column}
 .reanalysis-page select,.reanalysis-page input[type=text],.reanalysis-page input[type=date]{
-  background:var(--rx-panel-2);color:var(--rx-paper);border:1px solid var(--rx-line);
-  border-radius:6px;padding:8px 10px;font-family:var(--rx-mono);font-size:13px;
+  background:var(--bg-primary);color:var(--text-primary);border:1px solid var(--border-light);
+  border-radius:6px;padding:8px 10px;font-size:13px;font-family:inherit;
 }
 .reanalysis-page .rx-field{display:flex;flex-direction:column;gap:4px}
-.reanalysis-page .rx-field label{font-family:var(--rx-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--rx-fog)}
-.reanalysis-page .rx-filters{display:flex;flex-wrap:wrap;gap:10px;flex:none;padding:14px 18px;border-bottom:1px solid var(--rx-line);background:var(--rx-panel)}
-.reanalysis-page .rx-filters select{min-width:140px}
-.reanalysis-page .rx-gallery-scroll{flex:1;min-height:0;overflow-y:auto;padding:18px 18px 40px}
-.reanalysis-page .rx-status{font-family:var(--rx-mono);font-size:12.5px;color:var(--rx-fog);margin:0 0 14px}
-.reanalysis-page .rx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
-.reanalysis-page .rx-card{background:var(--rx-panel);border:1px solid var(--rx-line);border-radius:10px;overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s ease,transform .15s ease}
-.reanalysis-page .rx-card:hover{border-color:var(--rx-isobar-dim);transform:translateY(-2px)}
-.reanalysis-page .rx-card img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;background:#08101c}
-.reanalysis-page .rx-card-body{padding:11px 13px 13px;display:flex;flex-direction:column;gap:6px}
-.reanalysis-page .rx-card-title{font-size:14px;font-weight:600;letter-spacing:-.01em}
-.reanalysis-page .rx-tags{display:flex;flex-wrap:wrap;gap:6px;font-family:var(--rx-mono);font-size:10.5px}
-.reanalysis-page .rx-tag{border:1px solid var(--rx-line);color:var(--rx-fog);padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
-.reanalysis-page .rx-tag.rx-tag-type{color:var(--rx-isobar);border-color:var(--rx-isobar-dim)}
-.reanalysis-page .rx-empty,.reanalysis-page .rx-error{font-family:var(--rx-mono);font-size:13px;color:var(--rx-fog);border:1px dashed var(--rx-line);border-radius:8px;padding:24px;text-align:center}
-.reanalysis-page .rx-error{color:#ff9e8a;border-color:#5a2c26}
+.reanalysis-page .rx-field label{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-tertiary);font-weight:600}
+.reanalysis-page .rx-gallery-scroll{flex:1;min-height:0;overflow-y:auto;padding:20px}
+.reanalysis-page .rx-status{font-size:12.5px;color:var(--text-tertiary);margin:0 0 14px}
+.reanalysis-page .rx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:22px}
+.reanalysis-page .rx-card{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .15s ease,transform .15s ease;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.reanalysis-page .rx-card:hover{box-shadow:0 8px 22px rgba(0,0,0,.09);transform:translateY(-2px)}
+.reanalysis-page .rx-card img{width:100%;aspect-ratio:16/10;object-fit:contain;display:block;background:#0f0f1a}
+.reanalysis-page .rx-card-body{padding:13px 15px 15px;display:flex;flex-direction:column;gap:7px}
+.reanalysis-page .rx-card-title{font-size:15px;font-weight:600;letter-spacing:-.01em;color:var(--text-primary)}
+.reanalysis-page .rx-tags{display:flex;flex-wrap:wrap;gap:6px;font-size:10.5px}
+.reanalysis-page .rx-tag{border:1px solid var(--border-light);color:var(--text-tertiary);padding:2px 7px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em}
+.reanalysis-page .rx-tag.rx-tag-type{color:var(--tma-blue);border-color:var(--tma-blue-l);background:var(--tma-blue-l)}
+.reanalysis-page .rx-empty,.reanalysis-page .rx-error{font-size:13px;color:var(--text-tertiary);border:1px dashed var(--border-medium);border-radius:8px;padding:24px;text-align:center}
+.reanalysis-page .rx-error{color:#c0392b;border-color:#e6b3ab}
 .reanalysis-page a.rx-card-link{color:inherit;text-decoration:none}
 .reanalysis-page .rx-layout{flex:1;min-height:0;display:grid;grid-template-columns:320px 1fr}
 @media(max-width:820px){.reanalysis-page .rx-layout{grid-template-columns:1fr}}
-.reanalysis-page .rx-sidebar{border-right:1px solid var(--rx-line);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;background:var(--rx-panel)}
+.reanalysis-page .rx-sidebar{border-right:1px solid var(--border-light);padding:16px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;background:var(--bg-secondary)}
 .reanalysis-page .rx-mode-toggle{display:flex;gap:8px}
-.reanalysis-page .rx-mode-btn{flex:1;padding:9px 8px;border-radius:7px;border:1px solid var(--rx-line);background:var(--rx-panel-2);color:var(--rx-fog);font-family:var(--rx-mono);font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em}
-.reanalysis-page .rx-mode-btn.active{color:var(--rx-isobar);border-color:var(--rx-isobar-dim);background:#1c2e22}
+.reanalysis-page .rx-mode-btn{flex:1;padding:9px 8px;border-radius:7px;border:1px solid var(--border-light);background:var(--bg-primary);color:var(--text-tertiary);font-size:12px;cursor:pointer;text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.reanalysis-page .rx-mode-btn.active{color:var(--tma-blue);border-color:var(--tma-blue);background:var(--tma-blue-l)}
 .reanalysis-page .rx-row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.reanalysis-page .rx-hint{font-family:var(--rx-mono);font-size:11.5px;color:var(--rx-fog);border:1px dashed var(--rx-line);border-radius:7px;padding:10px 11px;line-height:1.5}
-.reanalysis-page .rx-coords{font-family:var(--rx-mono);font-size:12.5px;color:var(--rx-paper);background:var(--rx-panel-2);border:1px solid var(--rx-line);border-radius:7px;padding:10px 11px}
-.reanalysis-page .rx-btn-primary{background:var(--rx-isobar);color:#20140a;border:none;border-radius:7px;padding:11px 14px;font-weight:600;font-size:14px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif}
+.reanalysis-page .rx-hint{font-size:11.5px;color:var(--text-tertiary);border:1px dashed var(--border-medium);border-radius:7px;padding:10px 11px;line-height:1.5}
+.reanalysis-page .rx-coords{font-size:12.5px;color:var(--text-primary);background:var(--bg-primary);border:1px solid var(--border-light);border-radius:7px;padding:10px 11px}
+.reanalysis-page .rx-btn-primary{background:var(--tma-blue);color:#fff;border:none;border-radius:7px;padding:11px 14px;font-weight:600;font-size:14px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif}
 .reanalysis-page .rx-btn-primary:disabled{opacity:.45;cursor:not-allowed}
-.reanalysis-page .rx-btn-ghost{background:transparent;color:var(--rx-fog);border:1px solid var(--rx-line);border-radius:7px;padding:9px 12px;font-family:var(--rx-mono);font-size:12px;cursor:pointer}
+.reanalysis-page .rx-btn-ghost{background:transparent;color:var(--text-tertiary);border:1px solid var(--border-light);border-radius:7px;padding:9px 12px;font-size:12px;cursor:pointer}
 .reanalysis-page .rx-map-col{display:flex;flex-direction:column;min-height:0}
 .reanalysis-page .rx-map{flex:1;min-height:0}
-.reanalysis-page .rx-result{flex:none;max-height:42%;overflow-y:auto;border-top:1px solid var(--rx-line);padding:14px 16px;background:var(--rx-panel)}
-.reanalysis-page .rx-result img{max-width:100%;border-radius:8px;border:1px solid var(--rx-line);display:block}
-.reanalysis-page .rx-result .rx-status.rx-error{color:#ff9e8a}
-.reanalysis-page .rx-spinner{width:14px;height:14px;border:2px solid var(--rx-isobar-dim);border-top-color:var(--rx-isobar);border-radius:50%;display:inline-block;vertical-align:-2px;margin-right:8px;animation:rx-spin .8s linear infinite}
+.reanalysis-page .rx-result{flex:none;max-height:42%;overflow-y:auto;border-top:1px solid var(--border-light);padding:14px 16px;background:var(--bg-secondary)}
+.reanalysis-page .rx-result img{max-width:100%;border-radius:8px;border:1px solid var(--border-light);display:block}
+.reanalysis-page .rx-result .rx-status.rx-error{color:#c0392b}
+.reanalysis-page .rx-spinner{width:14px;height:14px;border:2px solid var(--tma-blue-l);border-top-color:var(--tma-blue);border-radius:50%;display:inline-block;vertical-align:-2px;margin-right:8px;animation:rx-spin .8s linear infinite}
 @keyframes rx-spin{to{transform:rotate(360deg)}}
+
+/* ══════════════════════════════════════════════════
+   WEATHER DATA DOWNLOAD (admin) — ported from
+   tz_weather_download.html. Every rule is scoped under
+   .wxdl-page and every class/id is prefixed wxdl- so
+   nothing here can leak onto (or be overridden by) the
+   rest of the app's own .btn/.sidebar/.toast/etc rules or
+   :root variables like --radius.
+   ══════════════════════════════════════════════════ */
+.wxdl-page{
+  --wxdl-sky:#1a6fa8;--wxdl-sky-dark:#0f4d78;--wxdl-sky-light:#d6eaf8;
+  --wxdl-earth:#6b8f5e;--wxdl-earth-light:#e8f5e2;
+  --wxdl-amber:#e67e22;--wxdl-amber-light:#fef3e2;
+  --wxdl-bg:#f4f7fb;--wxdl-surface:#ffffff;--wxdl-border:#dce6f0;
+  --wxdl-text:#1c2d3e;--wxdl-text-muted:#5a7a95;
+  --wxdl-danger:#c0392b;--wxdl-success:#27ae60;
+  --wxdl-radius:10px;--wxdl-shadow:0 2px 12px rgba(26,111,168,0.12);
+  font-family:'IBM Plex Sans',sans-serif;color:var(--wxdl-text);
+  height:calc(100vh - 220px);min-height:520px;
+  border:0.5px solid var(--border-light);border-radius:var(--radius-lg);overflow:hidden;
+  display:flex;flex-direction:column;position:relative;
+}
+.wxdl-workspace{display:flex;flex:1;overflow:hidden;background:var(--wxdl-bg)}
+.wxdl-map-pane{flex:1;position:relative}
+.wxdl-map-pane .wxdl-map{width:100%;height:100%;cursor:crosshair}
+
+.wxdl-map-tooltip{position:absolute;pointer-events:none;z-index:1000;background:rgba(15,77,120,.92);color:#fff;padding:6px 12px;border-radius:8px;font-size:.75rem;font-family:'IBM Plex Mono',monospace;display:none;white-space:nowrap;box-shadow:0 2px 10px rgba(0,0,0,.3)}
+.wxdl-map-tooltip.visible{display:block}
+
+.wxdl-coords-bar{position:absolute;bottom:0;left:0;right:0;z-index:900;background:rgba(15,77,120,.88);color:#fff;padding:6px 16px;font-size:.72rem;font-family:'IBM Plex Mono',monospace;display:flex;gap:20px;align-items:center}
+.wxdl-coords-bar span{opacity:.7}
+.wxdl-coords-bar strong{margin-left:4px}
+
+.wxdl-pin-info{position:absolute;top:14px;left:14px;z-index:1000;background:#fff;border-radius:var(--wxdl-radius);box-shadow:var(--wxdl-shadow);padding:12px 16px;font-size:.8rem;min-width:200px;display:none;border-left:4px solid var(--wxdl-sky)}
+.wxdl-pin-info.visible{display:block}
+.wxdl-pin-name{font-weight:600;color:var(--wxdl-sky-dark);margin-bottom:4px}
+.wxdl-pin-coords{font-family:'IBM Plex Mono',monospace;color:var(--wxdl-text-muted);font-size:.72rem}
+
+.wxdl-sidebar{width:340px;flex-shrink:0;background:var(--wxdl-surface);border-right:1px solid var(--wxdl-border);display:flex;flex-direction:column;overflow:hidden}
+.wxdl-sidebar-scroll{flex:1;overflow-y:auto;padding-bottom:8px}
+.wxdl-s-section{padding:14px 16px;border-bottom:1px solid var(--wxdl-border)}
+.wxdl-s-label{font-size:.65rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--wxdl-text-muted);margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.wxdl-s-label::before{content:'';display:inline-block;width:3px;height:11px;background:var(--wxdl-sky);border-radius:2px}
+
+.wxdl-search-wrap{position:relative;margin-bottom:8px}
+.wxdl-search-wrap input{width:100%;padding:9px 12px 9px 34px;border:1.5px solid var(--wxdl-border);border-radius:var(--wxdl-radius);font-size:.82rem;font-family:inherit;background:var(--wxdl-bg);color:var(--wxdl-text);transition:border-color .2s}
+.wxdl-search-wrap input:focus{outline:none;border-color:var(--wxdl-sky);background:#fff}
+.wxdl-search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:.9rem;pointer-events:none}
+.wxdl-search-dropdown{position:absolute;top:100%;left:0;right:0;z-index:2000;background:#fff;border:1.5px solid var(--wxdl-sky);border-top:none;border-radius:0 0 var(--wxdl-radius) var(--wxdl-radius);max-height:200px;overflow-y:auto;box-shadow:0 6px 20px rgba(26,111,168,.15);display:none}
+.wxdl-search-dropdown.open{display:block}
+.wxdl-search-item{padding:8px 12px;font-size:.78rem;cursor:pointer;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--wxdl-border);transition:background .12s}
+.wxdl-search-item:hover{background:var(--wxdl-sky-light)}
+.wxdl-search-item:last-child{border-bottom:none}
+.wxdl-search-item-region{font-size:.68rem;color:var(--wxdl-text-muted)}
+
+.wxdl-loc-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.wxdl-page select,.wxdl-page input[type=date]{
+  width:100%;padding:8px 10px;border:1.5px solid var(--wxdl-border);border-radius:var(--wxdl-radius);
+  font-family:inherit;font-size:.8rem;color:var(--wxdl-text);background:var(--wxdl-bg);transition:border-color .2s;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%235a7a95' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 10px center;padding-right:28px;
+}
+.wxdl-page input[type=date]{background-image:none;padding-right:10px}
+.wxdl-page select:focus,.wxdl-page input[type=date]:focus{outline:none;border-color:var(--wxdl-sky);background-color:#fff}
+.wxdl-field-label{font-size:.7rem;color:var(--wxdl-text-muted);font-weight:500;display:block;margin-bottom:4px}
+
+.wxdl-loc-badge{display:flex;align-items:center;gap:10px;background:var(--wxdl-sky-light);border:1px solid #b3d4ec;border-radius:var(--wxdl-radius);padding:8px 12px;margin-top:8px}
+.wxdl-loc-badge-dot{width:10px;height:10px;background:var(--wxdl-sky);border-radius:50%;flex-shrink:0}
+.wxdl-loc-badge-text{flex:1}
+.wxdl-loc-badge-name{font-size:.8rem;font-weight:600;color:var(--wxdl-sky-dark)}
+.wxdl-loc-badge-coords{font-size:.68rem;font-family:'IBM Plex Mono',monospace;color:var(--wxdl-text-muted)}
+.wxdl-loc-badge-none{font-size:.78rem;color:var(--wxdl-text-muted);font-style:italic}
+
+.wxdl-preset-row{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.wxdl-preset-btn{padding:4px 9px;background:var(--wxdl-bg);border:1.5px solid var(--wxdl-border);border-radius:20px;font-size:.68rem;font-family:inherit;color:var(--wxdl-text-muted);cursor:pointer;transition:all .15s}
+.wxdl-preset-btn:hover,.wxdl-preset-btn.active{background:var(--wxdl-sky-light);border-color:var(--wxdl-sky);color:var(--wxdl-sky-dark);font-weight:600}
+
+.wxdl-vars-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.wxdl-var-chip{display:flex;align-items:center;gap:6px;padding:6px 9px;border:1.5px solid var(--wxdl-border);border-radius:8px;cursor:pointer;transition:all .15s;font-size:.72rem;background:var(--wxdl-bg);user-select:none}
+.wxdl-var-chip:hover{border-color:var(--wxdl-sky);background:var(--wxdl-sky-light)}
+.wxdl-var-chip.checked{border-color:var(--wxdl-sky);background:var(--wxdl-sky-light);color:var(--wxdl-sky-dark);font-weight:500}
+.wxdl-var-dot{width:8px;height:8px;border-radius:50%;border:2px solid #aac;flex-shrink:0;transition:all .15s}
+.wxdl-var-chip.checked .wxdl-var-dot{background:var(--wxdl-sky);border-color:var(--wxdl-sky)}
+.wxdl-vars-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.wxdl-link-btn{font-size:.7rem;color:var(--wxdl-sky);cursor:pointer;background:none;border:none;font-family:inherit;text-decoration:underline}
+
+.wxdl-res-row{display:flex;gap:8px}
+.wxdl-res-opt{flex:1;padding:8px;border:1.5px solid var(--wxdl-border);border-radius:var(--wxdl-radius);text-align:center;cursor:pointer;font-size:.78rem;transition:all .15s;background:var(--wxdl-bg)}
+.wxdl-res-opt:hover{border-color:var(--wxdl-sky)}
+.wxdl-res-opt.active{border-color:var(--wxdl-sky);background:var(--wxdl-sky-light);color:var(--wxdl-sky-dark);font-weight:600}
+.wxdl-res-opt .wxdl-res-icon{font-size:1.1rem;display:block;margin-bottom:2px}
+
+.wxdl-action-area{padding:12px 16px;border-top:1px solid var(--wxdl-border);flex-shrink:0;display:flex;flex-direction:column;gap:8px}
+.wxdl-btn{display:flex;align-items:center;justify-content:center;gap:8px;padding:11px;border:none;border-radius:var(--wxdl-radius);font-family:inherit;font-size:.85rem;font-weight:600;cursor:pointer;transition:all .18s;width:100%}
+.wxdl-btn-primary{background:var(--wxdl-sky);color:#fff}
+.wxdl-btn-primary:hover{background:var(--wxdl-sky-dark);box-shadow:0 4px 14px rgba(26,111,168,.35);transform:translateY(-1px)}
+.wxdl-btn-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.wxdl-btn-csv{background:var(--wxdl-earth-light);color:var(--wxdl-earth);border:1.5px solid #b8d4ae;font-size:.78rem}
+.wxdl-btn-csv:hover{background:#d4ebcc}
+.wxdl-btn-xl{background:var(--wxdl-amber-light);color:#7a5010;border:1.5px solid #f0c070;font-size:.78rem}
+.wxdl-btn-xl:hover{background:#fde8b0}
+.wxdl-btn:disabled{opacity:.45;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+
+.wxdl-results-panel{position:absolute;bottom:32px;left:0;right:0;background:#fff;border-top:2px solid var(--wxdl-sky);z-index:800;max-height:50%;display:none;flex-direction:column;box-shadow:0 -4px 24px rgba(26,111,168,.15)}
+.wxdl-results-panel.visible{display:flex}
+.wxdl-results-header{padding:10px 16px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--wxdl-border);flex-shrink:0}
+.wxdl-results-title{font-weight:600;font-size:.88rem;color:var(--wxdl-sky-dark)}
+.wxdl-results-meta{font-size:.68rem;color:var(--wxdl-text-muted);font-family:'IBM Plex Mono',monospace}
+.wxdl-results-body{overflow:auto;flex:1}
+.wxdl-page .wxdl-results-body table{width:100%;border-collapse:collapse;font-size:.73rem}
+.wxdl-page .wxdl-results-body thead th{background:var(--wxdl-sky-dark);color:#fff;padding:7px 12px;text-align:left;font-weight:500;font-family:'IBM Plex Mono',monospace;font-size:.66rem;white-space:nowrap;position:sticky;top:0}
+.wxdl-page .wxdl-results-body tbody tr:nth-child(even){background:var(--wxdl-bg)}
+.wxdl-page .wxdl-results-body tbody tr:hover{background:var(--wxdl-sky-light)}
+.wxdl-page .wxdl-results-body tbody td{padding:5px 12px;border-bottom:1px solid var(--wxdl-border);font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.wxdl-page .wxdl-results-body tbody td:first-child{color:var(--wxdl-text-muted)}
+
+.wxdl-loading-overlay{position:absolute;inset:0;background:rgba(244,247,251,.93);z-index:2000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.wxdl-loading-overlay.visible{display:flex}
+.wxdl-spinner{width:42px;height:42px;border:4px solid var(--wxdl-border);border-top-color:var(--wxdl-sky);border-radius:50%;animation:wxdl-spin .8s linear infinite}
+@keyframes wxdl-spin{to{transform:rotate(360deg)}}
+.wxdl-loading-text{font-size:.9rem;color:var(--wxdl-sky-dark);font-weight:600}
+.wxdl-loading-sub{font-size:.74rem;color:var(--wxdl-text-muted);font-family:'IBM Plex Mono',monospace}
+.wxdl-progress-wrap{width:220px;height:5px;background:var(--wxdl-border);border-radius:3px;overflow:hidden}
+.wxdl-progress-fill{height:100%;background:linear-gradient(90deg,var(--wxdl-sky),var(--wxdl-earth));border-radius:3px;transition:width .4s;width:0%}
+
+.wxdl-toast{position:absolute;bottom:20px;right:20px;z-index:9999;background:var(--wxdl-sky-dark);color:#fff;padding:11px 18px;border-radius:10px;font-size:.8rem;box-shadow:0 4px 20px rgba(0,0,0,.2);display:none;max-width:300px;line-height:1.5}
+.wxdl-toast.success{background:var(--wxdl-success)}
+.wxdl-toast.error{background:var(--wxdl-danger)}
+.wxdl-toast.show{display:block;animation:wxdl-fadeUp .25s ease}
+@keyframes wxdl-fadeUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+.wxdl-close-btn{background:none;border:none;color:var(--wxdl-text-muted);font-size:1.1rem;cursor:pointer;padding:2px 6px}
+.wxdl-close-btn:hover{color:var(--wxdl-danger)}
+
+.wxdl-info-tip{display:flex;align-items:center;gap:6px;background:var(--wxdl-amber-light);border:1px solid #f0c070;color:#7a5010;border-radius:8px;padding:7px 10px;font-size:.72rem;margin-top:8px;line-height:1.4}
 </style>
 </head>
 <body>
@@ -1558,11 +1681,6 @@ body{
   </div>
 </div>
 
-<!-- Standalone-mode "back to home" button — only shown when the Reanalysis
-     explorer is opened directly from the landing page nav, independent of
-     any dashboard (see openGriddedDataProducts()/enterPublicView()). -->
-<button id="standaloneBackBtn" onclick="goHome()">&larr; Back to Home</button>
-
 <!-- ======================== MAIN APP ======================== -->
 <div class="layout" id="mainApp" style="display:none">
 
@@ -1623,6 +1741,7 @@ body{
       <button class="tab-btn" data-page="observers" onclick="showPage('observers',this)">&#9673; Observers</button>
       <button class="tab-btn" data-page="manageStakeholders" onclick="showPage('manageStakeholders',this)">&#9672; Stakeholders</button>
       <button class="tab-btn" data-page="landingImages" onclick="showPage('landingImages',this)">&#128444; Landing Images</button>
+      <button class="tab-btn" data-page="weatherDownload" onclick="showPage('weatherDownload',this)">&#127780;&#65039; National Data Access</button>
     </div>
   </div>
 
@@ -1670,6 +1789,7 @@ body{
       <div class="nav-item" onclick="showPage('observers',this)"><span class="nav-icon">◉</span>Manage observers</div>
       <div class="nav-item" onclick="showPage('manageStakeholders',this)"><span class="nav-icon">◈</span>Manage stakeholders</div>
       <div class="nav-item" onclick="showPage('landingImages',this)"><span class="nav-icon">🖼</span>Landing page images</div>
+      <div class="nav-item" onclick="showPage('weatherDownload',this)"><span class="nav-icon">🌦</span>National Data Access</div>
     </div>
     <div class="sidebar-footer">
       <div class="user-chip">
@@ -2920,34 +3040,195 @@ body{
         </div>
       </div>
 
+      <!-- Weather Data Download (admin) — ported from tz_weather_download.html.
+           Fetches historical weather data directly from Open-Meteo's public
+           ERA5 archive API client-side (no backend/Supabase involved), for
+           any point in Tanzania picked via map/search/dropdowns. -->
+      <div class="page" id="page-weatherDownload">
+        <div class="wxdl-page">
+          <div class="wxdl-workspace">
+
+            <div class="wxdl-sidebar">
+              <div class="wxdl-sidebar-scroll">
+
+                <div class="wxdl-s-section">
+                  <div class="wxdl-s-label">&#128205; Location</div>
+
+                  <div class="wxdl-search-wrap">
+                    <span class="wxdl-search-icon">&#128269;</span>
+                    <input type="text" id="wxdl-searchInput" placeholder="Search region or district&hellip;" oninput="WeatherDownload.onSearch()" onblur="WeatherDownload.closeDropdown()" autocomplete="off">
+                    <div class="wxdl-search-dropdown" id="wxdl-searchDropdown"></div>
+                  </div>
+
+                  <div class="wxdl-loc-row" style="margin-bottom:8px">
+                    <div>
+                      <label class="wxdl-field-label">Region</label>
+                      <select id="wxdl-regionSel" onchange="WeatherDownload.onRegionChange()">
+                        <option value="">-- Region --</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="wxdl-field-label">District</label>
+                      <select id="wxdl-districtSel" onchange="WeatherDownload.onDistrictChange()">
+                        <option value="">-- District --</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="wxdl-loc-badge" id="wxdl-locBadge">
+                    <div class="wxdl-loc-badge-dot" id="wxdl-locDot" style="background:#ccc"></div>
+                    <div class="wxdl-loc-badge-text">
+                      <div class="wxdl-loc-badge-none" id="wxdl-locNone">No location selected &mdash; click map or search above</div>
+                      <div class="wxdl-loc-badge-name" id="wxdl-locName" style="display:none"></div>
+                      <div class="wxdl-loc-badge-coords" id="wxdl-locCoords" style="display:none"></div>
+                    </div>
+                  </div>
+
+                  <div class="wxdl-info-tip">&#128161; Move your cursor on the map &mdash; districts highlight automatically. Click to select.</div>
+                </div>
+
+                <div class="wxdl-s-section">
+                  <div class="wxdl-s-label">&#128197; Date Range</div>
+                  <div class="wxdl-loc-row">
+                    <div>
+                      <label class="wxdl-field-label">Start Date</label>
+                      <input type="date" id="wxdl-startDate" value="2024-01-01">
+                    </div>
+                    <div>
+                      <label class="wxdl-field-label">End Date</label>
+                      <input type="date" id="wxdl-endDate">
+                    </div>
+                  </div>
+                  <div class="wxdl-preset-row">
+                    <button class="wxdl-preset-btn" onclick="WeatherDownload.setPreset('last30',this)">Last 30d</button>
+                    <button class="wxdl-preset-btn" onclick="WeatherDownload.setPreset('last90',this)">Last 90d</button>
+                    <button class="wxdl-preset-btn" onclick="WeatherDownload.setPreset('thisYear',this)">This year</button>
+                    <button class="wxdl-preset-btn" onclick="WeatherDownload.setPreset('lastYear',this)">Last year</button>
+                    <button class="wxdl-preset-btn" onclick="WeatherDownload.setPreset('5y',this)">5 years</button>
+                    <button class="wxdl-preset-btn" onclick="WeatherDownload.setPreset('10y',this)">10 years</button>
+                  </div>
+                </div>
+
+                <div class="wxdl-s-section">
+                  <div class="wxdl-s-label">&#9201; Temporal Resolution</div>
+                  <div class="wxdl-res-row">
+                    <div class="wxdl-res-opt active" id="wxdl-resDaily" onclick="WeatherDownload.setRes('daily')">
+                      <span class="wxdl-res-icon">&#128198;</span>Daily
+                    </div>
+                    <div class="wxdl-res-opt" id="wxdl-resHourly" onclick="WeatherDownload.setRes('hourly')">
+                      <span class="wxdl-res-icon">&#128336;</span>Hourly
+                    </div>
+                  </div>
+                </div>
+
+                <div class="wxdl-s-section">
+                  <div class="wxdl-s-label">&#127777; Weather Variables</div>
+                  <div class="wxdl-vars-top">
+                    <span style="font-size:.7rem;color:var(--wxdl-text-muted)">Select variables to download</span>
+                    <span><button class="wxdl-link-btn" onclick="WeatherDownload.allVars(1)">All</button> / <button class="wxdl-link-btn" onclick="WeatherDownload.allVars(0)">None</button></span>
+                  </div>
+                  <div class="wxdl-vars-grid" id="wxdl-varsGrid"></div>
+                </div>
+
+              </div>
+
+              <div class="wxdl-action-area">
+                <button class="wxdl-btn wxdl-btn-primary" onclick="WeatherDownload.fetchData()">&#127760; Fetch Weather Data</button>
+                <div class="wxdl-btn-row">
+                  <button class="wxdl-btn wxdl-btn-csv" onclick="WeatherDownload.downloadCSV()" id="wxdl-csvBtn" disabled>&#11015; Download CSV</button>
+                  <button class="wxdl-btn wxdl-btn-xl" onclick="WeatherDownload.downloadExcel()" id="wxdl-xlBtn" disabled>&#11015; Download Excel</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="wxdl-map-pane">
+              <div class="wxdl-map" id="wxdl-map"></div>
+              <div class="wxdl-map-tooltip" id="wxdl-mapTooltip"></div>
+
+              <div class="wxdl-pin-info" id="wxdl-pinInfo">
+                <div class="wxdl-pin-name" id="wxdl-pinName">&mdash;</div>
+                <div class="wxdl-pin-coords" id="wxdl-pinCoords">&mdash;</div>
+              </div>
+
+              <div class="wxdl-coords-bar" id="wxdl-coordsBar">
+                <span>&#128433; Move cursor over map</span>
+                <span>Lat: <strong id="wxdl-curLat">&mdash;</strong></span>
+                <span>Lon: <strong id="wxdl-curLon">&mdash;</strong></span>
+                <span id="wxdl-curRegionLabel" style="color:#a8d4f0"></span>
+              </div>
+
+              <div class="wxdl-loading-overlay" id="wxdl-loadingOverlay">
+                <div class="wxdl-spinner"></div>
+                <div class="wxdl-loading-text" id="wxdl-loadingText">Fetching ERA5 data&hellip;</div>
+                <div class="wxdl-loading-sub" id="wxdl-loadingSub">Contacting Open-Meteo archive</div>
+                <div class="wxdl-progress-wrap"><div class="wxdl-progress-fill" id="wxdl-progressFill"></div></div>
+              </div>
+
+              <div class="wxdl-results-panel" id="wxdl-resultsPanel">
+                <div class="wxdl-results-header">
+                  <div>
+                    <div class="wxdl-results-title" id="wxdl-resultsTitle">Data Preview</div>
+                    <div class="wxdl-results-meta" id="wxdl-resultsMeta"></div>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <button class="wxdl-btn wxdl-btn-csv" style="width:auto;padding:6px 14px" onclick="WeatherDownload.downloadCSV()">&#11015; CSV</button>
+                    <button class="wxdl-btn wxdl-btn-xl" style="width:auto;padding:6px 14px" onclick="WeatherDownload.downloadExcel()">&#11015; Excel</button>
+                    <button class="wxdl-close-btn" onclick="document.getElementById('wxdl-resultsPanel').classList.remove('visible')">&#10005;</button>
+                  </div>
+                </div>
+                <div class="wxdl-results-body">
+                  <div style="overflow-x:auto">
+                    <table><thead id="wxdl-tHead"></thead><tbody id="wxdl-tBody"></tbody></table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div id="wxdl-toast" class="wxdl-toast"></div>
+        </div>
+      </div>
+
       <!-- Agrometeorological Products page (standalone, opened the same way
            as Gridded Data Products via enterPublicView -- not a landing-page
            section anymore) -->
       <div class="page" id="page-agrometProducts">
-        <div class="card">
+        <div class="page-breadcrumb">
+          <span class="crumb-home" onclick="goHome()">Home</span>
+          <span class="crumb-sep">/</span>
+          <span class="crumb-current" id="agromet-crumb-current">Agrometeorological Products</span>
+        </div>
+        <div class="card agromet-products-card">
           <div class="card-title">Agrometeorological Services &amp; Products</div>
           <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:1rem">From daily field observations to seasonal forecasts leading to decision support for Tanzania&rsquo;s farmers, fisheries and livestock keeping.</div>
-          <div class="lp-noaa-filters">
-            <select id="agrometCatFilter" onchange="refreshAgrometProductsPage()">
-              <option value="">All Categories</option>
-              <option>Monthly Weather Outlook</option>
-              <option>Decadal Agrometeorological Bulletin</option>
-              <option>Monthly Agrometeorological Bulletin</option>
-              <option>Seasonal Agrometeorological Bulletin</option>
-              <option>Seasonal Weather Outlook</option>
-              <option>Climatological Report</option>
-              <option>Early Warning Bulletin</option>
-            </select>
+          <div class="agromet-layout">
+            <div class="agromet-sidebar">
+              <div class="agromet-sidebar-title">Product Categories</div>
+              <label class="check-row"><input type="checkbox" value="Monthly Weather Outlook" onchange="onAgrometCatToggle(this)"><span>Monthly Weather Outlook</span></label>
+              <label class="check-row"><input type="checkbox" value="Decadal Agrometeorological Bulletin" onchange="onAgrometCatToggle(this)"><span>Decadal Agrometeorological Bulletin</span></label>
+              <label class="check-row"><input type="checkbox" value="Monthly Agrometeorological Bulletin" onchange="onAgrometCatToggle(this)"><span>Monthly Agrometeorological Bulletin</span></label>
+              <label class="check-row"><input type="checkbox" value="Seasonal Agrometeorological Bulletin" onchange="onAgrometCatToggle(this)"><span>Seasonal Agrometeorological Bulletin</span></label>
+              <label class="check-row"><input type="checkbox" value="Seasonal Weather Outlook" onchange="onAgrometCatToggle(this)"><span>Seasonal Weather Outlook</span></label>
+              <label class="check-row"><input type="checkbox" value="Climatological Report" onchange="onAgrometCatToggle(this)"><span>Climatological Report</span></label>
+              <label class="check-row"><input type="checkbox" value="Early Warning Bulletin" onchange="onAgrometCatToggle(this)"><span>Early Warning Bulletin</span></label>
+            </div>
+            <div class="agromet-main">
+              <div class="empty-state" id="agromet-products-empty"><div class="empty-state-icon">📂</div><div class="empty-state-title">Tick a category to view its products</div></div>
+              <div id="agromet-products-list"></div>
+            </div>
           </div>
-          <div class="empty-state" id="agromet-products-empty"><div class="empty-state-icon">📂</div><div class="empty-state-title">No products published yet</div></div>
-          <div id="agromet-products-list"></div>
         </div>
       </div>
 
       <!-- Reanalysis page (folded in from reanalysis.html) -->
       <div class="page" id="page-reanalysis">
+        <div class="page-breadcrumb">
+          <span class="crumb-home" onclick="goHome()">Home</span>
+          <span class="crumb-sep">/</span>
+          <span class="crumb-current">Gridded Data Products</span>
+        </div>
         <div class="reanalysis-page">
-          <div class="rx-isobar-band"></div>
           <div class="rx-tabs">
             <button class="rx-tab-btn active" id="rx-tab-gallery" data-tab="gallery">Gallery</button>
             <button class="rx-tab-btn" id="rx-tab-explorer" data-tab="explorer">Live Explorer</button>
@@ -2956,29 +3237,33 @@ body{
 
             <!-- Gallery -->
             <section class="rx-panel active" id="rx-panel-gallery">
-              <div class="rx-filters">
-                <div class="rx-field"><label for="rx-f-var">Variable</label>
-                  <select id="rx-f-var"><option value="">All</option></select>
+              <div class="rx-layout">
+                <div class="rx-sidebar">
+                  <div class="rx-field"><label for="rx-f-var">Variable</label>
+                    <select id="rx-f-var"><option value="">All</option></select>
+                  </div>
+                  <div class="rx-field"><label for="rx-f-level">Level (hPa)</label>
+                    <select id="rx-f-level"><option value="">All</option></select>
+                  </div>
+                  <div class="rx-field"><label for="rx-f-aggr">Aggregation</label>
+                    <select id="rx-f-aggr"><option value="">All</option></select>
+                  </div>
+                  <div class="rx-field"><label for="rx-f-type">Plot type</label>
+                    <select id="rx-f-type"><option value="">All</option></select>
+                  </div>
+                  <div class="rx-row2">
+                    <div class="rx-field"><label for="rx-f-year-from">From year</label>
+                      <select id="rx-f-year-from"><option value="">Any</option></select>
+                    </div>
+                    <div class="rx-field"><label for="rx-f-year-to">To year</label>
+                      <select id="rx-f-year-to"><option value="">Any</option></select>
+                    </div>
+                  </div>
                 </div>
-                <div class="rx-field"><label for="rx-f-level">Level (hPa)</label>
-                  <select id="rx-f-level"><option value="">All</option></select>
+                <div class="rx-gallery-scroll">
+                  <p class="rx-status" id="rx-gallery-status">Loading products&hellip;</p>
+                  <div class="rx-grid" id="rx-gallery-grid"></div>
                 </div>
-                <div class="rx-field"><label for="rx-f-aggr">Aggregation</label>
-                  <select id="rx-f-aggr"><option value="">All</option></select>
-                </div>
-                <div class="rx-field"><label for="rx-f-type">Plot type</label>
-                  <select id="rx-f-type"><option value="">All</option></select>
-                </div>
-                <div class="rx-field"><label for="rx-f-year-from">From year</label>
-                  <select id="rx-f-year-from"><option value="">Any</option></select>
-                </div>
-                <div class="rx-field"><label for="rx-f-year-to">To year</label>
-                  <select id="rx-f-year-to"><option value="">Any</option></select>
-                </div>
-              </div>
-              <div class="rx-gallery-scroll">
-                <p class="rx-status" id="rx-gallery-status">Loading products&hellip;</p>
-                <div class="rx-grid" id="rx-gallery-grid"></div>
               </div>
             </section>
 
@@ -3158,30 +3443,53 @@ function renderLandingImagesCarousel(images) {
 }
 
 // ---- Agrometeorological Products (public page, Products nav) ----
-// Shows admin-uploaded bulletins/outlooks from the `products` table
-// (the same records the logged-in Observer/Stakeholder product pages
-// show), restricted to the public-facing bulletin categories and to
-// products whose access level is publicly visible (productAccessAllowed
-// with role 'public' only matches the default "All observers &
-// stakeholders" access -- "Observers only"/"Stakeholders only"/member-
-// or zone-restricted items correctly stay hidden from anonymous visitors).
-const AGROMET_PUBLIC_CATEGORIES = [
-  'Monthly Weather Outlook', 'Decadal Agrometeorological Bulletin',
-  'Monthly Agrometeorological Bulletin', 'Seasonal Agrometeorological Bulletin',
-  'Seasonal Weather Outlook', 'Climatological Report', 'Early Warning Bulletin',
-];
+// Shows admin-uploaded bulletins/outlooks from the `products` table (the
+// same records the logged-in Observer/Stakeholder product pages show),
+// gated on two things: the category checkbox sidebar (valid categories
+// are simply whatever checkboxes exist in the markup -- ticking one
+// reveals matching products, nothing shows until at least one is ticked)
+// and public visibility (productAccessAllowed with role 'public' only
+// matches the default "All observers & stakeholders" access --
+// "Observers only"/"Stakeholders only"/member- or zone-restricted items
+// correctly stay hidden from anonymous visitors).
+// Checkboxes are exclusive by design (only one category viewable at a
+// time) -- ticking one clears any other that was ticked, rather than
+// letting the sidebar accumulate a multi-category selection.
+function onAgrometCatToggle(el) {
+  if (el.checked) {
+    document.querySelectorAll('#page-agrometProducts .agromet-sidebar input[type="checkbox"]').forEach(cb => {
+      if (cb !== el) cb.checked = false;
+    });
+  }
+  refreshAgrometProductsPage();
+}
 
 function refreshAgrometProductsPage() {
   const empty = document.getElementById('agromet-products-empty');
   const list = document.getElementById('agromet-products-list');
+  const crumb = document.getElementById('agromet-crumb-current');
   if (!empty || !list) return;
-  const catFilter = document.getElementById('agrometCatFilter')?.value || '';
+
+  const checked = [...document.querySelectorAll('#page-agrometProducts .agromet-sidebar input[type="checkbox"]:checked')].map(el => el.value);
+
+  if (crumb) {
+    crumb.textContent = checked.length === 0 ? 'Agrometeorological Products'
+      : checked.length === 1 ? checked[0]
+      : `${checked.length} categories selected`;
+  }
+
+  if (checked.length === 0) {
+    empty.querySelector('.empty-state-title').textContent = 'Tick a category to view its products';
+    empty.style.display = '';
+    list.innerHTML = '';
+    return;
+  }
+
   const items = (state.products || []).filter(p =>
-    AGROMET_PUBLIC_CATEGORIES.includes(p.cat) &&
-    (!catFilter || p.cat === catFilter) &&
-    productAccessAllowed(p, 'public')
+    checked.includes(p.cat) && productAccessAllowed(p, 'public')
   );
   if (items.length === 0) {
+    empty.querySelector('.empty-state-title').textContent = 'No products published yet in the selected categories';
     empty.style.display = '';
     list.innerHTML = '';
   } else {
@@ -3463,8 +3771,6 @@ function showLanding() {
   // (login, register, or public browse) starts with the normal topnav/tabnav.
   const mainAppEl = document.getElementById('mainApp');
   if(mainAppEl) mainAppEl.classList.remove('standalone');
-  const backBtn = document.getElementById('standaloneBackBtn');
-  if(backBtn) backBtn.style.display = 'none';
   window.scrollTo({top:0,behavior:'smooth'});
   loadLandingImages();
   closeLandingMenu();
@@ -3566,6 +3872,43 @@ const TZ_STATIONS = [
   { name: 'Mbiba Station',               lat: -8.8500,  lng: 32.9500 },
 ];
 
+// All 31 regions and 167 districts, used by both the public station map
+// (district dots, hover-only) and the admin National Data Access tool
+// (WeatherDownload module -- also clickable there to pick a download point).
+const TZ_REGIONS = {
+  "Arusha":         { lat:-3.387, lon:36.683, districts:{ "Arusha City":{lat:-3.387,lon:36.683}, "Arusha":{lat:-3.400,lon:36.550}, "Karatu":{lat:-3.350,lon:35.650}, "Longido":{lat:-2.750,lon:36.683}, "Monduli":{lat:-3.300,lon:36.450}, "Meru":{lat:-3.217,lon:36.750}, "Ngorongoro":{lat:-3.200,lon:35.500} }},
+  "Dar es Salaam":  { lat:-6.792, lon:39.208, districts:{ "Ilala":{lat:-6.817,lon:39.283}, "Kinondoni":{lat:-6.750,lon:39.250}, "Temeke":{lat:-6.878,lon:39.268}, "Ubungo":{lat:-6.767,lon:39.217}, "Kigamboni":{lat:-6.867,lon:39.317} }},
+  "Dodoma":         { lat:-6.172, lon:35.740, districts:{ "Dodoma City":{lat:-6.172,lon:35.740}, "Bahi":{lat:-5.933,lon:35.317}, "Chamwino":{lat:-5.950,lon:35.950}, "Chemba":{lat:-5.000,lon:35.900}, "Kondoa":{lat:-4.900,lon:35.783}, "Kongwa":{lat:-6.200,lon:36.417}, "Mpwapwa":{lat:-6.350,lon:36.483} }},
+  "Geita":          { lat:-2.867, lon:32.167, districts:{ "Geita Town":{lat:-2.867,lon:32.167}, "Bukombe":{lat:-3.483,lon:31.600}, "Chato":{lat:-2.617,lon:31.933}, "Geita":{lat:-2.917,lon:32.183}, "Mbogwe":{lat:-3.567,lon:31.950}, "Nyang'hwale":{lat:-2.900,lon:32.550} }},
+  "Iringa":         { lat:-7.770, lon:35.690, districts:{ "Iringa Urban":{lat:-7.770,lon:35.690}, "Iringa":{lat:-7.750,lon:35.670}, "Kilolo":{lat:-7.967,lon:36.350}, "Mufindi":{lat:-8.550,lon:35.500} }},
+  "Kagera":         { lat:-1.283, lon:31.717, districts:{ "Bukoba Urban":{lat:-1.333,lon:31.817}, "Biharamulo":{lat:-2.633,lon:31.317}, "Bukoba":{lat:-1.400,lon:31.817}, "Karagwe":{lat:-1.500,lon:31.000}, "Kyerwa":{lat:-1.350,lon:30.617}, "Missenyi":{lat:-0.983,lon:31.567}, "Muleba":{lat:-1.767,lon:31.750}, "Ngara":{lat:-2.500,lon:30.650} }},
+  "Katavi":         { lat:-6.817, lon:31.100, districts:{ "Mpanda Town":{lat:-6.350,lon:31.067}, "Mlele":{lat:-6.000,lon:31.500}, "Mpanda":{lat:-6.350,lon:31.067}, "Nsimbo":{lat:-6.850,lon:31.750} }},
+  "Kigoma":         { lat:-4.877, lon:29.627, districts:{ "Kigoma Urban":{lat:-4.877,lon:29.627}, "Buhigwe":{lat:-4.700,lon:29.933}, "Kakonko":{lat:-3.800,lon:30.467}, "Kasulu":{lat:-4.583,lon:30.083}, "Kibondo":{lat:-3.583,lon:30.683}, "Kigoma":{lat:-4.883,lon:29.650}, "Uvinza":{lat:-5.100,lon:30.383} }},
+  "Kilimanjaro":    { lat:-3.354, lon:37.356, districts:{ "Moshi Urban":{lat:-3.356,lon:37.338}, "Hai":{lat:-3.350,lon:37.100}, "Moshi":{lat:-3.356,lon:37.338}, "Mwanga":{lat:-3.500,lon:37.383}, "Rombo":{lat:-3.150,lon:37.500}, "Same":{lat:-4.067,lon:37.717}, "Siha":{lat:-3.117,lon:37.150} }},
+  "Lindi":          { lat:-9.999, lon:39.717, districts:{ "Lindi Urban":{lat:-9.999,lon:39.717}, "Kilwa":{lat:-8.917,lon:39.517}, "Lindi":{lat:-9.983,lon:39.717}, "Liwale":{lat:-9.783,lon:37.933}, "Nachingwea":{lat:-10.358,lon:38.758}, "Ruangwa":{lat:-10.467,lon:38.583} }},
+  "Manyara":        { lat:-4.317, lon:36.083, districts:{ "Babati Town":{lat:-4.217,lon:35.750}, "Babati":{lat:-4.217,lon:35.750}, "Hanang":{lat:-4.483,lon:35.350}, "Kiteto":{lat:-5.917,lon:36.967}, "Mbulu":{lat:-3.833,lon:35.533}, "Simanjiro":{lat:-4.583,lon:36.917} }},
+  "Mara":           { lat:-1.750, lon:34.117, districts:{ "Musoma Urban":{lat:-1.500,lon:33.800}, "Bunda":{lat:-2.000,lon:33.883}, "Butiama":{lat:-1.567,lon:34.000}, "Musoma":{lat:-1.500,lon:33.800}, "Rorya":{lat:-1.333,lon:34.083}, "Serengeti":{lat:-2.283,lon:34.500}, "Tarime":{lat:-1.350,lon:34.183} }},
+  "Mbeya":          { lat:-8.900, lon:33.450, districts:{ "Mbeya City":{lat:-8.900,lon:33.450}, "Busokelo":{lat:-9.050,lon:33.683}, "Chunya":{lat:-8.500,lon:33.417}, "Kyela":{lat:-9.583,lon:33.883}, "Mbarali":{lat:-8.633,lon:34.083}, "Mbeya":{lat:-8.867,lon:33.467}, "Rungwe":{lat:-9.167,lon:33.617} }},
+  "Morogoro":       { lat:-6.817, lon:37.650, districts:{ "Morogoro Urban":{lat:-6.817,lon:37.650}, "Gairo":{lat:-6.583,lon:36.783}, "Kilombero":{lat:-8.333,lon:36.633}, "Kilosa":{lat:-6.833,lon:36.983}, "Morogoro":{lat:-6.817,lon:37.650}, "Mvomero":{lat:-6.000,lon:37.500}, "Ulanga":{lat:-8.833,lon:36.667} }},
+  "Mtwara":         { lat:-10.274,lon:40.183, districts:{ "Mtwara Urban":{lat:-10.274,lon:40.183}, "Masasi":{lat:-10.717,lon:38.800}, "Mtwara":{lat:-10.274,lon:40.183}, "Nanyumbu":{lat:-10.917,lon:39.117}, "Newala":{lat:-10.950,lon:39.633}, "Tandahimba":{lat:-10.750,lon:39.583} }},
+  "Mwanza":         { lat:-2.517, lon:32.900, districts:{ "Ilemela":{lat:-2.467,lon:32.850}, "Kwimba":{lat:-2.800,lon:32.917}, "Magu":{lat:-2.533,lon:33.450}, "Misungwi":{lat:-2.867,lon:33.067}, "Nyamagana":{lat:-2.517,lon:32.900}, "Sengerema":{lat:-2.617,lon:32.583}, "Ukerewe":{lat:-1.983,lon:33.050} }},
+  "Njombe":         { lat:-9.333, lon:34.767, districts:{ "Njombe Town":{lat:-9.333,lon:34.767}, "Ludewa":{lat:-10.500,lon:34.667}, "Makambako":{lat:-8.867,lon:34.817}, "Makete":{lat:-9.500,lon:34.633}, "Njombe":{lat:-9.333,lon:34.767}, "Wanging'ombe":{lat:-9.000,lon:34.950} }},
+  "Pwani":          { lat:-7.000, lon:38.500, districts:{ "Bagamoyo":{lat:-6.440,lon:38.906}, "Kibaha":{lat:-6.767,lon:38.850}, "Kibaha Town":{lat:-6.767,lon:38.850}, "Kisarawe":{lat:-7.050,lon:39.050}, "Mafia":{lat:-7.817,lon:39.850}, "Mkuranga":{lat:-7.150,lon:39.167}, "Rufiji":{lat:-7.983,lon:38.467} }},
+  "Rukwa":          { lat:-8.017, lon:31.450, districts:{ "Kalambo":{lat:-8.583,lon:31.317}, "Nkasi":{lat:-7.500,lon:31.250}, "Sumbawanga Urban":{lat:-7.967,lon:31.600}, "Sumbawanga":{lat:-7.967,lon:31.600} }},
+  "Ruvuma":         { lat:-10.683,lon:35.650, districts:{ "Mbinga":{lat:-10.900,lon:35.033}, "Namtumbo":{lat:-10.583,lon:36.317}, "Nyasa":{lat:-11.000,lon:34.717}, "Songea Urban":{lat:-10.683,lon:35.650}, "Songea":{lat:-10.683,lon:35.650}, "Tunduru":{lat:-11.100,lon:37.367} }},
+  "Shinyanga":      { lat:-3.661, lon:33.427, districts:{ "Shinyanga Urban":{lat:-3.661,lon:33.427}, "Kahama Town":{lat:-3.833,lon:32.600}, "Kahama":{lat:-3.833,lon:32.600}, "Kishapu":{lat:-3.500,lon:33.750}, "Shinyanga":{lat:-3.661,lon:33.427} }},
+  "Simiyu":         { lat:-2.833, lon:34.200, districts:{ "Bariadi Town":{lat:-2.817,lon:34.183}, "Bariadi":{lat:-2.817,lon:34.183}, "Busega":{lat:-2.333,lon:33.667}, "Itilima":{lat:-3.117,lon:33.917}, "Maswa":{lat:-3.050,lon:34.033}, "Meatu":{lat:-3.567,lon:34.600} }},
+  "Singida":        { lat:-4.817, lon:34.750, districts:{ "Singida Urban":{lat:-4.817,lon:34.750}, "Ikungi":{lat:-5.467,lon:34.667}, "Iramba":{lat:-4.383,lon:34.617}, "Manyoni":{lat:-5.750,lon:34.850}, "Mkalama":{lat:-4.000,lon:34.850}, "Singida":{lat:-4.817,lon:34.750} }},
+  "Songwe":         { lat:-8.850, lon:32.950, districts:{ "Ileje":{lat:-9.367,lon:33.633}, "Mbozi":{lat:-8.917,lon:32.917}, "Momba":{lat:-8.700,lon:32.583}, "Tunduma":{lat:-9.300,lon:32.783} }},
+  "Tabora":         { lat:-5.017, lon:32.800, districts:{ "Tabora Urban":{lat:-5.017,lon:32.800}, "Igunga":{lat:-4.333,lon:33.167}, "Kaliua":{lat:-5.083,lon:31.767}, "Nzega":{lat:-4.217,lon:33.183}, "Sikonge":{lat:-5.617,lon:32.783}, "Tabora":{lat:-5.017,lon:32.800}, "Urambo":{lat:-5.083,lon:32.050}, "Uyui":{lat:-5.083,lon:32.900} }},
+  "Tanga":          { lat:-5.070, lon:39.100, districts:{ "Tanga City":{lat:-5.070,lon:39.100}, "Handeni":{lat:-5.417,lon:38.017}, "Kilindi":{lat:-4.917,lon:38.167}, "Korogwe":{lat:-5.150,lon:38.483}, "Lushoto":{lat:-4.783,lon:38.283}, "Mkinga":{lat:-4.683,lon:39.100}, "Muheza":{lat:-5.167,lon:38.783}, "Pangani":{lat:-5.433,lon:38.967}, "Tanga":{lat:-5.070,lon:39.100} }},
+  "Pemba Kaskazini":{ lat:-5.033, lon:39.783, districts:{ "Micheweni":{lat:-4.967,lon:39.833}, "Wete":{lat:-5.050,lon:39.717} }},
+  "Pemba Kusini":   { lat:-5.317, lon:39.817, districts:{ "Chake Chake":{lat:-5.250,lon:39.767}, "Mkoani":{lat:-5.433,lon:39.667} }},
+  "Unguja Kaskazini":{lat:-5.783,lon:39.300, districts:{ "Kaskazini A":{lat:-5.717,lon:39.283}, "Kaskazini B":{lat:-5.817,lon:39.250} }},
+  "Unguja Kusini":  { lat:-6.283, lon:39.400, districts:{ "Kusini":{lat:-6.283,lon:39.400} }},
+  "Unguja Mjini":   { lat:-6.166, lon:39.203, districts:{ "Mjini":{lat:-6.166,lon:39.203}, "Magharibi":{lat:-6.200,lon:39.150} }},
+};
+
 let _tzMap = null;
 let _tzMarkers = {};
 
@@ -3604,6 +3947,21 @@ function initTzStationMap() {
   window.addEventListener('resize', () => {
     clearTimeout(_tzResizeTimer);
     _tzResizeTimer = setTimeout(() => { if (_tzMap) _tzMap.invalidateSize(); }, 200);
+  });
+
+  // Region/district markers -- same TZ_REGIONS data and styling as the
+  // admin's National Data Access map, so the public map is visually as
+  // rich as the admin one. Hover-only here (name tooltip + highlight) --
+  // no click-to-select, since this page has no data-download feature.
+  Object.entries(TZ_REGIONS).forEach(([region, rdata]) => {
+    Object.entries(rdata.districts).forEach(([district, ddata]) => {
+      const circle = L.circleMarker([ddata.lat, ddata.lon], {
+        radius: 5, fillColor: '#1a6fa8', color: 'white', weight: 1.5, fillOpacity: 0.35, opacity: 0.6
+      }).addTo(_tzMap);
+      circle.bindTooltip(`${district}, ${region}`, { direction: 'top', offset: [0, -6] });
+      circle.on('mouseover', function () { this.setStyle({ fillOpacity: 0.85, radius: 8, fillColor: '#0f4d78' }); });
+      circle.on('mouseout', function () { this.setStyle({ fillOpacity: 0.35, radius: 5, fillColor: '#1a6fa8' }); });
+    });
   });
 
   TZ_STATIONS.forEach(st => {
@@ -3693,14 +4051,12 @@ function enterPublicView(landingPage) {
   loadState(); loadPhenoState();
   loadFromSupabase().then(() => { if (page === 'agrometProducts') refreshAgrometProductsPage(); });
   const page = landingPage || 'stakeholderDash';
-  // Reanalysis opened straight from the landing nav is a fully independent
-  // page — no dashboard topnav/tabnav chrome around it, just its own
-  // "Back to Home" button.
+  // Reanalysis and agrometProducts opened straight from the landing nav are
+  // fully independent pages — no dashboard topnav/tabnav chrome around them,
+  // just their own breadcrumb "Home" link (.page-breadcrumb .crumb-home).
   const standalone = page === 'reanalysis' || page === 'agrometProducts';
   const mainAppEl = document.getElementById('mainApp');
   if(mainAppEl) mainAppEl.classList.toggle('standalone', standalone);
-  const backBtn = document.getElementById('standaloneBackBtn');
-  if(backBtn) backBtn.style.display = standalone ? 'inline-block' : 'none';
   showPage(page,null);
   if(page==='stakeholderDash') setTimeout(()=>{refreshStakeholderDash();},80);
   setTodayDate(); updateClock();
@@ -3980,6 +4336,7 @@ function showPage(id,navEl) {
     observers:['Manage Observers','All registered observers'],
     manageStakeholders:['Manage Stakeholders','All registered stakeholders'],
     landingImages:['Landing Page Images','Manage the photos shown in the front-page carousel'],
+    weatherDownload:['National Data Access','Historical weather data for any point in Tanzania (ERA5 via Open-Meteo)'],
     reanalysis:['Gridded Data Products','Browse products or generate a plot on demand'],
     agrometProducts:['Agrometeorological Products','From daily field observations to seasonal forecasts'],
   };
@@ -3994,6 +4351,7 @@ function showPage(id,navEl) {
     uploadProducts:refreshAdminProducts,adminMessages:refreshAdminMessages,
     observers:refreshObservers,manageStakeholders:refreshManageStakeholders,landingImages:refreshLandingImagesAdmin,
     reanalysis:refreshReanalysisPage,agrometProducts:refreshAgrometProductsPage,
+    weatherDownload:()=>WeatherDownload.init(),
   };
   if(rfMap[id]) rfMap[id]();
 }
@@ -4352,6 +4710,440 @@ const RxExplorer = (function () {
   }
 
   return { init, invalidateSize };
+})();
+
+// ═══════════════════════════════════════════════════════════════
+//  WEATHER DATA DOWNLOAD (admin) — ported from tz_weather_download.html.
+//  Everything lives inside this IIFE and every DOM id it touches is
+//  prefixed wxdl- (see markup in #page-weatherDownload and the .wxdl-page
+//  CSS block) specifically so nothing here collides with the rest of the
+//  app's own globals (e.g. the app already has its own #toast element and
+//  .btn/.sidebar classes with different meanings).
+//
+//  Fetches straight from Open-Meteo's public ERA5 archive API in the
+//  browser -- no Supabase/backend involved, same as the standalone file.
+// ═══════════════════════════════════════════════════════════════
+const WeatherDownload = (function () {
+  const VARS_DAILY = [
+    { key:"temperature_2m_max",         label:"Temp Max (°C)" },
+    { key:"temperature_2m_min",         label:"Temp Min (°C)" },
+    { key:"temperature_2m_mean",        label:"Temp Mean (°C)" },
+    { key:"precipitation_sum",          label:"Precipitation (mm)" },
+    { key:"rain_sum",                   label:"Rain Sum (mm)" },
+    { key:"windspeed_10m_max",          label:"Wind Max (km/h)" },
+    { key:"windgusts_10m_max",          label:"Wind Gusts (km/h)" },
+    { key:"sunshine_duration",          label:"Sunshine (s)" },
+    { key:"shortwave_radiation_sum",    label:"Solar Rad (MJ/m²)" },
+    { key:"et0_fao_evapotranspiration", label:"ET₀ FAO (mm)" },
+    { key:"relative_humidity_2m_max",   label:"RH Max (%)" },
+    { key:"relative_humidity_2m_min",   label:"RH Min (%)" },
+  ];
+  const VARS_HOURLY = [
+    { key:"temperature_2m",       label:"Temperature (°C)" },
+    { key:"precipitation",        label:"Precipitation (mm)" },
+    { key:"windspeed_10m",        label:"Wind Speed (km/h)" },
+    { key:"relative_humidity_2m", label:"Rel. Humidity (%)" },
+    { key:"shortwave_radiation",  label:"Solar Rad (W/m²)" },
+    { key:"cloudcover",           label:"Cloud Cover (%)" },
+    { key:"surface_pressure",     label:"Pressure (hPa)" },
+    { key:"dewpoint_2m",          label:"Dew Point (°C)" },
+  ];
+
+  let selLat = null, selLon = null, selName = '';
+  let resolution = 'daily';
+  let downloadedData = null;
+  let map, pinMarker;
+  let districtLayers = [];
+  let initialized = false;
+
+  function init() {
+    if (initialized) { requestAnimationFrame(() => map && map.invalidateSize()); return; }
+    initialized = true;
+
+    const today = new Date();
+    document.getElementById('wxdl-endDate').value = today.toISOString().slice(0,10);
+    document.getElementById('wxdl-startDate').value = today.getFullYear() + '-01-01';
+
+    const rSel = document.getElementById('wxdl-regionSel');
+    Object.keys(TZ_REGIONS).sort().forEach(r => {
+      const o = document.createElement('option'); o.value=r; o.textContent=r;
+      rSel.appendChild(o);
+    });
+
+    buildVarsGrid();
+    initMap();
+  }
+
+  function invalidateSize() {
+    if (map) requestAnimationFrame(() => map.invalidateSize());
+  }
+
+  function buildVarsGrid() {
+    const vars = resolution === 'daily' ? VARS_DAILY : VARS_HOURLY;
+    const g = document.getElementById('wxdl-varsGrid');
+    g.innerHTML = '';
+    vars.forEach(v => {
+      const d = document.createElement('div');
+      d.className = 'wxdl-var-chip checked'; d.dataset.key = v.key;
+      d.innerHTML = `<div class="wxdl-var-dot"></div><span>${v.label}</span>`;
+      d.addEventListener('click', () => d.classList.toggle('checked'));
+      g.appendChild(d);
+    });
+  }
+
+  function allVars(on) {
+    document.querySelectorAll('#page-weatherDownload .wxdl-var-chip').forEach(c => c.classList.toggle('checked', !!on));
+  }
+
+  function setRes(r) {
+    resolution = r;
+    document.getElementById('wxdl-resDaily').classList.toggle('active', r==='daily');
+    document.getElementById('wxdl-resHourly').classList.toggle('active', r==='hourly');
+    buildVarsGrid();
+  }
+
+  function initMap() {
+    map = L.map('wxdl-map', { zoomControl: true }).setView([-6.3, 35.0], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors', maxZoom: 18
+    }).addTo(map);
+
+    Object.entries(TZ_REGIONS).forEach(([region, rdata]) => {
+      Object.entries(rdata.districts).forEach(([district, ddata]) => {
+        const circle = L.circleMarker([ddata.lat, ddata.lon], {
+          radius: 5, fillColor: '#1a6fa8', color: 'white', weight: 1.5, fillOpacity: 0.35, opacity: 0.6
+        }).addTo(map);
+
+        circle.on('mouseover', function(e) {
+          this.setStyle({ fillOpacity: 0.85, radius: 8, fillColor: '#0f4d78' });
+          showTooltip(e, `${district}\n${region}`);
+          document.getElementById('wxdl-curRegionLabel').textContent = `${district}, ${region}`;
+        });
+        circle.on('mouseout', function() {
+          this.setStyle({ fillOpacity: 0.35, radius: 5, fillColor: '#1a6fa8' });
+          hideTooltip();
+          document.getElementById('wxdl-curRegionLabel').textContent = '';
+        });
+        circle.on('click', function() {
+          selectLocation(ddata.lat, ddata.lon, `${district}, ${region}`);
+          placePinMarker(ddata.lat, ddata.lon, `${district}, ${region}`);
+        });
+
+        districtLayers.push({ circle, region, district, lat: ddata.lat, lon: ddata.lon });
+      });
+    });
+
+    // Real meteorological stations (TZ_STATIONS, defined earlier for the
+    // landing page's own station map) -- shown as distinct amber markers
+    // so they read as actual observing stations rather than the blue
+    // district-centroid dots above. Hover shows the name; click selects
+    // it as the download location, same as clicking a district.
+    TZ_STATIONS.forEach(st => {
+      const marker = L.circleMarker([st.lat, st.lng], {
+        radius: 7, color: '#ffffff', weight: 2, fillColor: '#e67e22', fillOpacity: 0.95,
+      }).addTo(map);
+      marker.bindTooltip(st.name, { direction: 'top', offset: [0, -8] });
+      marker.on('click', () => {
+        selectLocation(st.lat, st.lng, st.name);
+        placePinMarker(st.lat, st.lng, st.name);
+      });
+    });
+
+    map.on('mousemove', (e) => {
+      document.getElementById('wxdl-curLat').textContent = e.latlng.lat.toFixed(4) + '°';
+      document.getElementById('wxdl-curLon').textContent = e.latlng.lng.toFixed(4) + '°';
+    });
+
+    map.on('click', (e) => {
+      const lat = e.latlng.lat, lon = e.latlng.lng;
+      let best = null, bestDist = Infinity;
+      districtLayers.forEach(d => {
+        const dx = d.lat - lat, dy = d.lon - lon;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < bestDist) { bestDist = dist; best = d; }
+      });
+      if (best && bestDist < 1.5) {
+        selectLocation(best.lat, best.lon, `${best.district}, ${best.region}`);
+        placePinMarker(best.lat, best.lon, `${best.district}, ${best.region}`);
+      } else {
+        selectLocation(lat, lon, `${lat.toFixed(4)}°, ${lon.toFixed(4)}°`);
+        placePinMarker(lat, lon, `Custom Point`);
+      }
+    });
+  }
+
+  function showTooltip(e, text) {
+    const tooltip = document.getElementById('wxdl-mapTooltip');
+    tooltip.textContent = text.replace('\n', ' — ');
+    tooltip.classList.add('visible');
+    moveTooltip(e.originalEvent);
+  }
+  function hideTooltip() { document.getElementById('wxdl-mapTooltip').classList.remove('visible'); }
+  function moveTooltip(e) {
+    const tooltip = document.getElementById('wxdl-mapTooltip');
+    const rect = document.getElementById('wxdl-map').getBoundingClientRect();
+    tooltip.style.left = (e.clientX - rect.left + 14) + 'px';
+    tooltip.style.top = (e.clientY - rect.top - 10) + 'px';
+  }
+
+  function placePinMarker(lat, lon, name) {
+    if (pinMarker) map.removeLayer(pinMarker);
+    const icon = L.divIcon({
+      html: `<div style="background:#1a6fa8;width:14px;height:14px;border-radius:50%;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.35)"></div>`,
+      iconSize:[14,14], iconAnchor:[7,7], className:''
+    });
+    pinMarker = L.marker([lat,lon], {icon}).addTo(map);
+    map.flyTo([lat,lon], Math.max(map.getZoom(), 9), { duration:0.8 });
+
+    document.getElementById('wxdl-pinName').textContent = name;
+    document.getElementById('wxdl-pinCoords').textContent = `${lat.toFixed(4)}°N, ${lon.toFixed(4)}°E`;
+    document.getElementById('wxdl-pinInfo').classList.add('visible');
+  }
+
+  function selectLocation(lat, lon, name) {
+    selLat = lat; selLon = lon; selName = name;
+    document.getElementById('wxdl-locNone').style.display = 'none';
+    document.getElementById('wxdl-locName').style.display = 'block';
+    document.getElementById('wxdl-locCoords').style.display = 'block';
+    document.getElementById('wxdl-locName').textContent = name;
+    document.getElementById('wxdl-locCoords').textContent = `${lat.toFixed(4)}°, ${lon.toFixed(4)}°`;
+    document.getElementById('wxdl-locDot').style.background = '#1a6fa8';
+  }
+
+  function onRegionChange() {
+    const r = document.getElementById('wxdl-regionSel').value;
+    const dSel = document.getElementById('wxdl-districtSel');
+    dSel.innerHTML = '<option value="">-- District --</option>';
+    if (!r) return;
+    Object.keys(TZ_REGIONS[r].districts).sort().forEach(d => {
+      const o = document.createElement('option'); o.value=d; o.textContent=d;
+      dSel.appendChild(o);
+    });
+    const { lat, lon } = TZ_REGIONS[r];
+    selectLocation(lat, lon, r);
+    placePinMarker(lat, lon, r);
+  }
+
+  function onDistrictChange() {
+    const r = document.getElementById('wxdl-regionSel').value;
+    const d = document.getElementById('wxdl-districtSel').value;
+    if (!r || !d) return;
+    const { lat, lon } = TZ_REGIONS[r].districts[d];
+    selectLocation(lat, lon, `${d}, ${r}`);
+    placePinMarker(lat, lon, `${d}, ${r}`);
+  }
+
+  function onSearch() {
+    const q = document.getElementById('wxdl-searchInput').value.toLowerCase().trim();
+    const dd = document.getElementById('wxdl-searchDropdown');
+    if (q.length < 2) { dd.classList.remove('open'); return; }
+
+    const results = [];
+    Object.entries(TZ_REGIONS).forEach(([region, rdata]) => {
+      if (region.toLowerCase().includes(q)) {
+        results.push({ type:'region', label:region, sub:'Region', lat:rdata.lat, lon:rdata.lon, region });
+      }
+      Object.entries(rdata.districts).forEach(([district, ddata]) => {
+        if (district.toLowerCase().includes(q)) {
+          results.push({ type:'district', label:district, sub:region, lat:ddata.lat, lon:ddata.lon, region, district });
+        }
+      });
+    });
+
+    dd.innerHTML = '';
+    if (!results.length) {
+      dd.innerHTML = '<div class="wxdl-search-item" style="color:var(--wxdl-text-muted);font-style:italic">No results found</div>';
+    } else {
+      results.slice(0, 12).forEach(r => {
+        const div = document.createElement('div');
+        div.className = 'wxdl-search-item';
+        div.innerHTML = `<span>📍</span><div><div>${r.label}</div><div class="wxdl-search-item-region">${r.sub}</div></div>`;
+        div.addEventListener('mousedown', () => {
+          selectLocation(r.lat, r.lon, r.type==='district' ? `${r.label}, ${r.sub}` : r.label);
+          placePinMarker(r.lat, r.lon, r.label);
+          document.getElementById('wxdl-searchInput').value = r.label;
+          dd.classList.remove('open');
+          if (r.region) {
+            document.getElementById('wxdl-regionSel').value = r.region;
+            onRegionChange();
+            if (r.district) setTimeout(() => { document.getElementById('wxdl-districtSel').value = r.district; }, 50);
+          }
+        });
+        dd.appendChild(div);
+      });
+    }
+    dd.classList.add('open');
+  }
+
+  function closeDropdown() {
+    setTimeout(() => document.getElementById('wxdl-searchDropdown').classList.remove('open'), 200);
+  }
+
+  function setPreset(p, btn) {
+    document.querySelectorAll('#page-weatherDownload .wxdl-preset-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const fmt = d => d.toISOString().slice(0,10);
+    const today = new Date();
+    let s = new Date(), e = new Date();
+    if (p==='last30') { s.setDate(s.getDate()-30); }
+    else if (p==='last90') { s.setDate(s.getDate()-90); }
+    else if (p==='thisYear') { s = new Date(today.getFullYear(),0,1); }
+    else if (p==='lastYear') { s=new Date(today.getFullYear()-1,0,1); e=new Date(today.getFullYear()-1,11,31); }
+    else if (p==='5y') { s.setFullYear(s.getFullYear()-5); }
+    else if (p==='10y') { s.setFullYear(s.getFullYear()-10); }
+    document.getElementById('wxdl-startDate').value = fmt(s);
+    document.getElementById('wxdl-endDate').value = fmt(e);
+  }
+
+  async function fetchData() {
+    if (!selLat || !selLon) { toast('Select a location first — search, use dropdowns, or click the map.','error'); return; }
+    const s = document.getElementById('wxdl-startDate').value;
+    const e = document.getElementById('wxdl-endDate').value;
+    if (!s||!e||s>e) { toast('Check your date range.','error'); return; }
+    const checked = [...document.querySelectorAll('#page-weatherDownload .wxdl-var-chip.checked')].map(c=>c.dataset.key);
+    if (!checked.length) { toast('Select at least one variable.','error'); return; }
+
+    showLoad(true,'Fetching ERA5 data…',`${selName} · ${s} → ${e}`);
+    setProgress(20);
+
+    const param = resolution==='daily' ? 'daily' : 'hourly';
+    const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${selLat}&longitude=${selLon}&start_date=${s}&end_date=${e}&${param}=${checked.join(',')}&timezone=Africa%2FDar_es_Salaam`;
+
+    try {
+      setProgress(55);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`API error ${res.status}`);
+      const json = await res.json();
+      setProgress(85);
+      if (!json[param]) throw new Error('No data returned. Try adjusting date range or variables.');
+      downloadedData = buildRows(json, param, checked);
+      setProgress(100);
+      showLoad(false);
+      renderResults(downloadedData, checked);
+      document.getElementById('wxdl-csvBtn').disabled = false;
+      document.getElementById('wxdl-xlBtn').disabled = false;
+      toast(`✅ ${downloadedData.length} ${resolution} records fetched for ${selName}`,'success');
+    } catch(err) {
+      showLoad(false);
+      toast('Error: '+err.message,'error');
+    }
+  }
+
+  function buildRows(json, param, vars) {
+    const timeArr = json[param].time || [];
+    return timeArr.map((t,i) => {
+      const row = { Date: t };
+      vars.forEach(v => {
+        const arr = json[param][v];
+        row[v] = arr ? (arr[i]??'') : '';
+      });
+      return row;
+    });
+  }
+
+  function renderResults(data, vars) {
+    const allVarsList = resolution==='daily' ? VARS_DAILY : VARS_HOURLY;
+    document.getElementById('wxdl-resultsTitle').textContent = `${selName} — ${resolution==='daily'?'Daily':'Hourly'} Data`;
+    document.getElementById('wxdl-resultsMeta').textContent =
+      `${data.length} records · ${selLat.toFixed(4)}°, ${selLon.toFixed(4)}° · ERA5 via Open-Meteo`;
+
+    const head = document.getElementById('wxdl-tHead');
+    const body = document.getElementById('wxdl-tBody');
+    head.innerHTML=''; body.innerHTML='';
+
+    const tr = document.createElement('tr');
+    ['Date',...vars].forEach(k => {
+      const th = document.createElement('th');
+      th.textContent = k==='Date' ? 'Date' : (allVarsList.find(v=>v.key===k)?.label||k);
+      tr.appendChild(th);
+    });
+    head.appendChild(tr);
+
+    data.slice(0,250).forEach(row => {
+      const tr = document.createElement('tr');
+      ['Date',...vars].forEach(k => {
+        const td = document.createElement('td');
+        const val = row[k];
+        td.textContent = (val!==''&&val!=null) ? (typeof val==='number'?val.toFixed(2):val) : '—';
+        tr.appendChild(td);
+      });
+      body.appendChild(tr);
+    });
+
+    if (data.length>250) {
+      const tr = document.createElement('tr');
+      const td = document.createElement('td');
+      td.colSpan = vars.length+1;
+      td.style.cssText='text-align:center;padding:10px;color:var(--wxdl-text-muted);font-family:IBM Plex Sans,sans-serif;font-size:0.75rem';
+      td.textContent=`Showing first 250 of ${data.length} rows. Download for full dataset.`;
+      tr.appendChild(td); body.appendChild(tr);
+    }
+    document.getElementById('wxdl-resultsPanel').classList.add('visible');
+  }
+
+  function safeName() {
+    return selName.replace(/[^a-z0-9]/gi,'_').replace(/_+/g,'_');
+  }
+  function fileSuffix() {
+    return `${safeName()}_${document.getElementById('wxdl-startDate').value}_${document.getElementById('wxdl-endDate').value}`;
+  }
+
+  function downloadCSV() {
+    if (!downloadedData?.length) { toast('No data — fetch first.','error'); return; }
+    const headers = Object.keys(downloadedData[0]);
+    const rows = [
+      headers.join(','),
+      ...downloadedData.map(row => headers.map(h => {
+        const v=row[h];
+        return (typeof v==='string'&&v.includes(','))?`"${v}"`:(v??'');
+      }).join(','))
+    ];
+    const blob = new Blob([rows.join('\n')],{type:'text/csv;charset=utf-8;'});
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `tz_weather_${fileSuffix()}.csv`;
+    a.click();
+    toast('CSV downloaded!','success');
+  }
+
+  function downloadExcel() {
+    if (!downloadedData?.length) { toast('No data — fetch first.','error'); return; }
+    const ws = XLSX.utils.json_to_sheet(downloadedData);
+    ws['!cols'] = Object.keys(downloadedData[0]).map(k=>({wch:Math.max(k.length,14)}));
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Weather Data');
+    const meta = [
+      ['Tanzania Weather Data Download'],
+      ['Location', selName],
+      ['Latitude', selLat], ['Longitude', selLon],
+      ['Start Date', document.getElementById('wxdl-startDate').value],
+      ['End Date', document.getElementById('wxdl-endDate').value],
+      ['Resolution', resolution], ['Records', downloadedData.length],
+      ['Source', 'Open-Meteo ERA5 Reanalysis'],
+      ['Downloaded', new Date().toISOString()]
+    ];
+    XLSX.utils.book_append_sheet(wb, XLSX.utils.aoa_to_sheet(meta), 'Metadata');
+    XLSX.writeFile(wb, `tz_weather_${fileSuffix()}.xlsx`);
+    toast('Excel downloaded!','success');
+  }
+
+  function showLoad(v, text='', sub='') {
+    document.getElementById('wxdl-loadingOverlay').classList.toggle('visible',v);
+    if(text) document.getElementById('wxdl-loadingText').textContent=text;
+    if(sub) document.getElementById('wxdl-loadingSub').textContent=sub;
+    if(!v) setProgress(0);
+  }
+  function setProgress(p) { document.getElementById('wxdl-progressFill').style.width=p+'%'; }
+  function toast(msg, type='info') {
+    const el=document.getElementById('wxdl-toast');
+    el.textContent=msg; el.className=`wxdl-toast ${type} show`;
+    setTimeout(()=>el.classList.remove('show'),4500);
+  }
+
+  return {
+    init, invalidateSize, onSearch, closeDropdown, onRegionChange, onDistrictChange,
+    setPreset, setRes, allVars, fetchData, downloadCSV, downloadExcel,
+  };
 })();
 
 const FORM_LABELS = {
