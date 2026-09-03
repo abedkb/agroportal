@@ -2696,7 +2696,7 @@ body{
               <div class="field"><label>Your full name *</label><input type="text" id="req-contact-name" placeholder="e.g. Juma Ally"/></div>
               <div class="field"><label>Your phone number *</label><input type="tel" id="req-contact-phone" placeholder="e.g. 0712 345 678"/></div>
             </div>
-            <div class="field"><label>Product type / Nature of product *</label><select id="req-type"><option value="">-- Select product type --</option><option>Monthly Weather Outlook</option><option>Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Early Warning Bulletin</option><option>Climatological Report</option><option>Other</option></select></div>
+            <div class="field"><label>Product type / Nature of product *</label><select id="req-type"><option value="">-- Select product type --</option><option>Monthly Weather Outlook</option><option>Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Early warning</option><option>Climatological Report</option><option>Other</option></select></div>
             <div class="field"><label>Your location / District *</label><input type="text" id="req-location" placeholder="e.g. Dodoma Region, Tanzania"/></div>
             <div class="field"><label>Period / month / season</label><input type="text" id="req-period" placeholder="e.g. May 2026"/></div>
             <div class="field"><label>Purpose / Additional details</label><textarea id="req-purpose" style="min-height:70px" placeholder="Describe how you intend to use this product..."></textarea></div>
@@ -2827,7 +2827,7 @@ body{
           <div class="card">
             <div class="card-title">Upload new meteorological product</div>
             <div class="field"><label>Product title</label><input type="text" id="prod-title"/></div>
-            <div class="field"><label>Category</label><select id="prod-cat"><option value="">-- Select category --</option><option>Monthly Weather Outlook</option><option>Decadal Agrometeorological Bulletin</option><option>Monthly Agrometeorological Bulletin</option><option>Seasonal Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Climatological Report</option><option>Early Warning Bulletin</option><option>Other</option></select></div>
+            <div class="field"><label>Category</label><select id="prod-cat"><option value="">-- Select category --</option><option>Monthly Weather Outlook</option><option>Decadal Agrometeorological Bulletin</option><option>Monthly Agrometeorological Bulletin</option><option>Seasonal Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Climatological Report</option><option>Early warning</option><option>Other</option></select></div>
             <div class="field"><label>Access</label>
               <select id="prod-access" onchange="onProdAccessChange()">
                 <option>All observers &amp; stakeholders</option>
@@ -3211,7 +3211,7 @@ body{
               <label class="check-row"><input type="checkbox" value="Seasonal Agrometeorological Bulletin" onchange="onAgrometCatToggle(this)"><span>Seasonal Agrometeorological Bulletin</span></label>
               <label class="check-row"><input type="checkbox" value="Seasonal Weather Outlook" onchange="onAgrometCatToggle(this)"><span>Seasonal Weather Outlook</span></label>
               <label class="check-row"><input type="checkbox" value="Climatological Report" onchange="onAgrometCatToggle(this)"><span>Climatological Report</span></label>
-              <label class="check-row"><input type="checkbox" value="Early Warning Bulletin" onchange="onAgrometCatToggle(this)"><span>Early Warning Bulletin</span></label>
+              <label class="check-row"><input type="checkbox" value="Early warning" onchange="onAgrometCatToggle(this)"><span>Early warning</span></label>
             </div>
             <div class="agromet-main">
               <div class="empty-state" id="agromet-products-empty"><div class="empty-state-icon">📂</div><div class="empty-state-title">Tick a category to view its products</div></div>
@@ -3695,6 +3695,22 @@ function loginAs(role, user) {
     else if (role === 'observer') { refreshObsDash(); refreshMyRecords(); refreshAllReturns(); }
     else if (role === 'stakeholder') { refreshStakeholderDash(); refreshProductsPage(); }
     startAutoSync();
+    // Came in via an SMS "?product=<id>" link — jump straight to that
+    // document now that products are loaded and the user is signed in.
+    if (_pendingProductUid && (role === 'observer' || role === 'stakeholder')) {
+      const uid = _pendingProductUid;
+      _pendingProductUid = null;
+      history.replaceState(null, '', window.location.pathname);
+      const openIt = () => {
+        if (state.products.some(p => String(p.uid) === String(uid))) {
+          showPage(role === 'stakeholder' ? 'stakeholderProducts' : 'products', null);
+          setTimeout(() => viewProduct(uid), 150);
+        } else {
+          showToast('Document not found', 'This document could not be found — it may have been removed.', 'warning');
+        }
+      };
+      setTimeout(openIt, 200);
+    }
   });
   setTimeout(initAccordionDelegation, 100);
   if (!state.currentYM) state.currentYM = currentYM();
@@ -3804,7 +3820,8 @@ function _greetByTimeOfDay() {
   const h = new Date().getHours();
   if (h < 12) return 'Good morning';
   if (h < 18) return 'Good afternoon';
-  return 'Good evening';
+  if (h < 22) return 'Good evening';
+  return 'Good night';
 }
 // "Gridded Data Products" and "Agrometeorological Products" (nav bar) both
 // open as their own standalone pages via enterPublicView() -- neither is a
@@ -4234,6 +4251,10 @@ function findAccountByResetToken(token) {
 }
 
 let _lastResetPhone = '', _lastResetMsg = '';
+// Set when the app is opened via a "?product=<id>" SMS deep link and the
+// user isn't logged in yet. Consumed once, right after loginAs() finishes
+// loading the observer/stakeholder dashboard, to auto-open that document.
+let _pendingProductUid = null;
 
 async function requestPasswordReset() {
   const phone = (document.getElementById('forgot-phone')?.value || '').trim();
@@ -7951,7 +7972,7 @@ function onProdFileChosen(input){
   if(zone) zone.style.borderColor=f?'var(--tma-green)':'';
 }
 
-const PRODUCT_ICONS={'Monthly Weather Outlook':'🌤️','Decadal Agrometeorological Bulletin':'📆','Monthly Agrometeorological Bulletin':'🗓️','Seasonal Agrometeorological Bulletin':'📋','Seasonal Weather Outlook':'🌦️','Climatological Report':'📊','Early Warning Bulletin':'🌡️','Other':'📁'};
+const PRODUCT_ICONS={'Monthly Weather Outlook':'🌤️','Decadal Agrometeorological Bulletin':'📆','Monthly Agrometeorological Bulletin':'🗓️','Seasonal Agrometeorological Bulletin':'📋','Seasonal Weather Outlook':'🌦️','Climatological Report':'📊','Early warning':'🌡️','Other':'📁'};
 const PRODUCT_MAX_BYTES=15*1024*1024;
 
 function readFileAsDataURL(file){
@@ -8013,7 +8034,11 @@ async function uploadProduct(){
   const fileType=file?.type||null;
   const _newProd={uid:'local-'+Date.now(),title,cat,access,icon:PRODUCT_ICONS[cat]||'📁',date:getTodayStr(),downloads:0,fileName,fileType,fileData};
   state.products.unshift(_newProd);
-  pushProductToSupabase(_newProd);
+  // Wait for the Supabase insert so _newProd.uid becomes the permanent
+  // database id (not the temporary "local-…" one) before it's baked into
+  // the SMS deep link below — recipients open the link from their own
+  // phone/session, where only the synced database id will resolve.
+  await pushProductToSupabase(_newProd);
   notifyProductUploadSms(_newProd);
   if(document.getElementById('prod-title')) document.getElementById('prod-title').value='';
   if(fileInput){fileInput.value='';onProdFileChosen(fileInput);}
@@ -8042,10 +8067,31 @@ async function notifyProductUploadSms(prod){
   } else {
     targets = [...state.approvedObservers, ...state.approvedStakeholders];
   }
-  const phones = [...new Set(targets.map(t=>t.phone).filter(Boolean))];
-  if (!phones.length) return false;
-  const msg = `TMA AgroMet: New ${prod.cat} uploaded - "${prod.title}" (${prod.date}). Please log in to the AgroMet Service System to view the update.\nTanzania Meteorological Authority`;
-  return await sendBeemSms(phones, msg);
+  // Dedupe by phone, keeping one (name, phone) pair per number so each
+  // recipient gets a personalized greeting.
+  const seenPhones = new Set();
+  const recipients = [];
+  for (const t of targets) {
+    if (!t.phone || seenPhones.has(t.phone)) continue;
+    seenPhones.add(t.phone);
+    recipients.push({name: t.name || '', phone: t.phone});
+  }
+  if (!recipients.length) return false;
+
+  // Direct deep link straight to this document. Recipients tap it, log in
+  // (if not already) and the viewer opens automatically — see the
+  // "?product=" handling near the bottom of this script (INIT section)
+  // and the pending-product check inside loginAs().
+  const link = window.location.origin + window.location.pathname + '?product=' + encodeURIComponent(prod.uid);
+
+  const greeting = _greetByTimeOfDay();
+  let allOk = true;
+  for (const r of recipients) {
+    const msg = `${greeting} ${r.name}. New ${prod.cat} has been uploaded. Please, can you visit into the Agromet system and management to go through the document and take specific measures as advised by experts.\n${link}\nThank you!!`;
+    const ok = await sendBeemSms([r.phone], msg);
+    if (!ok) allOk = false;
+  }
+  return allOk;
 }
 
 // ── Admin respond to stakeholder request modal ──────────────────
@@ -9452,6 +9498,7 @@ const mf=document.getElementById('recordsMonthFilter');
 if(mf){const {y,m}=getNow();mf.value=`${y}-${pad(m)}`;}
 initReturnWASMSButtons();
 const _resetTokenParam = new URLSearchParams(window.location.search).get('reset');
+const _productParam = new URLSearchParams(window.location.search).get('product');
 if (_resetTokenParam) {
   document.getElementById('landingScreen').style.display = 'none';
   document.getElementById('mainApp').style.display = 'none';
@@ -9460,6 +9507,13 @@ if (_resetTokenParam) {
   document.getElementById('registerForm').style.display = 'none';
   const tabs = document.querySelector('#authScreen .auth-tabs'); if (tabs) tabs.style.display = 'none';
   document.getElementById('resetPasswordForm').style.display = '';
+} else if (_productParam) {
+  // Opened from an SMS "New product uploaded" link — skip the landing
+  // page, drop straight into sign-in, and remember which document to
+  // open the moment login succeeds (see loginAs()).
+  _pendingProductUid = _productParam;
+  openStaffLogin();
+  showToast('Sign in to view the document', 'Log in to open the document that was shared with you by SMS.', 'info');
 } else {
   showLanding();
 }
