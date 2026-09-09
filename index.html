@@ -183,11 +183,12 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;back
 .obs-table-wrap{overflow-x:auto}
 .obs-table{width:100%;border-collapse:collapse;font-size:12px;min-width:400px}
 .obs-table th{background:var(--bg-secondary);font-size:10px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.4px;padding:6px 8px;border-bottom:0.5px solid var(--border-light);text-align:center;white-space:nowrap}
-.obs-table td{padding:4px 5px;border-bottom:0.5px solid var(--border-light);text-align:center;vertical-align:middle}
+.obs-table td{padding:5px 6px;border-bottom:0.5px solid var(--border-light);text-align:center;vertical-align:middle}
 .obs-table tr:last-child td{border-bottom:none}
-.obs-table input[type="number"],.obs-table input[type="text"]{width:100%;min-width:58px;border:0.5px solid var(--border-light);border-radius:4px;padding:4px 5px;font-size:12px;text-align:center;background:var(--bg-primary);color:var(--text-primary);font-family:'IBM Plex Mono',monospace;outline:none;transition:.15s}
-.obs-table input:focus{border-color:var(--tma-blue-m);background:#f0f7ff}
-.obs-table input.auto-calc{background:var(--bg-secondary);color:var(--text-secondary);cursor:not-allowed}
+.obs-table input[type="number"],.obs-table input[type="text"]{width:100%;min-width:58px;border:1.5px solid var(--tma-blue-m);border-radius:5px;padding:5px 6px;font-size:12px;text-align:center;background:var(--tma-blue-l);color:var(--text-primary);font-family:'IBM Plex Mono',monospace;outline:none;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.05)}
+.obs-table input:focus{border-color:var(--tma-blue);background:#fff;box-shadow:0 0 0 3px rgba(24,95,165,.18)}
+.obs-table input.auto-calc{background:var(--bg-secondary);border-color:var(--border-medium);color:var(--text-secondary);cursor:not-allowed;box-shadow:none}
+.obs-table input::placeholder{color:var(--tma-blue-m);opacity:.75;font-weight:500}
 .obs-table select{font-size:12px;padding:4px 5px;border-radius:4px;border:0.5px solid var(--border-light);background:var(--bg-primary);color:var(--text-primary);outline:none}
 .time-cell{font-family:'IBM Plex Mono',monospace;font-weight:500;font-size:12px;color:var(--tma-blue);background:var(--tma-blue-l);padding:4px 8px;border-radius:4px;display:inline-block;white-space:nowrap}
 .form-actions{display:flex;gap:.5rem;padding:1rem 1.25rem;border-top:0.5px solid var(--border-light);background:var(--bg-secondary);flex-wrap:wrap;align-items:center}
@@ -1092,6 +1093,18 @@ body{
 .lp-nav-dropdown:hover .lp-nav-dropdown-menu, .lp-nav-dropdown-menu.open{display:flex}
 .lp-nav-dropdown-menu a{padding:9px 12px;border-radius:6px;font-size:13px;font-weight:600;color:#0a1e3c;text-decoration:none;cursor:pointer}
 .lp-nav-dropdown-menu a:hover{background:#f0f4fa}
+/* Nested flyout for "Spatial Products" / "Time series" -- same visual
+   language as the top-level dropdown, opening to the right on hover. */
+.lp-nav-submenu-wrap{position:relative}
+.lp-nav-submenu-trigger{display:flex;align-items:center;justify-content:space-between;gap:8px}
+/* No gap between the trigger and its flyout -- a margin here creates a
+   dead zone where the cursor leaves both elements while moving toward
+   the submenu, dropping :hover and closing it before the click lands. */
+.lp-nav-submenu{position:absolute;top:-6px;left:100%;margin-left:0;padding-left:6px;background:transparent;display:none;z-index:51}
+.lp-nav-submenu-inner{background:#fff;border-radius:9px;box-shadow:0 8px 28px rgba(0,0,0,0.22);min-width:180px;padding:6px;display:flex;flex-direction:column;gap:2px}
+.lp-nav-submenu-wrap:hover .lp-nav-submenu{display:block}
+.lp-nav-submenu a{padding:9px 12px;border-radius:6px;font-size:13px;font-weight:600;color:#0a1e3c;text-decoration:none;cursor:pointer}
+.lp-nav-submenu a:hover{background:#f0f4fa}
 @media(max-width:980px){.lp-nav-links{display:none}}
 .lp-nav-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;position:relative}
 .lp-hamburger-btn{width:44px;height:44px;border-radius:8px;border:1.5px solid rgba(255,255,255,0.4);background:transparent;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;transition:.18s}
@@ -1269,7 +1282,7 @@ body{
 .reanalysis-page .rx-field label{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-tertiary);font-weight:600}
 .reanalysis-page .rx-gallery-scroll{flex:1;min-height:0;overflow-y:auto;padding:20px}
 .reanalysis-page .rx-status{font-size:12.5px;color:var(--text-tertiary);margin:0 0 14px}
-.reanalysis-page .rx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(380px,1fr));gap:22px}
+.reanalysis-page .rx-grid{display:grid;grid-template-columns:1fr;gap:22px}
 .reanalysis-page .rx-card{background:var(--bg-primary);border:0.5px solid var(--border-light);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .15s ease,transform .15s ease;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .reanalysis-page .rx-card:hover{box-shadow:0 8px 22px rgba(0,0,0,.09);transform:translateY(-2px)}
 .reanalysis-page .rx-card img{width:100%;aspect-ratio:16/10;object-fit:contain;display:block;background:#0f0f1a}
@@ -1459,8 +1472,27 @@ body{
         <div class="lp-nav-dropdown">
           <a class="lp-nav-link" href="#" onclick="return false">Products <span class="lp-nav-caret">&#9662;</span></a>
           <div class="lp-nav-dropdown-menu">
-            <a href="#" onclick="openAgrometProducts();return false">Agrometeorological Products</a>
-            <a href="#" onclick="openGriddedDataProducts();return false">Gridded Data Products</a>
+            <div class="lp-nav-submenu-wrap">
+              <a href="#" class="lp-nav-submenu-trigger" onclick="return false">Agromet Products <span class="lp-nav-caret">&#9656;</span></a>
+              <div class="lp-nav-submenu"><div class="lp-nav-submenu-inner">
+                <a href="#" onclick="openAgrometProducts();return false">Products</a>
+                <a href="#" onclick="openReportsPage();return false">Reports</a>
+              </div></div>
+            </div>
+            <div class="lp-nav-submenu-wrap">
+              <a href="#" class="lp-nav-submenu-trigger" onclick="return false">Spatial Products <span class="lp-nav-caret">&#9656;</span></a>
+              <div class="lp-nav-submenu"><div class="lp-nav-submenu-inner">
+                <a href="#" onclick="openGriddedDataProducts();return false">Gridded data</a>
+                <a href="#" onclick="landingComingSoon('Spatial Products — Point Data');return false">Point data</a>
+              </div></div>
+            </div>
+            <div class="lp-nav-submenu-wrap">
+              <a href="#" class="lp-nav-submenu-trigger" onclick="return false">Time Series <span class="lp-nav-caret">&#9656;</span></a>
+              <div class="lp-nav-submenu"><div class="lp-nav-submenu-inner">
+                <a href="#" onclick="landingComingSoon('Time Series — Area Average');return false">Area average</a>
+                <a href="#" onclick="landingComingSoon('Time Series — Point Data');return false">Point data</a>
+              </div></div>
+            </div>
           </div>
         </div>
         <a class="lp-nav-link" href="#" onclick="landingComingSoon('About');return false">About</a>
@@ -1733,17 +1765,20 @@ body{
     <!-- Admin tabs -->
     <div class="tabnav-inner" id="adminTabs" style="display:none">
       <button class="tab-btn" onclick="goHome()">&#8962; Home</button>
-      <button class="tab-btn" data-page="adminDash" onclick="showPage('adminDash',this)">&#8862; Dashboard</button>
-      <button class="tab-btn" data-page="approvals" onclick="showPage('approvals',this)">&#10003; Approvals <span class="tab-badge" id="tabApprovalBadge" style="display:none">0</span></button>
-      <button class="tab-btn" data-page="allRecords" onclick="showPage('allRecords',this)">&#8801; All Records</button>
-      <button class="tab-btn" data-page="returns" onclick="showPage('returns',this)">&#128203; Returns</button>
-      <button class="tab-btn" data-page="uploadProducts" onclick="showPage('uploadProducts',this)">&#10570; Products</button>
-      <button class="tab-btn" data-page="dataProducts" onclick="showPage('dataProducts',this)">&#128200; Data Products</button>
-      <button class="tab-btn" data-page="adminMessages" onclick="showPage('adminMessages',this)">&#9711; Comms</button>
-      <button class="tab-btn" data-page="observers" onclick="showPage('observers',this)">&#9673; Observers</button>
-      <button class="tab-btn" data-page="manageStakeholders" onclick="showPage('manageStakeholders',this)">&#9672; Stakeholders</button>
-      <button class="tab-btn" data-page="landingImages" onclick="showPage('landingImages',this)">&#128444; Landing Images</button>
-      <button class="tab-btn" data-page="weatherDownload" onclick="showPage('weatherDownload',this)">&#127780;&#65039; National Data Access</button>
+      <button class="tab-btn" data-role="both" data-page="adminDash" onclick="showPage('adminDash',this)">&#8862; Dashboard</button>
+      <button class="tab-btn" data-role="admin" data-page="approvals" onclick="showPage('approvals',this)">&#10003; Approvals <span class="tab-badge" id="tabApprovalBadge" style="display:none">0</span></button>
+      <button class="tab-btn" data-role="admin" data-page="observers" onclick="showPage('observers',this)">&#9673; Observers</button>
+      <button class="tab-btn" data-role="admin" data-page="stations" onclick="showPage('stations',this)">&#128506; Stations</button>
+      <button class="tab-btn" data-role="admin" data-page="stationData" onclick="showPage('stationData',this)">&#128202; Station's Observed Data</button>
+      <button class="tab-btn" data-role="admin" data-page="weatherDownload" onclick="showPage('weatherDownload',this)">&#127780;&#65039; National Data Access</button>
+      <button class="tab-btn" data-role="admin" data-page="rolesAccess" onclick="showPage('rolesAccess',this)">&#128273; Roles &amp; Access</button>
+      <button class="tab-btn" data-role="frontdesk" data-page="allRecords" onclick="showPage('allRecords',this)">&#8801; Station Data Approval</button>
+      <button class="tab-btn" data-role="frontdesk" data-page="returns" onclick="showPage('returns',this)">&#128203; Returns</button>
+      <button class="tab-btn" data-role="frontdesk" data-page="uploadProducts" onclick="showPage('uploadProducts',this)">&#10570; Products</button>
+      <button class="tab-btn" data-role="frontdesk" data-page="dataProducts" onclick="showPage('dataProducts',this)">&#128200; Data Products</button>
+      <button class="tab-btn" data-role="frontdesk" data-page="adminMessages" onclick="showPage('adminMessages',this)">&#9711; Comms</button>
+      <button class="tab-btn" data-role="frontdesk" data-page="manageStakeholders" onclick="showPage('manageStakeholders',this)">&#9672; Stakeholders</button>
+      <button class="tab-btn" data-role="frontdesk" data-page="landingImages" onclick="showPage('landingImages',this)">&#128444; Landing Images</button>
     </div>
   </div>
 
@@ -1901,8 +1936,8 @@ body{
                   <thead><tr><th class="col-0600">Obs. Time</th><th class="col-0600">Present reading</th><th class="col-0600">Previous reading</th><th class="col-0600">Wind run diff. (km/24h)</th><th>Wind direction</th><th>Wind speed (kts)</th></tr></thead>
                   <tbody><tr>
                     <td class="col-0600"><div class="time-cell" id="aneTime">0600</div></td>
-                    <td class="col-0600"><input type="number" id="ane_present" step="0.01" oninput="calcWindRun()"/></td>
-                    <td class="col-0600"><input type="number" id="ane_prev" step="0.01" oninput="calcWindRun()"/></td>
+                    <td class="col-0600"><input type="number" id="ane_present" step="0.01" oninput="restrictTwoDecimals(this);calcWindRun()"/></td>
+                    <td class="col-0600"><input type="number" id="ane_prev" step="0.01" oninput="restrictTwoDecimals(this);calcWindRun()"/></td>
                     <td class="col-0600"><input type="number" id="ane_diff" class="auto-calc" readonly step="0.01"/></td>
                     <td><input type="text" id="ane_dir" maxlength="3" style="width:64px;text-align:center;font-family:'IBM Plex Mono',monospace" placeholder="000" title="Enter 3-digit direction value (e.g. 110, 350, 000)"/></td>
                     <td><input type="number" id="ane_speed" step="0.1"/></td>
@@ -2030,13 +2065,13 @@ body{
                   <thead><tr><th>Obs. Time</th><th>Surface</th><th>5 cm</th><th>10 cm</th><th>20 cm</th><th>30 cm</th><th>50 cm</th><th>100 cm</th></tr></thead>
                   <tbody><tr>
                     <td><div class="time-cell" id="soilTempTime">0600</div></td>
-                    <td><input type="number" id="st_surf" step="0.1"/></td>
-                    <td><input type="number" id="st_5" step="0.1"/></td>
-                    <td><input type="number" id="st_10" step="0.1"/></td>
-                    <td><input type="number" id="st_20" step="0.1"/></td>
-                    <td><input type="number" id="st_30" step="0.1"/></td>
-                    <td><input type="number" id="st_50" step="0.1"/></td>
-                    <td><input type="number" id="st_100" step="0.1"/></td>
+                    <td><input type="number" id="st_surf" step="0.1" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="st_5" step="0.1" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="st_10" step="0.1" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="st_20" step="0.1" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="st_30" step="0.1" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="st_50" step="0.1" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="st_100" step="0.1" oninput="restrictOneDecimal(this)"/></td>
                   </tr></tbody>
                 </table></div>
               </div>
@@ -2046,17 +2081,17 @@ body{
                   <thead><tr><th>Obs. Time</th><th>5 cm</th><th>10 cm</th><th>20 cm</th><th>30 cm</th><th>40 cm</th><th>50 cm</th><th>60 cm</th><th>70 cm</th><th>80 cm</th><th>90 cm</th><th>100 cm</th></tr></thead>
                   <tbody><tr>
                     <td><div class="time-cell" id="soilMoistTime">0600</div></td>
-                    <td><input type="number" id="sm_5" step="0.1" min="0" max="100"/></td>
-                    <td><input type="number" id="sm_10" step="0.1" min="0" max="100"/></td>
-                    <td><input type="number" id="sm_20" step="0.1" min="0" max="100"/></td>
-                    <td><input type="number" id="sm_30" step="0.1" min="0" max="100"/></td>
-                    <td><input type="number" id="sm_40" step="0.1" min="0" max="100"/></td>
-                    <td><input type="number" id="sm_50" step="0.1" min="0" max="100"/></td>
-                    <td><input type="number" id="sm_60" step="0.1" min="0" max="100"/></td>
-                    <td><input type="number" id="sm_70" step="0.1" min="0" max="100"/></td>
-                    <td><input type="number" id="sm_80" step="0.1" min="0" max="100"/></td>
-                    <td><input type="number" id="sm_90" step="0.1" min="0" max="100"/></td>
-                    <td><input type="number" id="sm_100" step="0.1" min="0" max="100"/></td>
+                    <td><input type="number" id="sm_5" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="sm_10" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="sm_20" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="sm_30" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="sm_40" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="sm_50" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="sm_60" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="sm_70" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="sm_80" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="sm_90" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
+                    <td><input type="number" id="sm_100" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
                   </tr></tbody>
                 </table></div>
               </div>
@@ -2830,7 +2865,7 @@ body{
           <div class="card">
             <div class="card-title">Upload new meteorological product</div>
             <div class="field"><label>Product title</label><input type="text" id="prod-title"/></div>
-            <div class="field"><label>Category</label><select id="prod-cat"><option value="">-- Select category --</option><option>Monthly Weather Outlook</option><option>Decadal Agrometeorological Bulletin</option><option>Monthly Agrometeorological Bulletin</option><option>Seasonal Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Climatological Report</option><option>Early warning</option><option>Other</option></select></div>
+            <div class="field"><label>Category</label><select id="prod-cat"><option value="">-- Select category --</option><option>Monthly Weather Outlook</option><option>Decadal Agrometeorological Bulletin</option><option>Monthly Agrometeorological Bulletin</option><option>Seasonal Agrometeorological Bulletin</option><option>Seasonal Weather Outlook</option><option>Climatological Report</option><option>Drought Report</option><option>Early warning</option><option>Other</option></select></div>
             <div class="field"><label>Access</label>
               <select id="prod-access" onchange="onProdAccessChange()">
                 <option>All observers &amp; stakeholders</option>
@@ -2879,7 +2914,7 @@ body{
            external plotting service, everything renders as inline
            SVG client-side) ===== -->
       <div class="page" id="page-dataProducts">
-        <div style="display:grid;grid-template-columns:320px 1fr;gap:1rem;align-items:start">
+        <div style="display:grid;grid-template-columns:320px minmax(0,1fr);gap:1rem;align-items:start">
           <div class="card">
             <div class="card-title">Generate a data product</div>
             <div style="font-size:12px;color:var(--text-tertiary);margin:-6px 0 14px;line-height:1.5">Builds a chart straight from the observations already submitted by stations — no manual data entry required.</div>
@@ -2932,6 +2967,109 @@ body{
               </div>
               <button class="btn btn-primary btn-full" onclick="dpPublish()">Publish &amp; notify by SMS</button>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ADMIN: STATIONS (new-station registration) — a station
+           must exist here before an observer can register against it;
+           this is the canonical list the observer sign-up dropdown
+           (#reg-station) is populated from (see refreshRegStationOptions). ===== -->
+      <div class="page" id="page-stations">
+        <div style="display:grid;grid-template-columns:320px minmax(0,1fr);gap:1rem;align-items:start">
+          <div class="card">
+            <div class="card-title">Register a new station</div>
+            <div class="field"><label>Station name</label><input type="text" id="st-name" placeholder="e.g. Same Agromet Station"/></div>
+            <div class="field"><label>Region / Zone (optional)</label><input type="text" id="st-region" placeholder="e.g. Kilimanjaro"/></div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:.6rem">
+              <div class="field"><label>Latitude</label><input type="number" step="0.0001" id="st-lat" placeholder="e.g. -6.8500"/></div>
+              <div class="field"><label>Longitude</label><input type="number" step="0.0001" id="st-lng" placeholder="e.g. 37.0500"/></div>
+            </div>
+            <div style="font-size:11px;color:var(--text-tertiary);margin:-4px 0 10px">Coordinates power the station map and the "Station's Observed Data" tab — leave blank if unknown and fill in later.</div>
+            <button class="btn btn-primary btn-full" onclick="addStation()">Add station</button>
+          </div>
+          <div class="card">
+            <div class="card-title">Registered stations</div>
+            <div class="empty-state" id="stations-empty" style="display:none"><div class="empty-state-icon">&#128506;</div><div class="empty-state-title">No stations yet</div></div>
+            <table class="data-table" id="stations-table" style="display:none">
+              <thead><tr><th>Station</th><th>Region / Zone</th><th>Latitude</th><th>Longitude</th><th></th></tr></thead>
+              <tbody id="stations-rows"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ADMIN: STATION'S OBSERVED DATA — a single consolidated
+           pool of every station's filled-in observations (auto-populated
+           straight from state.records, the same pool Form 601 submissions
+           already land in — nothing new to sync), browsable by station,
+           with daily/monthly/yearly views ahead of a future full
+           database. ===== -->
+      <div class="page" id="page-stationData">
+        <div style="display:grid;grid-template-columns:280px minmax(0,1fr);gap:1rem;align-items:start">
+          <div class="card">
+            <div class="card-title">Stations</div>
+            <div style="font-size:12px;color:var(--text-tertiary);margin:-6px 0 12px;line-height:1.5">Pick a station to view its observed data pool.</div>
+            <div id="sd-station-list" style="display:flex;flex-direction:column;gap:6px;max-height:70vh;overflow-y:auto"></div>
+          </div>
+
+          <div class="card" style="min-width:0">
+            <div id="sd-empty" class="empty-state"><div class="empty-state-icon">&#128202;</div><div class="empty-state-title">Select a station to view its data</div></div>
+
+            <div id="sd-body" style="display:none">
+              <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+                <div>
+                  <div class="card-title" id="sd-station-name" style="margin-bottom:2px">—</div>
+                  <div style="font-size:12px;color:var(--text-tertiary)" id="sd-station-coords">—</div>
+                </div>
+                <button class="btn btn-sm" onclick="sdExportCSV()">&#11015; Export CSV</button>
+              </div>
+
+              <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;margin-bottom:14px">
+                <div class="field" style="margin:0"><label>Period</label>
+                  <select id="sd-period" onchange="refreshStationDataTable()">
+                    <option value="daily">Daily</option>
+                    <option value="monthly">Monthly</option>
+                    <option value="yearly">Yearly</option>
+                  </select>
+                </div>
+                <div class="field" style="margin:0"><label>From</label><input type="date" id="sd-from" onchange="refreshStationDataTable()"/></div>
+                <div class="field" style="margin:0"><label>To</label><input type="date" id="sd-to" onchange="refreshStationDataTable()"/></div>
+              </div>
+
+              <div style="overflow-x:auto">
+                <table class="data-table" id="sd-table">
+                  <thead id="sd-thead"></thead>
+                  <tbody id="sd-tbody"></tbody>
+                </table>
+              </div>
+              <div class="empty-state" id="sd-no-data" style="display:none"><div class="empty-state-icon">&#128203;</div><div class="empty-state-title">No observations in this range yet</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ADMIN: ROLES & ACCESS (create/manage Front Desk Officer
+           accounts). Front desk officers are internal staff created
+           directly by admin — no self-registration/approval step,
+           unlike observers and stakeholders. ===== -->
+      <div class="page" id="page-rolesAccess">
+        <div style="display:grid;grid-template-columns:340px minmax(0,1fr);gap:1rem;align-items:start">
+          <div class="card">
+            <div class="card-title">Create a Front Desk Officer account</div>
+            <div class="field"><label>Full name</label><input type="text" id="fd-name" placeholder="e.g. Amina Juma"/></div>
+            <div class="field"><label>Phone number</label><input type="text" id="fd-phone" placeholder="e.g. 0712345678"/></div>
+            <div class="field"><label>Email (optional)</label><input type="email" id="fd-email" placeholder="name@tma.go.tz"/></div>
+            <div class="field"><label>Password</label><input type="password" id="fd-password" placeholder="Set a temporary password"/></div>
+            <button class="btn btn-primary btn-full" onclick="addFrontDeskOfficer()">Create account</button>
+          </div>
+          <div class="card">
+            <div class="card-title">Front Desk Officers</div>
+            <div class="empty-state" id="fd-empty" style="display:none"><div class="empty-state-icon">&#128273;</div><div class="empty-state-title">No front desk officers yet</div></div>
+            <table class="data-table" id="fd-table" style="display:none">
+              <thead><tr><th>Name</th><th>Phone</th><th>Email</th><th>Added</th><th></th></tr></thead>
+              <tbody id="fd-rows"></tbody>
+            </table>
           </div>
         </div>
       </div>
@@ -3117,6 +3255,25 @@ body{
               <div class="wxdl-sidebar-scroll">
 
                 <div class="wxdl-s-section">
+                  <div class="wxdl-s-label">&#128225; Data Source</div>
+                  <div class="wxdl-res-row" id="wxdl-sourceRow" style="flex-wrap:wrap">
+                    <div class="wxdl-res-opt active" id="wxdl-srcEra5" onclick="WeatherDownload.setSource('era5')" style="flex:1 1 45%">
+                      <span class="wxdl-res-icon">&#127760;</span>ERA5
+                    </div>
+                    <div class="wxdl-res-opt" id="wxdl-srcRfe" onclick="WeatherDownload.setSource('rfe')" style="flex:1 1 45%">
+                      <span class="wxdl-res-icon">&#127783;&#65039;</span>RFE
+                    </div>
+                    <div class="wxdl-res-opt" id="wxdl-srcChirps" onclick="WeatherDownload.setSource('chirps')" style="flex:1 1 45%">
+                      <span class="wxdl-res-icon">&#128167;</span>CHIRPS
+                    </div>
+                    <div class="wxdl-res-opt" id="wxdl-srcNoaa" onclick="WeatherDownload.setSource('noaa')" style="flex:1 1 45%">
+                      <span class="wxdl-res-icon">&#128752;</span>NOAA
+                    </div>
+                  </div>
+                  <div class="wxdl-info-tip" id="wxdl-sourceNote">ERA5 reanalysis (via Open-Meteo) — full variable set, live data.</div>
+                </div>
+
+                <div class="wxdl-s-section">
                   <div class="wxdl-s-label">&#128205; Location</div>
 
                   <div class="wxdl-search-wrap">
@@ -3275,12 +3432,37 @@ body{
               <label class="check-row"><input type="checkbox" value="Monthly Agrometeorological Bulletin" onchange="onAgrometCatToggle(this)"><span>Monthly Agrometeorological Bulletin</span></label>
               <label class="check-row"><input type="checkbox" value="Seasonal Agrometeorological Bulletin" onchange="onAgrometCatToggle(this)"><span>Seasonal Agrometeorological Bulletin</span></label>
               <label class="check-row"><input type="checkbox" value="Seasonal Weather Outlook" onchange="onAgrometCatToggle(this)"><span>Seasonal Weather Outlook</span></label>
-              <label class="check-row"><input type="checkbox" value="Climatological Report" onchange="onAgrometCatToggle(this)"><span>Climatological Report</span></label>
               <label class="check-row"><input type="checkbox" value="Early warning" onchange="onAgrometCatToggle(this)"><span>Early warning</span></label>
             </div>
             <div class="agromet-main">
               <div class="empty-state" id="agromet-products-empty"><div class="empty-state-icon">📂</div><div class="empty-state-title">Tick a category to view its products</div></div>
               <div id="agromet-products-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reports (public page, Products nav — Drought/Climatological
+           reports uploaded by Front Desk Officers land here, kept
+           separate from the general product categories above). -->
+      <div class="page" id="page-reports">
+        <div class="page-breadcrumb">
+          <span class="crumb-home" onclick="goHome()">Home</span>
+          <span class="crumb-sep">/</span>
+          <span class="crumb-current" id="reports-crumb-current">Reports</span>
+        </div>
+        <div class="card agromet-products-card">
+          <div class="card-title">Reports</div>
+          <div style="font-size:12px;color:var(--text-tertiary);margin-bottom:1rem">Drought, climatological and other assessment reports published by the AgroMet team.</div>
+          <div class="agromet-layout">
+            <div class="agromet-sidebar">
+              <div class="agromet-sidebar-title">Report Categories</div>
+              <label class="check-row"><input type="checkbox" value="Drought Report" onchange="onReportsCatToggle(this)"><span>Drought Report</span></label>
+              <label class="check-row"><input type="checkbox" value="Climatological Report" onchange="onReportsCatToggle(this)"><span>Climatological Report</span></label>
+            </div>
+            <div class="agromet-main">
+              <div class="empty-state" id="reports-empty"><div class="empty-state-icon">📂</div><div class="empty-state-title">Tick a category to view its reports</div></div>
+              <div id="reports-list"></div>
             </div>
           </div>
         </div>
@@ -3567,6 +3749,58 @@ function refreshAgrometProductsPage() {
   }
 }
 
+// ---- Reports (public page, Products nav) ----
+// Same pattern as the Agrometeorological Products page above, scoped to
+// #page-reports and its own category checkboxes (Drought Report,
+// Climatological Report) — kept as a separate page so report-type
+// documents don't sit mixed in with the general product categories.
+function onReportsCatToggle(el) {
+  if (el.checked) {
+    document.querySelectorAll('#page-reports .agromet-sidebar input[type="checkbox"]').forEach(cb => {
+      if (cb !== el) cb.checked = false;
+    });
+  }
+  refreshReportsPage();
+}
+
+function refreshReportsPage() {
+  const empty = document.getElementById('reports-empty');
+  const list = document.getElementById('reports-list');
+  const crumb = document.getElementById('reports-crumb-current');
+  if (!empty || !list) return;
+
+  const checked = [...document.querySelectorAll('#page-reports .agromet-sidebar input[type="checkbox"]:checked')].map(el => el.value);
+
+  if (crumb) {
+    crumb.textContent = checked.length === 0 ? 'Reports'
+      : checked.length === 1 ? checked[0]
+      : `${checked.length} categories selected`;
+  }
+
+  if (checked.length === 0) {
+    empty.querySelector('.empty-state-title').textContent = 'Tick a category to view its reports';
+    empty.style.display = '';
+    list.innerHTML = '';
+    return;
+  }
+
+  const items = (state.products || []).filter(p =>
+    checked.includes(p.cat) && productAccessAllowed(p, 'public')
+  );
+  if (items.length === 0) {
+    empty.querySelector('.empty-state-title').textContent = 'No reports published yet in the selected categories';
+    empty.style.display = '';
+    list.innerHTML = '';
+  } else {
+    empty.style.display = 'none';
+    list.innerHTML = items.map(p => `<div class="product-card">
+      <div class="product-icon" style="background:var(--tma-blue-l)">${p.icon}</div>
+      <div class="product-info"><div class="product-name">${p.title}</div><div class="product-meta">${p.cat} &middot; ${p.date}</div></div>
+      <div class="product-actions"><button class="btn btn-sm" onclick="viewProduct('${p.uid}')">View</button><button class="btn btn-sm btn-primary" onclick="downloadProduct('${p.uid}')">Download</button></div>
+    </div>`).join('');
+  }
+}
+
 const BEEM_API_KEY    = '79e90e17ca823a2c';
 const BEEM_SECRET_KEY = 'MDU0ODhhOTBjMGMwNDU3NTZiNDAxMTMyZjExMjQ2MzY1ZTljYmI4MjJiYjcyNmI3YmZmOThhNjdjOGNhNDgwYg==';
 const BEEM_SENDER_ID  = 'TMA-AGRO';
@@ -3584,6 +3818,23 @@ const state = {
   products: [], pendingApprovals: [],
   approvedObservers: [],
   approvedStakeholders: [],
+  frontDeskOfficers: [],
+  stations: [
+    {name:'Ilonga Agromet Station', region:'', lat:-6.8500,  lng:37.0500},
+    {name:'Mlingano Station',       region:'', lat:-5.1333,  lng:38.7833},
+    {name:'Ukiriguru Station',      region:'', lat:-2.7000,  lng:33.0000},
+    {name:'Naliendele Station',     region:'', lat:-10.3333, lng:40.1833},
+    {name:'Tumbi Station',          region:'', lat:-5.0333,  lng:32.8500},
+    {name:'Kibaha Station',         region:'', lat:-6.7667,  lng:38.9167},
+    {name:'Uyole Station',          region:'', lat:-8.9167,  lng:33.3667},
+    {name:'Igeri Station',          region:'', lat:-9.2667,  lng:34.7667},
+    {name:'Kizimbani Station',      region:'', lat:-6.1333,  lng:39.2333},
+    {name:'Matangatuani Station',   region:'', lat:-5.0000,  lng:39.7667},
+    {name:'Hombolo Station',        region:'', lat:-5.9500,  lng:35.8500},
+    {name:'Lyamungu Station',       region:'', lat:-3.3667,  lng:37.2167},
+    {name:'Mbiba Station',          region:'', lat:-8.8500,  lng:32.9500},
+    {name:'Agromet Headquarter',    region:'', lat:null,     lng:null},
+  ],
   stakeholderRequests: [], stakeholderNotifications: [],
   notifications: [], adminNotifications: [],
   sessionSubmitted: { '0600': false, '1200': false },
@@ -3701,6 +3952,20 @@ function switchAuthTab(tab) {
   ['login','register','register-sh'].forEach(t => {
     const el=document.getElementById('tab-'+t); if(el) el.className = 'auth-tab' + (t===tab?' active':'');
   });
+  if (tab === 'register') {
+    // Pick up any stations admin has added since this page loaded — the
+    // visitor isn't signed in yet, so this is a lightweight direct fetch
+    // rather than the full loadFromSupabase() used post-login.
+    refreshRegStationOptions();
+    if (_sbReady()) {
+      supabaseClient.from('stations').select('*').then(({data}) => {
+        if (data && data.length) {
+          state.stations = data.map(row => ({ name: row.name, region: row.region || '' }));
+          refreshRegStationOptions();
+        }
+      }).catch(()=>{});
+    }
+  }
 }
 
 function openForgotPassword() {
@@ -3724,14 +3989,28 @@ function loginAs(role, user) {
   const tnAvatar=document.getElementById('topnavAvatar');
   const tnName=document.getElementById('topnavName');
   const tnRole=document.getElementById('topnavRole');
-  if (role==='admin') {
+  if (role==='admin' || role==='frontdesk') {
     const el=document.getElementById('adminTabs'); if(el)el.style.display='';
     const nv=document.getElementById('adminNav'); if(nv)nv.style.display='';
-    if(tnAvatar){tnAvatar.textContent='AD';}
-    if(tnName)tnName.textContent='TMA Administrator';
-    if(tnRole)tnRole.textContent='Administrator · All stations';
+    // adminTabs is shared between admin and front desk officers — each
+    // button is tagged data-role="admin" / "frontdesk" / "both", so only
+    // the ones relevant to the signed-in role are shown.
+    document.querySelectorAll('#adminTabs .tab-btn[data-role]').forEach(btn=>{
+      const r=btn.getAttribute('data-role');
+      btn.style.display=(r==='both'||r===role)?'':'none';
+    });
+    if (role==='admin') {
+      if(tnAvatar){tnAvatar.textContent='AD';}
+      if(tnName)tnName.textContent='TMA Administrator';
+      if(tnRole)tnRole.textContent='Administrator · All stations';
+      showPage('adminDash',null);
+    } else {
+      if(tnAvatar){tnAvatar.textContent=nameInitials(user.name);}
+      if(tnName)tnName.textContent=user.name;
+      if(tnRole)tnRole.textContent='Front Desk Officer · All stations';
+      showPage('adminDash',null);
+    }
     document.getElementById('sessionBadge').style.display='none';
-    showPage('adminDash',null);
   } else if (role==='stakeholder') {
     state.stakeholderName=user.name; state.stakeholderOrg=user.org;
     state.stakeholderPhone=user.phone||''; state.stakeholderEmail=user.email||'';
@@ -3756,7 +4035,8 @@ function loginAs(role, user) {
   loadState();
   loadPhenoState();
   loadFromSupabase().then(() => {
-    if (role === 'admin') { refreshAdminDash(); refreshApprovals(); refreshObservers(); refreshManageStakeholders(); refreshAllRecords(); }
+    if (role === 'admin') { refreshAdminDash(); refreshApprovals(); refreshObservers(); refreshStationsPage(); refreshRolesAccessPage(); }
+    else if (role === 'frontdesk') { refreshAdminDash(); refreshAllRecords(); refreshManageStakeholders(); refreshAdminProducts(); }
     else if (role === 'observer') { refreshObsDash(); refreshMyRecords(); refreshAllReturns(); }
     else if (role === 'stakeholder') { refreshStakeholderDash(); refreshProductsPage(); }
     startAutoSync();
@@ -3800,13 +4080,15 @@ function tryLogin() {
     if(obs){hideErr();loginAs('observer',obs);return true;}
     const sh=state.approvedStakeholders.find(s=>(s.phone===id||s.email===id)&&s.password===pw);
     if(sh){hideErr();loginAs('stakeholder',sh);return true;}
+    const fd=state.frontDeskOfficers.find(f=>(f.phone===id||f.email===id)&&f.password===pw);
+    if(fd){hideErr();loginAs('frontdesk',fd);return true;}
     const pending=state.pendingApprovals.find(a=>a.phone===id||a.email===id);
     if(pending){showErr('Your account is pending administrator approval.');}else{showErr('Incorrect phone/email or password.');}
     return false;
   }
 
 
-  if(state.approvedObservers.length>0||state.approvedStakeholders.length>0){
+  if(state.approvedObservers.length>0||state.approvedStakeholders.length>0||state.frontDeskOfficers.length>0){
     attemptMatch();
     return;
   }
@@ -3917,6 +4199,10 @@ const AGROMET_SLIDE_MS = 4500;
 function openAgrometProducts() {
   closeLandingMenu();
   enterPublicView('agrometProducts');
+}
+function openReportsPage() {
+  closeLandingMenu();
+  enterPublicView('reports');
 }
 function agrometGoToSlide(i) {
   const slides = document.querySelectorAll('#lp-agromet-carousel .lp-agromet-slide');
@@ -4136,12 +4422,13 @@ function enterPublicView(landingPage) {
   document.getElementById('sessionBadge').style.display='none';
   const logoutBtn=document.getElementById('topnavLogoutBtn'); if(logoutBtn) logoutBtn.style.display='none';
   loadState(); loadPhenoState();
-  loadFromSupabase().then(() => { if (page === 'agrometProducts') refreshAgrometProductsPage(); });
+  loadFromSupabase().then(() => { if (page === 'agrometProducts') refreshAgrometProductsPage(); if (page === 'reports') refreshReportsPage(); });
   const page = landingPage || 'stakeholderDash';
-  // Reanalysis and agrometProducts opened straight from the landing nav are
-  // fully independent pages — no dashboard topnav/tabnav chrome around them,
-  // just their own breadcrumb "Home" link (.page-breadcrumb .crumb-home).
-  const standalone = page === 'reanalysis' || page === 'agrometProducts';
+  // Reanalysis, agrometProducts and reports opened straight from the
+  // landing nav are fully independent pages — no dashboard topnav/tabnav
+  // chrome around them, just their own breadcrumb "Home" link
+  // (.page-breadcrumb .crumb-home).
+  const standalone = page === 'reanalysis' || page === 'agrometProducts' || page === 'reports';
   const mainAppEl = document.getElementById('mainApp');
   if(mainAppEl) mainAppEl.classList.toggle('standalone', standalone);
   showPage(page,null);
@@ -4309,6 +4596,8 @@ function findAccountByPhone(phone) {
   if (u) return { user: u, table: 'observers' };
   u = state.approvedStakeholders.find(s => s.phone === p);
   if (u) return { user: u, table: 'stakeholders' };
+  u = state.frontDeskOfficers.find(f => f.phone === p);
+  if (u) return { user: u, table: 'front_desk_officers' };
   return null;
 }
 
@@ -4317,6 +4606,8 @@ function findAccountByResetToken(token) {
   if (u) return { user: u, table: 'observers' };
   u = state.approvedStakeholders.find(s => s.resetToken === token);
   if (u) return { user: u, table: 'stakeholders' };
+  u = state.frontDeskOfficers.find(f => f.resetToken === token);
+  if (u) return { user: u, table: 'front_desk_officers' };
   return null;
 }
 
@@ -4411,7 +4702,7 @@ function showPage(id,navEl) {
     dashboard:['Observer Dashboard',`${state.stationName} · ${getTodayStr()}`],
     obsForms:['Fill Observation','Form 601 — Agricultural Meteorological Observations'],
     myRecords:['My Records','Submission history'],
-    returns:[state.role==='admin'?'Climatological Returns — All Stations':'Climatological Returns','Auto-populated from Form 601 submissions'],
+    returns:[(state.role==='admin'||state.role==='frontdesk')?'Climatological Returns — All Stations':'Climatological Returns','Auto-populated from Form 601 submissions'],
     products:['Products','Meteorological products from TMA Admin'],
     messages:['Notifications','SMS, WhatsApp & dashboard messages'],
     stakeholderDash:['Stakeholder Dashboard',`${state.stakeholderOrg} · ${getTodayStr()}`],
@@ -4423,6 +4714,9 @@ function showPage(id,navEl) {
     allRecords:['All Records','System-wide observation data'],
     uploadProducts:['Products','Publish meteorological products'],
     dataProducts:['Data Products','Auto-generate charts from station observations'],
+    stations:['Stations','Register and manage AgroMet observation stations'],
+    stationData:["Station's Observed Data",'The consolidated data pool for every station, by station'],
+    rolesAccess:['Roles & Access','Create and manage Front Desk Officer accounts'],
     adminMessages:['Notifications & Comms',`Admin: ${ADMIN_PHONE}`],
     observers:['Manage Observers','All registered observers'],
     manageStakeholders:['Manage Stakeholders','All registered stakeholders'],
@@ -4430,6 +4724,7 @@ function showPage(id,navEl) {
     weatherDownload:['National Data Access','Historical weather data for any point in Tanzania (ERA5 via Open-Meteo)'],
     reanalysis:['Gridded Data Products','Browse products or generate a plot on demand'],
     agrometProducts:['Agrometeorological Products','From daily field observations to seasonal forecasts'],
+    reports:['Reports','Drought, climatological and other assessment reports'],
   };
   if(titles[id]){document.getElementById('pageTitle').textContent=titles[id][0];document.getElementById('pageDate').textContent=titles[id][1];}
   if(id==='obsForms') setTodayDate();
@@ -4441,8 +4736,11 @@ function showPage(id,navEl) {
     adminDash:refreshAdminDash,approvals:refreshApprovals,allRecords:refreshAllRecords,
     uploadProducts:refreshAdminProducts,adminMessages:refreshAdminMessages,
     dataProducts:refreshDataProductsPage,
+    stations:refreshStationsPage,
+    stationData:refreshStationDataPage,
+    rolesAccess:refreshRolesAccessPage,
     observers:refreshObservers,manageStakeholders:refreshManageStakeholders,landingImages:refreshLandingImagesAdmin,
-    reanalysis:refreshReanalysisPage,agrometProducts:refreshAgrometProductsPage,
+    reanalysis:refreshReanalysisPage,agrometProducts:refreshAgrometProductsPage,reports:refreshReportsPage,
     weatherDownload:()=>WeatherDownload.init(),
   };
   if(rfMap[id]) rfMap[id]();
@@ -4841,6 +5139,34 @@ const WeatherDownload = (function () {
     { key:"dewpoint_2m",          label:"Dew Point (°C)" },
   ];
 
+  // Data source catalogue for the "National Data Access" selector.
+  // ERA5 is wired to a real, working, key-free endpoint (Open-Meteo's
+  // archive API, which serves ERA5 reanalysis). RFE, CHIRPS and NOAA are
+  // satellite/blended-rainfall and multi-product datasets that TMA would
+  // typically source via WMO GTS, USGS/FEWS-NET, or NOAA CPC feeds — none
+  // of which expose a public, CORS-enabled, key-free point-query API a
+  // browser can call directly, so they need a small backend proxy (with
+  // credentials/licensing where applicable) before they can go live here.
+  //
+  // TO CONNECT YOUR OWN BACKEND for RFE / CHIRPS / NOAA: deploy an HTTPS
+  // endpoint that accepts GET requests shaped like
+  //   <apiUrl>?latitude=<lat>&longitude=<lon>&start_date=YYYY-MM-DD
+  //           &end_date=YYYY-MM-DD&daily=<comma,separated,var,keys>
+  //           (or &hourly=... when resolution is hourly)
+  // and returns JSON shaped exactly like Open-Meteo's archive response:
+  //   { "daily": { "time": ["2024-01-01", ...], "precipitation_sum": [3.2, ...], ... } }
+  // (top-level key is "daily" or "hourly" to match the resolution requested).
+  // Then just paste that URL into the matching apiUrl below and flip
+  // available to true — fetchData() already knows how to call it, no
+  // other changes needed. See fetchData() for exactly how apiUrl is used.
+  const DATA_SOURCES = {
+    era5:   { label:'ERA5', available:true,  apiUrl:'https://archive-api.open-meteo.com/v1/archive', note:'ERA5 reanalysis (via Open-Meteo) — full variable set, live data.' },
+    rfe:    { label:'RFE',  available:false, apiUrl:'', note:'NOAA CPC Rainfall Estimate (RFE2) — rainfall only. Needs a backend proxy to NOAA CPC before this can go live.' },
+    chirps: { label:'CHIRPS', available:false, apiUrl:'', note:'CHIRPS blended satellite-station rainfall — rainfall only. Needs a backend proxy to the CHIRPS data service before this can go live.' },
+    noaa:   { label:'NOAA', available:false, apiUrl:'', note:'NOAA climate data (CDO/GFS) — needs a NOAA API token and backend proxy before this can go live.' },
+  };
+  let dataSource = 'era5';
+
   let selLat = null, selLon = null, selName = '';
   let resolution = 'daily';
   let downloadedData = null;
@@ -4871,7 +5197,14 @@ const WeatherDownload = (function () {
   }
 
   function buildVarsGrid() {
-    const vars = resolution === 'daily' ? VARS_DAILY : VARS_HOURLY;
+    let vars = resolution === 'daily' ? VARS_DAILY : VARS_HOURLY;
+    // RFE and CHIRPS are rainfall-only products — narrow the variable
+    // list to match what those datasets actually provide, rather than
+    // offering temperature/wind/etc. chips a rainfall-only source can't
+    // deliver.
+    if (dataSource === 'rfe' || dataSource === 'chirps') {
+      vars = vars.filter(v => v.key.includes('precipitation') || v.key.includes('rain'));
+    }
     const g = document.getElementById('wxdl-varsGrid');
     g.innerHTML = '';
     vars.forEach(v => {
@@ -4891,6 +5224,18 @@ const WeatherDownload = (function () {
     resolution = r;
     document.getElementById('wxdl-resDaily').classList.toggle('active', r==='daily');
     document.getElementById('wxdl-resHourly').classList.toggle('active', r==='hourly');
+    buildVarsGrid();
+  }
+
+  function setSource(src) {
+    dataSource = src;
+    const ids = { era5:'wxdl-srcEra5', rfe:'wxdl-srcRfe', chirps:'wxdl-srcChirps', noaa:'wxdl-srcNoaa' };
+    Object.entries(ids).forEach(([k,id]) => {
+      const el = document.getElementById(id);
+      if (el) el.classList.toggle('active', k===src);
+    });
+    const note = document.getElementById('wxdl-sourceNote');
+    if (note) note.textContent = DATA_SOURCES[src].note;
     buildVarsGrid();
   }
 
@@ -5095,11 +5440,22 @@ const WeatherDownload = (function () {
     const checked = [...document.querySelectorAll('#page-weatherDownload .wxdl-var-chip.checked')].map(c=>c.dataset.key);
     if (!checked.length) { toast('Select at least one variable.','error'); return; }
 
-    showLoad(true,'Fetching ERA5 data…',`${selName} · ${s} → ${e}`);
+    const src = DATA_SOURCES[dataSource];
+    if (!src.available || !src.apiUrl) {
+      toast(`${src.label} isn't connected yet — ${src.note}`, 'error');
+      return;
+    }
+
+    showLoad(true,`Fetching ${src.label} data…`,`${selName} · ${s} → ${e}`);
     setProgress(20);
 
     const param = resolution==='daily' ? 'daily' : 'hourly';
-    const url = `https://archive-api.open-meteo.com/v1/archive?latitude=${selLat}&longitude=${selLon}&start_date=${s}&end_date=${e}&${param}=${checked.join(',')}&timezone=Africa%2FDar_es_Salaam`;
+    // Every source is called the same way: a GET request with these five
+    // query params, expected to return JSON shaped like Open-Meteo's
+    // archive response (see the DATA_SOURCES comment above for the exact
+    // contract). This is what lets a new backend just be "paste the URL
+    // in" rather than needing its own fetch/parsing code.
+    const url = `${src.apiUrl}?latitude=${selLat}&longitude=${selLon}&start_date=${s}&end_date=${e}&${param}=${checked.join(',')}&timezone=Africa%2FDar_es_Salaam`;
 
     try {
       setProgress(55);
@@ -5137,7 +5493,7 @@ const WeatherDownload = (function () {
     const allVarsList = resolution==='daily' ? VARS_DAILY : VARS_HOURLY;
     document.getElementById('wxdl-resultsTitle').textContent = `${selName} — ${resolution==='daily'?'Daily':'Hourly'} Data`;
     document.getElementById('wxdl-resultsMeta').textContent =
-      `${data.length} records · ${selLat.toFixed(4)}°, ${selLon.toFixed(4)}° · ERA5 via Open-Meteo`;
+      `${data.length} records · ${selLat.toFixed(4)}°, ${selLon.toFixed(4)}° · ${DATA_SOURCES[dataSource].label} via Open-Meteo`;
 
     const head = document.getElementById('wxdl-tHead');
     const body = document.getElementById('wxdl-tBody');
@@ -5234,7 +5590,7 @@ const WeatherDownload = (function () {
 
   return {
     init, invalidateSize, onSearch, closeDropdown, onRegionChange, onDistrictChange,
-    setPreset, setRes, allVars, fetchData, downloadCSV, downloadExcel,
+    setPreset, setRes, setSource, allVars, fetchData, downloadCSV, downloadExcel,
   };
 })();
 
@@ -6176,7 +6532,23 @@ function switchForm601(btn,id){
 }
 
 // ── TEMPERATURE RANGE REAL-TIME HIGHLIGHT ──────────────────────
+// Restricts an input to a fixed number of decimal places as the user
+// types — trims anything typed beyond that, rather than silently
+// rounding on submit, so what's on screen always matches what gets
+// saved. Used for temperature (1 dp, WMO convention), anemometer
+// counter readings (2 dp), and soil moisture (1 dp).
+function restrictDecimals(el, n) {
+  const v = el.value;
+  if (v.includes('.')) {
+    const [whole, frac] = v.split('.');
+    if (frac && frac.length > n) el.value = whole + '.' + frac.slice(0, n);
+  }
+}
+function restrictOneDecimal(el) { restrictDecimals(el, 1); }
+function restrictTwoDecimals(el) { restrictDecimals(el, 2); }
+
 function checkTempRange(el) {
+  restrictOneDecimal(el);
   const v = parseFloat(el.value);
   if (el.value.trim() !== '' && !isNaN(v) && (v < 0 || v > 40)) {
     el.classList.add('temp-out-range');
@@ -6393,7 +6765,7 @@ function refreshAllReturns() {
   // Show/populate admin station filter
   const stFilter=document.getElementById('admin-station-filter');
   if(stFilter){
-    if(state.role==='admin'){
+    if(state.role==='admin'||state.role==='frontdesk'){
       stFilter.style.display='flex';
       const stSel=document.getElementById('admin-returns-station');
       if(stSel){
@@ -8043,7 +8415,7 @@ function onProdFileChosen(input){
   if(zone) zone.style.borderColor=f?'var(--tma-green)':'';
 }
 
-const PRODUCT_ICONS={'Monthly Weather Outlook':'🌤️','Decadal Agrometeorological Bulletin':'📆','Monthly Agrometeorological Bulletin':'🗓️','Seasonal Agrometeorological Bulletin':'📋','Seasonal Weather Outlook':'🌦️','Climatological Report':'📊','Early warning':'🌡️','Station Data Chart':'📈','Other':'📁'};
+const PRODUCT_ICONS={'Monthly Weather Outlook':'🌤️','Decadal Agrometeorological Bulletin':'📆','Monthly Agrometeorological Bulletin':'🗓️','Seasonal Agrometeorological Bulletin':'📋','Seasonal Weather Outlook':'🌦️','Climatological Report':'📊','Drought Report':'🏜️','Early warning':'🌡️','Station Data Chart':'📈','Other':'📁'};
 const PRODUCT_MAX_BYTES=15*1024*1024;
 
 function readFileAsDataURL(file){
@@ -8128,6 +8500,158 @@ async function uploadProduct(){
 //  Supabase-insert + SMS-notify pipeline as a manually uploaded file
 //  (see dpPublish() / uploadProduct()).
 // ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+//  STATION'S OBSERVED DATA — a single consolidated pool of every
+//  station's filled-in observations, browsable by station with
+//  daily / monthly / yearly views. Reads straight from state.records
+//  (the same pool Form 601 submissions already land in via
+//  loadFromSupabase), so nothing needs to be re-synced — the moment an
+//  observer submits a return it shows up here automatically. Meant as
+//  the first step toward a full queryable station database.
+// ═══════════════════════════════════════════════════════════════
+const SD_METRICS = {
+  dry:       { label:'Dry Bulb',          unit:'\u00b0C', agg:'avg' },
+  wet:       { label:'Wet Bulb',          unit:'\u00b0C', agg:'avg' },
+  dew:       { label:'Dew Point',         unit:'\u00b0C', agg:'avg' },
+  rh:        { label:'Relative Humidity', unit:'%',       agg:'avg' },
+  vap:       { label:'Vapour Pressure',   unit:'hPa',     agg:'avg' },
+  tmax:      { label:'Max Temperature',   unit:'\u00b0C', agg:'max' },
+  tmin:      { label:'Min Temperature',   unit:'\u00b0C', agg:'min' },
+  windSpeed: { label:'Wind Speed',        unit:'km/h',    agg:'avg' },
+  windRun:   { label:'Wind Run',          unit:'km',      agg:'sum' },
+  rain:      { label:'Rainfall',          unit:'mm',      agg:'sum' },
+  evapStd:   { label:'Evaporation',       unit:'mm',      agg:'sum' },
+  radiation: { label:'Solar Radiation',   unit:'MJ/m\u00b2', agg:'sum' },
+  sunshine:  { label:'Sunshine',          unit:'h',       agg:'sum' },
+};
+let sdSelectedStation = null;
+
+function refreshStationDataPage(){
+  const list = document.getElementById('sd-station-list');
+  if (!list) return;
+  if (!state.stations.length) {
+    list.innerHTML = '<div class="empty-state-title" style="font-size:12px">No stations registered yet — add one from the Stations tab.</div>';
+    return;
+  }
+  list.innerHTML = state.stations.map((s,i) => {
+    const name = typeof s==='string' ? s : s.name;
+    const hasCoords = typeof s!=='string' && s.lat!=null && s.lng!=null;
+    const count = state.records.filter(r=>r.stationName===name).length;
+    const active = name===sdSelectedStation ? 'style="background:var(--tma-blue-l);border-color:var(--tma-blue)"' : '';
+    return `<div class="check-row" ${active} style="cursor:pointer;border:1px solid var(--border-light);border-radius:8px;padding:8px 10px" onclick="sdSelectStation(${i})">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong style="font-size:12.5px">${name}</strong>
+        <span style="font-size:10.5px;color:var(--text-tertiary)">${count} rec.</span>
+      </div>
+      <div style="font-size:10.5px;color:var(--text-tertiary);margin-top:2px">${hasCoords ? s.lat.toFixed(4)+'°, '+s.lng.toFixed(4)+'°' : 'No coordinates on file'}</div>
+    </div>`;
+  }).join('');
+}
+
+function sdSelectStation(i){
+  const s = state.stations[i]; if (!s) return;
+  sdSelectedStation = typeof s==='string' ? s : s.name;
+  const hasCoords = typeof s!=='string' && s.lat!=null && s.lng!=null;
+  document.getElementById('sd-empty').style.display = 'none';
+  document.getElementById('sd-body').style.display = '';
+  document.getElementById('sd-station-name').textContent = sdSelectedStation;
+  document.getElementById('sd-station-coords').textContent = hasCoords
+    ? `${s.lat.toFixed(4)}°, ${s.lng.toFixed(4)}°`
+    : 'No coordinates on file — add them from the Stations tab.';
+  if (!document.getElementById('sd-from').value) {
+    const from = new Date(); from.setDate(from.getDate()-30);
+    document.getElementById('sd-from').value = from.toISOString().slice(0,10);
+    document.getElementById('sd-to').value = new Date().toISOString().slice(0,10);
+  }
+  refreshStationDataPage();
+  refreshStationDataTable();
+}
+
+function _sdRecDate(r){
+  if (!r.date) return null;
+  const [d,m,y] = r.date.split('/').map(Number);
+  if (!d||!m||!y) return null;
+  return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+}
+
+function refreshStationDataTable(){
+  if (!sdSelectedStation) return;
+  const period = document.getElementById('sd-period')?.value || 'daily';
+  const fromStr = document.getElementById('sd-from')?.value;
+  const toStr = document.getElementById('sd-to')?.value;
+  const thead = document.getElementById('sd-thead');
+  const tbody = document.getElementById('sd-tbody');
+  const noData = document.getElementById('sd-no-data');
+  const table = document.getElementById('sd-table');
+
+  let recs = state.records
+    .filter(r => r.stationName===sdSelectedStation && r.status!=='rejected')
+    .map(r => ({ r, iso:_sdRecDate(r) })).filter(x=>x.iso);
+  if (fromStr) recs = recs.filter(x=>x.iso>=fromStr);
+  if (toStr) recs = recs.filter(x=>x.iso<=toStr);
+  recs.sort((a,b)=>a.iso.localeCompare(b.iso) || (a.r.session||'').localeCompare(b.r.session||''));
+
+  const metricKeys = Object.keys(SD_METRICS);
+
+  if (!recs.length) {
+    table.style.display = 'none'; noData.style.display = '';
+    thead.innerHTML=''; tbody.innerHTML='';
+    return;
+  }
+  table.style.display = ''; noData.style.display = 'none';
+
+  if (period === 'daily') {
+    thead.innerHTML = `<tr><th>Date</th><th>Session</th>${metricKeys.map(k=>`<th>${SD_METRICS[k].label}<br><span style="font-weight:400;color:var(--text-tertiary)">${SD_METRICS[k].unit}</span></th>`).join('')}</tr>`;
+    tbody.innerHTML = recs.map(({r}) => `<tr><td>${r.date}</td><td class="mono">${r.session||'—'}</td>${
+      metricKeys.map(k => { const v=r[k]; return `<td>${(v!=null && v!==MISSING_CODE) ? v : '—'}</td>`; }).join('')
+    }</tr>`).join('');
+    return;
+  }
+
+  // monthly / yearly — group and aggregate per SD_METRICS[key].agg
+  const groupLen = period === 'monthly' ? 7 : 4; // "YYYY-MM" or "YYYY"
+  const groups = {};
+  recs.forEach(({r,iso}) => {
+    const gKey = iso.slice(0,groupLen);
+    if (!groups[gKey]) groups[gKey] = {};
+    metricKeys.forEach(k => {
+      const v = r[k];
+      if (v==null || v===MISSING_CODE) return;
+      (groups[gKey][k] = groups[gKey][k]||[]).push(Number(v));
+    });
+  });
+  const gKeys = Object.keys(groups).sort();
+  thead.innerHTML = `<tr><th>${period==='monthly'?'Month':'Year'}</th>${metricKeys.map(k=>`<th>${SD_METRICS[k].label}<br><span style="font-weight:400;color:var(--text-tertiary)">${SD_METRICS[k].unit}</span></th>`).join('')}</tr>`;
+  tbody.innerHTML = gKeys.map(gKey => {
+    const cells = metricKeys.map(k => {
+      const arr = groups[gKey][k];
+      if (!arr || !arr.length) return '<td>—</td>';
+      const agg = SD_METRICS[k].agg;
+      const val = agg==='sum' ? arr.reduce((a,b)=>a+b,0)
+        : agg==='max' ? Math.max(...arr)
+        : agg==='min' ? Math.min(...arr)
+        : arr.reduce((a,b)=>a+b,0)/arr.length;
+      return `<td>${val.toFixed(1)}</td>`;
+    }).join('');
+    return `<tr><td>${gKey}</td>${cells}</tr>`;
+  }).join('');
+}
+
+function sdExportCSV(){
+  if (!sdSelectedStation) return;
+  const table = document.getElementById('sd-table');
+  if (!table || table.style.display==='none') { showToast('Nothing to export','Select a station and range with data first.','warning'); return; }
+  const rows = [...table.querySelectorAll('tr')].map(tr =>
+    [...tr.children].map(td => `"${td.textContent.replace(/\s+/g,' ').trim().replace(/"/g,'""')}"`).join(',')
+  );
+  const blob = new Blob([rows.join('\n')], {type:'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `${sdSelectedStation.replace(/[^\w\-]+/g,'_')}_observed_data.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
 const DP_METRICS = {
   rain:      { label:'Rainfall',          unit:'mm',    agg:'sum' },
   tmax:      { label:'Max Temperature',   unit:'\u00b0C', agg:'max' },
@@ -8593,6 +9117,122 @@ function refreshObservers(){
 }
 
 function deleteObserver(i){const o=state.approvedObservers[i];if(!o)return;if(!confirm(`Remove observer "${o.name}"?`))return;state.approvedObservers.splice(i,1);saveState();refreshObservers();showToast('Observer removed',`${o.name} removed.`);}
+
+// ── STATIONS (admin: station's addition / new station registration) ──
+// The canonical station list. Seeded locally with the stations that used
+// to be hardcoded into the observer sign-up dropdown; once the
+// "stations" Supabase table exists, loadFromSupabase() takes over as the
+// source of truth and admin-added stations sync across devices.
+function refreshStationsPage(){
+  const e=document.getElementById('stations-empty'),t=document.getElementById('stations-table'),r=document.getElementById('stations-rows');
+  if(!e||!t||!r) return;
+  if(!state.stations.length){e.style.display='';t.style.display='none';}
+  else{e.style.display='none';t.style.display='';r.innerHTML=state.stations.map((s,i)=>{
+    const name = typeof s==='string' ? s : s.name;
+    const region = typeof s==='string' ? '' : (s.region||'');
+    const lat = typeof s==='string' ? null : s.lat;
+    const lng = typeof s==='string' ? null : s.lng;
+    const coordText = (lat!=null && lng!=null) ? '' : '<span style="color:var(--tma-amber,#b8860b)">Not set</span>';
+    return `<tr><td>${name}</td><td>${region||'—'}</td><td>${lat!=null?lat:coordText}</td><td>${lng!=null?lng:''}</td><td style="white-space:nowrap"><button class="btn btn-sm" onclick="editStationCoords(${i})">Edit coords</button> <button class="btn btn-sm btn-danger" onclick="deleteStation(${i})">Remove</button></td></tr>`;
+  }).join('');}
+  refreshRegStationOptions();
+}
+
+async function addStation(){
+  const name=(document.getElementById('st-name')?.value||'').trim();
+  const region=(document.getElementById('st-region')?.value||'').trim();
+  const latRaw=(document.getElementById('st-lat')?.value||'').trim();
+  const lngRaw=(document.getElementById('st-lng')?.value||'').trim();
+  if(!name){showToast('Station name required','Please enter a station name.','warning');return;}
+  const exists=state.stations.some(s=>(typeof s==='string'?s:s.name).toLowerCase()===name.toLowerCase());
+  if(exists){showToast('Already registered',`"${name}" is already in the station list.`,'warning');return;}
+  const lat=latRaw?parseFloat(latRaw):null, lng=lngRaw?parseFloat(lngRaw):null;
+  state.stations.push({name,region,lat,lng});
+  saveState();
+  await pushUserToSupabase('stations',{name,region:region||null,lat,lng,added_date:getTodayStr().split('/').reverse().join('-')});
+  ['st-name','st-region','st-lat','st-lng'].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
+  refreshStationsPage();
+  showToast('Station added',`"${name}" is now available for observer registration.`,'success');
+}
+
+async function editStationCoords(i){
+  const s=state.stations[i]; if(!s) return;
+  const name=typeof s==='string'?s:s.name;
+  const curLat = typeof s==='string' ? '' : (s.lat??'');
+  const curLng = typeof s==='string' ? '' : (s.lng??'');
+  const latInput=prompt(`Latitude for "${name}" (e.g. -6.8500):`, curLat);
+  if(latInput===null) return;
+  const lngInput=prompt(`Longitude for "${name}" (e.g. 37.0500):`, curLng);
+  if(lngInput===null) return;
+  const lat=latInput.trim()?parseFloat(latInput):null;
+  const lng=lngInput.trim()?parseFloat(lngInput):null;
+  if(typeof s==='string'){ state.stations[i]={name:s,region:'',lat,lng}; }
+  else { s.lat=lat; s.lng=lng; }
+  saveState();
+  if(_sbReady()){ try{ await supabaseClient.from('stations').update({lat,lng}).eq('name',name); }catch(e){} }
+  refreshStationsPage();
+  showToast('Coordinates updated',`"${name}" coordinates saved.`,'success');
+}
+
+function deleteStation(i){
+  const s=state.stations[i]; if(!s) return;
+  const name=typeof s==='string'?s:s.name;
+  if(!confirm(`Remove station "${name}"? Existing observers already assigned to it are unaffected.`))return;
+  state.stations.splice(i,1); saveState(); refreshStationsPage();
+  showToast('Station removed',`"${name}" removed from the list.`);
+}
+
+// Keeps the observer sign-up dropdown (#reg-station) in sync with the
+// admin-managed station list, so a newly registered station shows up
+// there immediately without a hardcoded HTML edit.
+function refreshRegStationOptions(){
+  const sel=document.getElementById('reg-station');
+  if(!sel||!state.stations.length) return;
+  const current=sel.value;
+  sel.innerHTML='<option value="">-- Select station --</option>'+
+    state.stations.map(s=>{const name=typeof s==='string'?s:s.name;return `<option>${name}</option>`;}).join('');
+  if(current) sel.value=current;
+}
+
+// ── ROLES & ACCESS (admin: create/manage Front Desk Officer accounts) ──
+// Front desk officers are internal TMA staff, created directly by admin
+// (no self-registration / pending-approval step, unlike observers and
+// stakeholders) and immediately able to sign in.
+function refreshRolesAccessPage(){
+  const e=document.getElementById('fd-empty'),t=document.getElementById('fd-table'),r=document.getElementById('fd-rows');
+  if(!e||!t||!r) return;
+  if(!state.frontDeskOfficers.length){e.style.display='';t.style.display='none';}
+  else{e.style.display='none';t.style.display='';r.innerHTML=state.frontDeskOfficers.map((f,i)=>
+    `<tr><td>${f.name}</td><td>${f.phone||'—'}</td><td>${f.email||'—'}</td><td>${f.approvedDate||'—'}</td><td><button class="btn btn-sm btn-danger" onclick="deleteFrontDeskOfficer(${i})">Remove</button></td></tr>`
+  ).join('');}
+}
+
+async function addFrontDeskOfficer(){
+  const name=(document.getElementById('fd-name')?.value||'').trim();
+  const phone=(document.getElementById('fd-phone')?.value||'').trim();
+  const email=(document.getElementById('fd-email')?.value||'').trim();
+  const password=(document.getElementById('fd-password')?.value||'');
+  if(!name||!phone||!password){showToast('Missing details','Name, phone and password are required.','warning');return;}
+  if(state.frontDeskOfficers.some(f=>f.phone===phone)||state.approvedObservers.some(o=>o.phone===phone)||state.approvedStakeholders.some(s=>s.phone===phone)){
+    showToast('Phone already in use','That phone number is already registered to another account.','warning');return;
+  }
+  const approvedDate=getTodayStr();
+  const officer={name,phone,email,password,approvedDate};
+  state.frontDeskOfficers.unshift(officer);
+  saveState();
+  await pushUserToSupabase('front_desk_officers',{name,phone,email:email||null,password,approved_date:approvedDate.split('/').reverse().join('-')});
+  ['fd-name','fd-phone','fd-email','fd-password'].forEach(id=>{const el=document.getElementById(id); if(el) el.value='';});
+  refreshRolesAccessPage();
+  showToast('Front Desk Officer created',`${name} can now sign in.`,'success');
+  if(phone) sendBeemSms([phone],`Dear ${name}, a Front Desk Officer account has been created for you on the TMA AgroMet Service System. Sign in with this phone number and the password given to you by the administrator.`);
+}
+
+function deleteFrontDeskOfficer(i){
+  const f=state.frontDeskOfficers[i]; if(!f) return;
+  if(!confirm(`Remove Front Desk Officer "${f.name}"?`))return;
+  state.frontDeskOfficers.splice(i,1); saveState(); refreshRolesAccessPage();
+  showToast('Front Desk Officer removed',`${f.name} removed.`);
+}
 
 function refreshManageStakeholders(){
   const e=document.getElementById('stakeholders-empty'),t=document.getElementById('stakeholders-table'),r=document.getElementById('stakeholders-rows');
@@ -9716,7 +10356,7 @@ async function pushSHRequestToSupabase(req) {
 async function loadFromSupabase() {
   if (!_sbReady()) return;
   try {
-    const [obsRes, phenoRes, obsvrRes, shRes, pendRes, prodRes, reqRes] = await Promise.all([
+    const [obsRes, phenoRes, obsvrRes, shRes, pendRes, prodRes, reqRes, fdRes, stRes] = await Promise.all([
       supabaseClient.from('observations').select('*').order('obs_date', { ascending: false }),
       supabaseClient.from('phenological_observations').select('*').order('obs_date', { ascending: false }),
       supabaseClient.from('observers').select('*'),
@@ -9724,6 +10364,8 @@ async function loadFromSupabase() {
       supabaseClient.from('pending_approvals').select('*').eq('status','pending'),
       supabaseClient.from('products').select('*').order('id', { ascending: false }),
       supabaseClient.from('stakeholder_requests').select('*').order('request_time', { ascending: false }),
+      supabaseClient.from('front_desk_officers').select('*'),
+      supabaseClient.from('stations').select('*'),
     ]);
 
     // Supabase is the authoritative source — replace local records entirely
@@ -9834,6 +10476,21 @@ async function loadFromSupabase() {
       }));
     }
 
+    if (fdRes.data) {
+      state.frontDeskOfficers = fdRes.data.map(row => ({
+        name: row.name, phone: row.phone, email: row.email, password: row.password,
+        approvedDate: row.approved_date,
+        resetToken: row.reset_token, resetExpiry: row.reset_expiry
+      }));
+    }
+
+    // Only replace the local default station list once the "stations"
+    // table actually has rows in it — an empty/missing table (e.g. before
+    // it's been created in Supabase) must not wipe out the seeded defaults.
+    if (stRes.data && stRes.data.length) {
+      state.stations = stRes.data.map(row => ({ name: row.name, region: row.region || '', lat: row.lat ?? null, lng: row.lng ?? null }));
+    }
+
   } catch(e) { console.error('loadFromSupabase error:', e); }
 }
 
@@ -9845,6 +10502,8 @@ function startAutoSync() {
     await loadFromSupabase();
     if (state.role === 'admin') {
       refreshAdminDash(); refreshApprovals(); refreshAllRecords();
+    } else if (state.role === 'frontdesk') {
+      refreshAdminDash(); refreshAllRecords(); refreshManageStakeholders();
     } else if (state.role === 'observer') {
       refreshObsDash(); refreshMyRecords();
     } else if (state.role === 'stakeholder') {
