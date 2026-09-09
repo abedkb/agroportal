@@ -1940,7 +1940,7 @@ body{
                     <td class="col-0600"><input type="number" id="ane_prev" step="0.01" oninput="restrictTwoDecimals(this);calcWindRun()"/></td>
                     <td class="col-0600"><input type="number" id="ane_diff" class="auto-calc" readonly step="0.01"/></td>
                     <td><input type="text" id="ane_dir" maxlength="3" style="width:64px;text-align:center;font-family:'IBM Plex Mono',monospace" placeholder="000" title="Enter 3-digit direction value (e.g. 110, 350, 000)"/></td>
-                    <td><input type="number" id="ane_speed" step="0.1"/></td>
+                    <td><input type="number" id="ane_speed" step="1" min="0" max="99" oninput="restrictWindSpeed(this)"/></td>
                   </tr></tbody>
                 </table></div>
               </div>
@@ -6546,6 +6546,20 @@ function restrictDecimals(el, n) {
 }
 function restrictOneDecimal(el) { restrictDecimals(el, 1); }
 function restrictTwoDecimals(el) { restrictDecimals(el, 2); }
+
+// Wind speed is recorded as a whole number and can't physically exceed
+// 99 (kts) on this form — strips any decimal part as it's typed and
+// clamps the value into 0–99.
+function restrictWindSpeed(el) {
+  let v = el.value;
+  if (v === '') return;
+  v = v.split('.')[0]; // whole numbers only
+  let n = parseInt(v, 10);
+  if (isNaN(n)) { el.value = ''; return; }
+  if (n < 0) n = 0;
+  if (n > 99) n = 99;
+  el.value = String(n);
+}
 
 function checkTempRange(el) {
   restrictOneDecimal(el);
