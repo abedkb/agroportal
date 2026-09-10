@@ -671,6 +671,12 @@ tr.f626-pm-row td.f626-empty  { background: #fff8a0; }
 .pheno-field label {
   font-size: 11px; font-weight: 600; color: var(--text-secondary);
   text-transform: uppercase; letter-spacing: .3px;
+  /* Reserves space for two lines regardless of whether this label's text
+     actually wraps, and bottom-aligns it within that space — so every
+     input in the row starts at the same y-position instead of longer
+     labels (e.g. "Met. Phenomenon Causing Damage") pushing their input
+     down further than short one-line labels next to them. */
+  min-height: 30px; line-height: 1.3; display: flex; align-items: flex-end;
 }
 .pheno-field input, .pheno-field select {
   padding: .4rem .6rem; border: 1px solid var(--border-medium);
@@ -2102,13 +2108,6 @@ body{
             </div>
             <div class="form-actions">
               <button class="btn btn-primary" onclick="submitObservation()">Submit observation</button>
-              <button class="btn" onclick="saveDraft()">Save draft</button>
-              <button class="btn" onclick="clearForm()">Clear form</button>
-              <span class="form-note">Submitting notifies admin via SMS &amp; WhatsApp (0755863325)</span>
-              <span style="display:inline-block;width:1px;height:20px;background:var(--border-medium);margin:0 4px;vertical-align:middle"></span>
-              <span class="form-note" style="margin-right:4px">Share filled data:</span>
-              <button class="btn btn-sm btn-wa" title="Share observation data via WhatsApp to Admin" onclick="shareForm601AsText('wa')">📱 WA</button>
-              <button class="btn btn-sm btn-sms" title="Send observation data via SMS to Admin" onclick="shareForm601AsText('sms')">✉ SMS</button>
             </div>
           </div>
         </div>
@@ -2428,12 +2427,7 @@ body{
 
             <div class="form-actions">
               <button class="btn pheno-submit-btn" onclick="submitPhenoObservation()">Submit phenological observation</button>
-              <button class="btn" onclick="clearPhenoForm()">Clear form</button>
               <span class="form-note" id="pheno-day-warn" style="color:#c0392b"></span>
-              <span style="display:inline-block;width:1px;height:20px;background:var(--border-medium);margin:0 4px;vertical-align:middle"></span>
-              <span class="form-note" style="margin-right:4px">Share filled data:</span>
-              <button class="btn btn-sm btn-wa" title="Share phenological data via WhatsApp to Admin" onclick="shareFormPhenoAsText('wa')">📱 WA</button>
-              <button class="btn btn-sm btn-sms" title="Send phenological data via SMS to Admin" onclick="shareFormPhenoAsText('sms')">✉ SMS</button>
             </div>
           </div>
         </div>
@@ -10143,21 +10137,15 @@ function filterDashObs(mode) {
   }).join('');
 }
 
-// ── Inject WA/SMS buttons into return form accordion headers ────
+// ── Inject SMS share button into return form accordion headers ──
+// (WhatsApp sharing was removed from here — Email and SMS remain.)
 function initReturnWASMSButtons() {
   const retIds = ['ret-626','ret-10c','ret-446','ret-616','ret-drybulb','ret-wetbulb',
                   'ret-dewpoint','ret-rh','ret-vapour','ret-agro5','ret-agro1','ret-agro3','ret-agro4','ret-202',
                   'ret-windspeed','ret-winddir','ret-92'];
   retIds.forEach(id => {
     const hdr = document.getElementById('hdr-'+id);
-    if (!hdr || hdr.querySelector('.ret-wa-btn')) return;
-    const waBtn  = document.createElement('button');
-    waBtn.className  = 'ret-share-btn ret-wa-btn';
-    waBtn.type       = 'button';
-    waBtn.title      = 'Share via WhatsApp to Admin';
-    waBtn.innerHTML  = '📱 WA';
-    waBtn.style.cssText = 'background:#25D366;color:#fff;border-color:#25D366';
-    waBtn.onclick    = e => { e.stopPropagation(); shareReturnWA(id); };
+    if (!hdr || hdr.querySelector('.ret-sms-btn')) return;
     const smsBtn = document.createElement('button');
     smsBtn.className  = 'ret-share-btn ret-sms-btn';
     smsBtn.type       = 'button';
@@ -10166,7 +10154,7 @@ function initReturnWASMSButtons() {
     smsBtn.style.cssText = 'background:#1976d2;color:#fff;border-color:#1976d2';
     smsBtn.onclick    = e => { e.stopPropagation(); shareReturnSMS(id); };
     const firstBtn = hdr.querySelector('.ret-share-btn');
-    if (firstBtn) { hdr.insertBefore(smsBtn, firstBtn); hdr.insertBefore(waBtn, firstBtn); }
+    if (firstBtn) { hdr.insertBefore(smsBtn, firstBtn); }
   });
 }
 
