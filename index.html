@@ -178,12 +178,12 @@ html,body{height:100%;font-family:'IBM Plex Sans',sans-serif;font-size:14px;back
 .obs-header p{font-size:11px;opacity:.8;margin-top:3px}
 .obs-meta{display:flex;gap:1rem;font-size:11px;opacity:.85;margin-top:.5rem;flex-wrap:wrap}
 .obs-body{padding:1.25rem}
-.obs-section{margin-bottom:1rem;border:0.5px solid var(--border-light);border-radius:var(--radius);overflow:hidden}
-.obs-section-title{background:var(--tma-blue-l);color:var(--tma-blue);font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;padding:6px 10px;border-bottom:0.5px solid var(--border-light)}
+.obs-section{margin-bottom:1rem;border:2.5px solid var(--tma-blue-m);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.obs-section-title{background:var(--tma-blue-l);color:var(--tma-blue);font-size:10px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;padding:6px 10px;border-bottom:2.5px solid var(--tma-blue-m)}
 .obs-table-wrap{overflow-x:auto}
 .obs-table{width:100%;border-collapse:collapse;font-size:12px;min-width:400px}
 .obs-table th{background:var(--bg-secondary);font-size:10px;font-weight:500;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.4px;padding:6px 8px;border-bottom:0.5px solid var(--border-light);text-align:center;white-space:nowrap}
-.obs-table td{padding:5px 6px;border-bottom:0.5px solid var(--border-light);text-align:center;vertical-align:middle}
+.obs-table td{padding:6px 6px;border-bottom:2.5px solid var(--tma-blue-m);text-align:center;vertical-align:middle}
 .obs-table tr:last-child td{border-bottom:none}
 .obs-table input[type="number"],.obs-table input[type="text"]{width:100%;min-width:58px;border:1.5px solid var(--tma-blue-m);border-radius:5px;padding:5px 6px;font-size:12px;text-align:center;background:var(--tma-blue-l);color:var(--text-primary);font-family:'IBM Plex Mono',monospace;outline:none;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.05)}
 .obs-table input:focus{border-color:var(--tma-blue);background:#fff;box-shadow:0 0 0 3px rgba(24,95,165,.18)}
@@ -1080,12 +1080,18 @@ body{
 /* ====== LANDING PAGE ====== */
 .landing-screen{display:flex;flex-direction:column;min-height:100vh;font-family:'IBM Plex Sans',sans-serif;overflow-x:hidden}
 .lp-hero{position:relative;background:linear-gradient(155deg,#061a40 0%,#0a2d5e 30%,#1565C0 65%,#0d4fa0 100%);display:flex;flex-direction:column}
-.lp-nav{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2.5rem;border-bottom:1px solid rgba(255,255,255,0.08)}
+.lp-nav{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 2.5rem;border-bottom:1px solid rgba(255,255,255,0.08);max-width:1240px;margin:0 auto;box-sizing:border-box}
 .lp-nav-brand{display:flex;align-items:center;gap:14px}
 .lp-nav-logo{height:44px;width:auto}
 .lp-nav-title-main{display:block;font-size:17px;font-weight:700;color:#fff;letter-spacing:.2px;line-height:1.2}
 .lp-nav-title-sub{display:block;font-size:10px;color:rgba(255,255,255,0.6);letter-spacing:.6px;text-transform:uppercase}
-.lp-nav-links{display:flex;align-items:center;gap:2px;margin-right:auto;margin-left:2.5rem}
+.lp-nav-links{display:flex;align-items:center;gap:2px}
+/* Groups the links and the login/register hamburger together on the
+   right of the logo, with a fixed, modest gap between them -- instead
+   of nav-links' old margin-right:auto, which stretched to consume
+   *all* remaining nav width and left a huge, width-dependent void
+   before the hamburger button on wide screens. */
+.lp-nav-right-group{display:flex;align-items:center;gap:6.5rem;margin-left:2.5rem}
 .lp-nav-link{padding:9px 14px;border-radius:7px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.85);text-decoration:none;cursor:pointer;transition:.15s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;background:none;border:none;font-family:'IBM Plex Sans',sans-serif}
 .lp-nav-link:hover{color:#fff;background:rgba(255,255,255,0.1)}
 .lp-nav-dropdown{position:relative}
@@ -1234,9 +1240,9 @@ body{
 .lp-split-header{display:flex;max-width:1200px;margin:0 auto .4rem;padding:0 1.5rem;gap:2rem}
 .lp-split-header-col{flex:1 1 50%;min-width:0;text-align:left}
 .lp-split-header-col h2{font-size:19px;font-weight:800;color:#0a1e3c;margin:0 0 .2rem;letter-spacing:-.3px}
-.lp-split-header-col p{font-size:12px;color:#666;margin:0;max-width:none;line-height:1.5}
+.lp-split-header-col p{font-size:12.5px;color:#666;margin:0 0 0 -11rem;white-space:nowrap;line-height:1.5}
 .lp-split-header-col-map{display:flex;align-items:center;justify-content:center;text-align:center}
-.lp-split-header-col-map h2{margin:0;width:100%}
+.lp-split-header-col-map h2{margin:0;width:100%;transform:translateX(4.5rem)}
 @media(max-width:900px){.lp-split-header{flex-direction:column;gap:.5rem;margin-bottom:.4rem}}
 .lp-anim-caption{position:absolute;left:0;right:0;bottom:0;padding:16px 28px;background:linear-gradient(0deg,rgba(0,0,0,.7),transparent);color:#e8eef6;font-family:'IBM Plex Mono',monospace;font-size:13px;letter-spacing:.03em}
 
@@ -1473,44 +1479,46 @@ body{
           <span class="lp-nav-title-sub">Tanzania Meteorological Authority</span>
         </div>
       </div>
-      <div class="lp-nav-links">
-        <a class="lp-nav-link" href="#" onclick="window.location.reload();return false">Home</a>
-        <div class="lp-nav-dropdown">
-          <a class="lp-nav-link" href="#" onclick="return false">Products <span class="lp-nav-caret">&#9662;</span></a>
-          <div class="lp-nav-dropdown-menu">
-            <div class="lp-nav-submenu-wrap">
-              <a href="#" class="lp-nav-submenu-trigger" onclick="return false">Agromet Products <span class="lp-nav-caret">&#9656;</span></a>
-              <div class="lp-nav-submenu"><div class="lp-nav-submenu-inner">
-                <a href="#" onclick="openAgrometProducts();return false">Products</a>
-                <a href="#" onclick="openReportsPage();return false">Reports</a>
-              </div></div>
-            </div>
-            <div class="lp-nav-submenu-wrap">
-              <a href="#" class="lp-nav-submenu-trigger" onclick="return false">Spatial Products <span class="lp-nav-caret">&#9656;</span></a>
-              <div class="lp-nav-submenu"><div class="lp-nav-submenu-inner">
-                <a href="#" onclick="openGriddedDataProducts();return false">Gridded data</a>
-                <a href="#" onclick="landingComingSoon('Spatial Products — Point Data');return false">Point data</a>
-              </div></div>
-            </div>
-            <div class="lp-nav-submenu-wrap">
-              <a href="#" class="lp-nav-submenu-trigger" onclick="return false">Time Series <span class="lp-nav-caret">&#9656;</span></a>
-              <div class="lp-nav-submenu"><div class="lp-nav-submenu-inner">
-                <a href="#" onclick="landingComingSoon('Time Series — Area Average');return false">Area average</a>
-                <a href="#" onclick="landingComingSoon('Time Series — Point Data');return false">Point data</a>
-              </div></div>
+      <div class="lp-nav-right-group">
+        <div class="lp-nav-links">
+          <a class="lp-nav-link" href="#" onclick="window.location.reload();return false">Home</a>
+          <div class="lp-nav-dropdown">
+            <a class="lp-nav-link" href="#" onclick="return false">Products <span class="lp-nav-caret">&#9662;</span></a>
+            <div class="lp-nav-dropdown-menu">
+              <div class="lp-nav-submenu-wrap">
+                <a href="#" class="lp-nav-submenu-trigger" onclick="return false">Agromet Products <span class="lp-nav-caret">&#9656;</span></a>
+                <div class="lp-nav-submenu"><div class="lp-nav-submenu-inner">
+                  <a href="#" onclick="openAgrometProducts();return false">Products</a>
+                  <a href="#" onclick="openReportsPage();return false">Reports</a>
+                </div></div>
+              </div>
+              <div class="lp-nav-submenu-wrap">
+                <a href="#" class="lp-nav-submenu-trigger" onclick="return false">Spatial Products <span class="lp-nav-caret">&#9656;</span></a>
+                <div class="lp-nav-submenu"><div class="lp-nav-submenu-inner">
+                  <a href="#" onclick="openGriddedDataProducts();return false">Gridded data</a>
+                  <a href="#" onclick="landingComingSoon('Spatial Products — Point Data');return false">Point data</a>
+                </div></div>
+              </div>
+              <div class="lp-nav-submenu-wrap">
+                <a href="#" class="lp-nav-submenu-trigger" onclick="return false">Time Series <span class="lp-nav-caret">&#9656;</span></a>
+                <div class="lp-nav-submenu"><div class="lp-nav-submenu-inner">
+                  <a href="#" onclick="landingComingSoon('Time Series — Area Average');return false">Area average</a>
+                  <a href="#" onclick="landingComingSoon('Time Series — Point Data');return false">Point data</a>
+                </div></div>
+              </div>
             </div>
           </div>
+          <a class="lp-nav-link" href="#" onclick="landingComingSoon('About');return false">About</a>
+          <a class="lp-nav-link" href="#" onclick="landingComingSoon('Feedback');return false">Feedback</a>
+          <a class="lp-nav-link" href="#" onclick="landingComingSoon('Documentation');return false">Documentation</a>
+          <a class="lp-nav-link" href="#" onclick="landingComingSoon('Contact Us');return false">Contact Us</a>
         </div>
-        <a class="lp-nav-link" href="#" onclick="landingComingSoon('About');return false">About</a>
-        <a class="lp-nav-link" href="#" onclick="landingComingSoon('Feedback');return false">Feedback</a>
-        <a class="lp-nav-link" href="#" onclick="landingComingSoon('Documentation');return false">Documentation</a>
-        <a class="lp-nav-link" href="#" onclick="landingComingSoon('Contact Us');return false">Contact Us</a>
-      </div>
-      <div class="lp-nav-actions">
-        <button class="lp-hamburger-btn" onclick="toggleLandingMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
-        <div class="lp-hamburger-menu" id="lp-hamburger-menu">
-          <button onclick="closeLandingMenu();openStaffLogin()">Login</button>
-          <button onclick="closeLandingMenu();openStaffRegister()">Register</button>
+        <div class="lp-nav-actions">
+          <button class="lp-hamburger-btn" onclick="toggleLandingMenu()" aria-label="Menu"><span></span><span></span><span></span></button>
+          <div class="lp-hamburger-menu" id="lp-hamburger-menu">
+            <button onclick="closeLandingMenu();openStaffLogin()">Login</button>
+            <button onclick="closeLandingMenu();openStaffRegister()">Register</button>
+          </div>
         </div>
       </div>
     </nav>
