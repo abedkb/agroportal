@@ -4037,6 +4037,7 @@ function loginAs(role, user) {
     showPage('dashboard',null);
   }
   const logoutBtn=document.getElementById('topnavLogoutBtn'); if(logoutBtn) logoutBtn.style.display=(role==='stakeholder')?'':'none';
+  _navPush('dashboard');
   loadState();
   loadPhenoState();
   loadFromSupabase().then(() => {
@@ -4116,6 +4117,51 @@ function logout() {
   _doLogout('landing');
 }
 
+// ── Browser back/forward integration ──────────────────────────
+// Without this, the browser's back button had nothing to step through
+// inside the app (nothing ever called history.pushState), so pressing
+// it just left the site entirely — instead of returning to wherever the
+// user came from inside the app (landing → login, landing → a public
+// page, → the dashboard, etc.), which is what back normally does.
+// _navRestoring guards against re-pushing a new entry while we're in the
+// middle of *restoring* one from a popstate event.
+let _navRestoring = false;
+
+function _navPush(view, extra) {
+  if (_navRestoring) return;
+  history.pushState(Object.assign({ view }, extra || {}), '');
+}
+
+window.addEventListener('popstate', (e) => {
+  const s = e.state;
+  _navRestoring = true;
+  try {
+    if (!s || s.view === 'landing') {
+      showLanding();
+    } else if (s.view === 'login') {
+      openStaffLogin();
+    } else if (s.view === 'register') {
+      openStaffRegister();
+    } else if (s.view === 'public') {
+      enterPublicView(s.page);
+    } else if (s.view === 'dashboard') {
+      // Signed in earlier this same session — just restore the
+      // dashboard chrome. If that session state is gone (e.g. state.role
+      // got cleared some other way), fall back to the landing screen
+      // rather than showing a broken, empty dashboard.
+      if (state.role && state.role !== 'public') {
+        const ls=document.getElementById('landingScreen'); if(ls) ls.style.display='none';
+        document.getElementById('authScreen').style.display='none';
+        document.getElementById('mainApp').style.display='flex';
+      } else {
+        showLanding();
+      }
+    }
+  } finally {
+    _navRestoring = false;
+  }
+});
+
 function goHome() {
   stopAutoSync();
   showLanding();
@@ -4132,6 +4178,7 @@ function _doLogout(dest) {
 }
 
 function showLanding() {
+  _navPush('landing');
   const ls=document.getElementById('landingScreen'); if(ls) ls.style.display='flex';
   document.getElementById('authScreen').style.display='none';
   document.getElementById('mainApp').style.display='none';
@@ -4500,6 +4547,7 @@ function stopLandingAnimation() {}
 // Products" links, which open straight into their respective standalone
 // page instead of the stakeholder dashboard.
 function enterPublicView(landingPage) {
+  _navPush('public', { page: landingPage });
   stopLandingAnimation();
   stopAgrometSlideshow();
   const ls=document.getElementById('landingScreen'); if(ls) ls.style.display='none';
@@ -4536,6 +4584,7 @@ function enterPublicView(landingPage) {
 }
 
 function openStaffLogin() {
+  _navPush('login');
   switchAuthTab('login');
   stopLandingAnimation();
   stopAgrometSlideshow();
@@ -4544,6 +4593,7 @@ function openStaffLogin() {
 }
 
 function openStaffRegister() {
+  _navPush('register');
   switchAuthTab('register');
   stopLandingAnimation();
   stopAgrometSlideshow();
