@@ -1086,7 +1086,7 @@ body{
 .lp-nav-title-main{display:block;font-size:17px;font-weight:700;color:#fff;letter-spacing:.2px;line-height:1.2}
 .lp-nav-title-sub{display:block;font-size:10px;color:rgba(255,255,255,0.6);letter-spacing:.6px;text-transform:uppercase}
 .lp-nav-links{display:flex;align-items:center;gap:24px;justify-self:center}
-.lp-nav-link{padding:9px 14px;border-radius:7px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.85);text-decoration:none;cursor:pointer;transition:.15s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;background:none;border:none;font-family:'IBM Plex Sans',sans-serif}
+.lp-nav-link{padding:9px 14px;border-radius:7px;font-size:16px;font-weight:600;color:rgba(255,255,255,0.85);text-decoration:none;cursor:pointer;transition:.15s;white-space:nowrap;display:inline-flex;align-items:center;gap:4px;background:none;border:none;font-family:'IBM Plex Sans',sans-serif}
 .lp-nav-link:hover{color:#fff;background:rgba(255,255,255,0.1)}
 .lp-nav-dropdown{position:relative}
 .lp-nav-caret{font-size:10px;opacity:.8}
@@ -1097,7 +1097,7 @@ body{
    before the cursor reaches it. */
 .lp-nav-dropdown-menu{position:absolute;top:100%;left:0;background:#fff;border-radius:9px;box-shadow:0 8px 28px rgba(0,0,0,0.22);min-width:220px;padding:6px;display:none;flex-direction:column;gap:2px;z-index:50}
 .lp-nav-dropdown:hover .lp-nav-dropdown-menu, .lp-nav-dropdown-menu.open{display:flex}
-.lp-nav-dropdown-menu a{padding:9px 12px;border-radius:6px;font-size:13px;font-weight:600;color:#0a1e3c;text-decoration:none;cursor:pointer}
+.lp-nav-dropdown-menu a{padding:9px 12px;border-radius:6px;font-size:14.5px;font-weight:600;color:#0a1e3c;text-decoration:none;cursor:pointer}
 .lp-nav-dropdown-menu a:hover{background:#f0f4fa}
 /* Nested flyout for "Spatial Products" / "Time series" -- same visual
    language as the top-level dropdown, opening to the right on hover. */
@@ -1109,7 +1109,7 @@ body{
 .lp-nav-submenu{position:absolute;top:-6px;left:100%;margin-left:0;padding-left:6px;background:transparent;display:none;z-index:51}
 .lp-nav-submenu-inner{background:#fff;border-radius:9px;box-shadow:0 8px 28px rgba(0,0,0,0.22);min-width:180px;padding:6px;display:flex;flex-direction:column;gap:2px}
 .lp-nav-submenu-wrap:hover .lp-nav-submenu{display:block}
-.lp-nav-submenu a{padding:9px 12px;border-radius:6px;font-size:13px;font-weight:600;color:#0a1e3c;text-decoration:none;cursor:pointer}
+.lp-nav-submenu a{padding:9px 12px;border-radius:6px;font-size:14.5px;font-weight:600;color:#0a1e3c;text-decoration:none;cursor:pointer}
 .lp-nav-submenu a:hover{background:#f0f4fa}
 @media(max-width:980px){.lp-nav-links{display:none}}
 .lp-nav-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end;justify-self:end;position:relative}
@@ -1170,16 +1170,16 @@ body{
 .lp-feat-icon-red{background:#FFEBEE}
 .lp-feat-title{font-size:13.5px;font-weight:700;color:#0a1e3c;margin-bottom:3px}
 .lp-feat-desc{font-size:12px;color:#777;line-height:1.5}
-.lp-footer{background:linear-gradient(180deg,#061a40,#041230);color:rgba(255,255,255,0.6);padding:1.75rem 2rem 1.1rem;text-align:center;font-size:11.5px;line-height:1.6}
-.lp-footer-brand{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;margin-bottom:1rem}
-.lp-footer-brand img{height:34px;opacity:.85}
-.lp-footer-brand-name{display:block;font-size:14px;font-weight:700;color:rgba(255,255,255,0.9);text-align:center}
-.lp-footer-brand-sub{display:block;font-size:10px;color:rgba(255,255,255,0.4);letter-spacing:.5px;text-align:center}
-.lp-footer-links{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin:1rem 0;font-size:11px}
+.lp-footer{background:linear-gradient(180deg,#061a40,#041230);color:rgba(255,255,255,0.6);padding:1rem 2rem .6rem;text-align:center;font-size:11.5px;line-height:1.5}
+.lp-footer-brand{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;margin-bottom:.5rem}
+.lp-footer-brand img{height:24px;opacity:.85}
+.lp-footer-brand-name{display:block;font-size:13px;font-weight:700;color:rgba(255,255,255,0.9);text-align:center}
+.lp-footer-brand-sub{display:block;font-size:9.5px;color:rgba(255,255,255,0.4);letter-spacing:.5px;text-align:center}
+.lp-footer-links{display:flex;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin:.5rem 0;font-size:11px}
 .lp-footer-links a{color:rgba(255,255,255,0.5);text-decoration:none;transition:.15s}
 .lp-footer-links a:hover{color:#FCD116}
-.lp-footer-copy{color:rgba(255,255,255,0.28);margin-top:.5rem;font-size:10.5px}
-.lp-footer-flag{display:flex;height:4px;margin-top:1.5rem}
+.lp-footer-copy{color:rgba(255,255,255,0.28);margin-top:.3rem;font-size:10px}
+.lp-footer-flag{display:flex;height:4px;margin-top:.85rem}
 .lp-footer-flag div{flex:1}
 .lp-access-section{background:#fff;padding:4rem 2rem}
 .lp-access-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;max-width:900px;margin:0 auto}
@@ -1214,7 +1214,7 @@ body{
    on the right. */
 .lp-split-stage{
   width:100%;
-  height:92vh;min-height:560px;overflow:hidden;background:#0c1420;
+  height:70vh;min-height:480px;overflow:hidden;background:#0c1420;
   display:flex;
 }
 /* isolation:isolate forces a new stacking context so Leaflet's internal
