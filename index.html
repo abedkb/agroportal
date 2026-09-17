@@ -1765,7 +1765,7 @@ body{
       <button class="tab-btn" data-page="dashboard" onclick="showPage('dashboard',this)">&#8862; Dashboard</button>
       <button class="tab-btn" data-page="obsForms" onclick="showPage('obsForms',this)">&#9998; Fill Observation</button>
       <button class="tab-btn" data-page="myRecords" onclick="showPage('myRecords',this)">&#8801; My Records</button>
-      <button class="tab-btn" data-page="returns" onclick="showPage('returns',this)">&#128203; Returns <span class="auto-badge">AUTO</span></button>
+      <button class="tab-btn" data-page="returns" onclick="showPage('returns',this)">&#128203; Returns</button>
       <button class="tab-btn" data-page="products" onclick="showPage('products',this)">&#10571; Products</button>
       <button class="tab-btn" data-page="messages" onclick="showPage('messages',this)">&#9711; Notifications</button>
     </div>
@@ -1817,7 +1817,7 @@ body{
       <div class="nav-item" onclick="showPage('obsForms',this)"><span class="nav-icon">✎</span>Fill observation</div>
       <div class="nav-item" onclick="showPage('myRecords',this)"><span class="nav-icon">≡</span>My records</div>
       <div class="nav-label">Climatological Returns</div>
-      <div class="nav-item" onclick="showPage('returns',this)"><span class="nav-icon">📋</span>All return forms<span class="auto-badge" style="margin-left:4px">AUTO</span></div>
+      <div class="nav-item" onclick="showPage('returns',this)"><span class="nav-icon">📋</span>All return forms</div>
       <div class="nav-label">Products &amp; Comms</div>
       <div class="nav-item" onclick="showPage('products',this)"><span class="nav-icon">⤓</span>Products</div>
       <div class="nav-item" onclick="showPage('messages',this)"><span class="nav-icon">◎</span>Notifications</div>
@@ -2111,10 +2111,6 @@ body{
                     <td><input type="number" id="sm_100" step="0.1" min="0" max="100" oninput="restrictOneDecimal(this)"/></td>
                   </tr></tbody>
                 </table></div>
-              </div>
-              <div style="background:var(--tma-blue-l);border-radius:var(--radius);padding:.625rem .875rem;margin-top:.75rem;font-size:12px;color:var(--tma-blue);display:flex;align-items:center;gap:8px">
-                <span>⚡</span>
-                <span>On submission, data will <strong>automatically populate all 14 climatological return forms</strong> for the corresponding day and session.</span>
               </div>
             </div>
             <div class="form-actions">
